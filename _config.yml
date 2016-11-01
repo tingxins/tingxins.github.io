@@ -1,0 +1,49 @@
+# Basic
+title: tingxins
+subtitle: Creep before you walk.
+#welcome_message: <a href="https://github.com/tingxins" target="_blank">我的开源项目</a>
+description: 嘿, 我叫李昕(@tingxins), 一名 iOS 开发者, 热衷移动, 喜爱前端, 正在探索编程艺术之旅。
+
+url: "https://tingxins.github.io/"
+
+permalink: /:year/:month/:title/
+
+# Format
+highlighter: rouge
+markdown: kramdown
+
+# supported colors: blue, green, purple, red, orange or slate. If you need clear, leave it empty.
+cover_color: slate
+
+# The blog button should not be removed.
+blog_button:
+    title: 博客(Blog)
+    description: 访问博客(Visit blog)
+
+# Navigation buttons in the front page.
+#nav:
+#    - {title: Projects, description: My Projects, url: 'http://example.com'}
+    # - {title: Another Button, description: A button, url: 'http://example.com'}
+
+# Pagination
+gems: [jekyll-paginate]
+paginate: 10
+paginate_path: "page/:num/"
+
+# Comment
+comment:
+    disqus: tingxins
+    # duoshuo: 
+    
+# Social
+social:
+    weibo: tingxins
+    github: tingxins
+    twitter: tingxins
+    gplus: 117623867079144396589
+    mail: tingxinsss@gmail.com
+
+# Google Analytics
+ga:
+    # id: your_ga_id
+    # host: your_host
