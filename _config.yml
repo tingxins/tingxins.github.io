@@ -4,7 +4,7 @@ subtitle: Creep before you walk.
 #welcome_message: <a href="https://github.com/tingxins" target="_blank">我的开源项目</a>
 description: 嘿, 我叫李昕(@tingxins), 一名 iOS 开发者, 热衷移动, 喜爱前端, 正在探索编程艺术之旅。
 
-url: "https://tingxins.github.io/"
+url: "https://tingxins.com"
 
 permalink: /:year/:month/:title/
 
@@ -45,5 +45,5 @@ social:
 
 # Google Analytics
 ga:
-    # id: your_ga_id
-    # host: your_host
+    id: UA-86643638-1
+    host: tingxins.com
