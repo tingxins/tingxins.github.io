@@ -116,6 +116,6 @@ static NSDateFormatter *cachedDateFormatter = nil;
 [id3]:http://www.gnu.org/software/libc/
 [id4]:https://en.wikipedia.org/wiki/ISO_8601
 
-[1]:/assets/images/2016/date-formate-patterns.png
+[1]:/assets/images/2016/date-formate-patterns.jpg
 
 
