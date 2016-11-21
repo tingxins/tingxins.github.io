@@ -9,6 +9,8 @@ date: 2016-11-20 21:41:18.000 +09:00
 前段时间在开发一个广播的功能，网上也自己找了一些库，没有发现非常好用的，于是自己抽时间写了一个，发布一天收获六十多个 `star`，这里首先感谢大家在微博上的转发，使得 [`TXScrollLabelView`](https://github.com/tingxins/TXScrollLabelView)  被更多需要的人知道，同时非常感谢大家的吐槽及建议，使之诞生 [`TXScrollLabelView`](https://github.com/tingxins/TXScrollLabelView) v1.1.1 版本，目前已支持 `CocoaPods`，后续会增加 `Carthage`。Github 地址: [TXScrollLabelView](https://github.com/tingxins/TXScrollLabelView) 
 
 ```
+pod search TXScrollLabelView
+
 -> TXScrollLabelView (1.1.1)
    The best way to show & display such as adverts,boardcast,OnSale e.g. with a
    customView.
@@ -26,9 +28,13 @@ date: 2016-11-20 21:41:18.000 +09:00
 
 ![scrolling-txscrolllabelview-ka][2]
 
+![scrolling-txscrolllabelview-un][3]
+
 [1]:/assets/images/2016/scrolling-txscrolllabelview-jd.gif
 
 [2]:/assets/images/2016/scrolling-txscrolllabelview-ka.gif
+
+[3]:/assets/images/2016/scrolling-txscrolllabelview-un.gif
 
 ## 支持滚动类型
 
@@ -70,7 +76,6 @@ TXScrollLabelView *scrollLabelView = [TXScrollLabelView scrollWithTitle:scrollTi
 ```
 
 更多请详见Demo：<https://github.com/tingxins/TXScrollLabelView/tree/master/TXScrollLabelViewDemo>
-
     
     
 
