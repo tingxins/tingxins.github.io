@@ -1,7 +1,7 @@
 # Basic
 title: tingxins
 subtitle: Creep before you walk.
-#welcome_message: <a href="https://github.com/tingxins" target="_blank">我的开源项目</a>
+welcome_message: <a href="https://github.com/tingxins" target="_blank">我的开源项目</a>
 description: 嘿, 我叫李昕(@tingxins), 一名 iOS 开发者, 热衷移动, 喜爱前端, 正在探索编程艺术之旅。
 
 url: "https://tingxins.com"
@@ -21,9 +21,9 @@ blog_button:
     description: 访问博客(Visit blog)
 
 # Navigation buttons in the front page.
-#nav:
-#    - {title: Projects, description: My Projects, url: 'http://example.com'}
-    # - {title: Another Button, description: A button, url: 'http://example.com'}
+nav:
+    - {title: 项目(Projects), description: 我的项目, url: 'https://github.com/tingxins'}
+    - {title: 关于(About), description: 我的简书, url: 'http://www.jianshu.com/users/5141561e4d59/latest_articles'}
 
 # Pagination
 gems: [jekyll-paginate]
