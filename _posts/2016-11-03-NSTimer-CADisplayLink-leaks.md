@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 浅析NSTimer & CADisplayLink内存泄露
+title: 浅析NSTimer & CADisplayLink内存泄漏
 date: 2016-11-03 01:06:38
 ---
 
@@ -11,7 +11,7 @@ date: 2016-11-03 01:06:38
 
 ### 偶得前言
 
-本篇文章中我们主要谈谈`NSTimer`\\`CADisplayLink`在使用过程中牵扯到内存泄露的相关问题及解决思路（文章末尾会附上Demo），有时候我们在不知情的情况容易入坑，最关键你还不知道自己掉坑了，闲话不多说，让我们开始进入正题。
+本篇文章中我们主要谈谈`NSTimer`\\`CADisplayLink`在使用过程中牵扯到内存泄漏的相关问题及解决思路（文章末尾会附上Demo），有时候我们在不知情的情况容易入坑，最关键你还不知道自己掉坑了，闲话不多说，让我们开始进入正题。
 
 #### NSRunLoop与定时器
 我们先来回顾一下`NSRunLoop`对`NSTimer`\\`CADisplayLink`的影响。（为了方便，以下统称定时器）
@@ -23,9 +23,9 @@ date: 2016-11-03 01:06:38
 
 >Removes the object from all runloop modes (releasing the receiver if it has been implicitly retained) and releases the 'target' object.
 
-据官方介绍可知，`- invalidate`做了两件事，首先是把本身（定时器）从`NSRunLoop`中移除，然后就是释放对‘`target`’对象的强引用。从而解决定时器带来的内存泄露问题。
+据官方介绍可知，`- invalidate`做了两件事，首先是把本身（定时器）从`NSRunLoop`中移除，然后就是释放对‘`target`’对象的强引用。从而解决定时器带来的内存泄漏问题。
 
-#### 内存泄露在哪？
+#### 内存泄漏在哪？
 
 看到这里我们可能会有点懵逼，先上一个图（为了方便讲解，途中箭头指向谁就代表强引谁）：
 
@@ -33,15 +33,15 @@ date: 2016-11-03 01:06:38
 
 此处我们必须明确，在开发中，如果创建定时器只是简单的计时，不做其他引用，那么timer对象与myClock对象循环引用的问题就可以避免（即省略self.timer = timer，前文已经提到过，不再阐述），即图中`箭头5`可避免。
 
-虽然孤岛问题已经避免了，但还是存在问题，因为myClock对象被UIViewController以及timer引用（timer直接被NSRunLoop强引用着），当UIViewController控制器被UIWindow释放后，myClock不会被销毁，从而导致内存泄露。
+虽然孤岛问题已经避免了，但还是存在问题，因为myClock对象被UIViewController以及timer引用（timer直接被NSRunLoop强引用着），当UIViewController控制器被UIWindow释放后，myClock不会被销毁，从而导致内存泄漏。
 
-讲到这里，有些人可能会说对timer对象发送一个`invalidate`消息，这样NSRunLoop即不会对timer进行强引，同时timer也会释放对myClock对象的强引，这样不就解决了吗？没错，内存泄露是解决了。
+讲到这里，有些人可能会说对timer对象发送一个`invalidate`消息，这样NSRunLoop即不会对timer进行强引，同时timer也会释放对myClock对象的强引，这样不就解决了吗？没错，内存泄漏是解决了。
 
 但是，这并不是我们想要的结果，在开发中我们可能会遇到某些需求，只有在myClock对象要被释放时才去释放timer（此处要注意释放的先后顺序及释放条件），如果提前向timer发送了`invalidate`消息，那么myClock对象可能会因为timer被提前释放而导致数据错了，就像闹钟失去了`秒针`一样，就无法正常工作了。所以我们要做的是在向myClock对象发送`dealloc`消息前在给timer发送`invalidate`消息，从而避免本末倒置的问题。这种情况就像一个死循环（因为如果不给timer发送`invalidate`消息，myClock对象根本不会被销毁，dealloc方法根本不会执行），那么该怎么做呢？
 
 #### 我们如何解决？
 
-现在我们已经知道内存泄露在哪了，也知道原因是什么，那么如何解决，或者说怎样优雅的解决这问题呢？方式有很多.
+现在我们已经知道内存泄漏在哪了，也知道原因是什么，那么如何解决，或者说怎样优雅的解决这问题呢？方式有很多.
 
 **a.NSTimer Target**
 
@@ -90,7 +90,7 @@ date: 2016-11-03 01:06:38
 
 有点类似a方式，此处不再详述。
 
-    //NSTimer Block(解决self内存泄露) 模拟器会崩溃
+    //NSTimer Block(解决self内存泄漏) 模拟器会崩溃
     //API_AVAILABLE(macosx(10.12), ios(10.0), watchos(3.0), tvos(10.0));
     NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.25 repeats:YES block:^(NSTimer * _Nonnull timer) {
         NSLog(@"TXNSTimerBlockController timer start");
