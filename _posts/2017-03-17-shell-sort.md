@@ -80,11 +80,11 @@ index.php?curid=16020133](/assets/images/2017/sorting_shellsort_anim.gif)
             return n + delta; // 返回当前比较待插入的位置
         }
         return StraightInsertionSortInnerRecursionCompare(data, tmp, n - delta, delta);// 子序列递归方式排序
-}
+    }
     // 得出索引值
     int StraightInsertionSortInnerRecursionIndex(int data[], int n, int delta) {
         return StraightInsertionSortInnerRecursionCompare(data, data[n], n - delta, delta);
-}
+    }
     
     ```
 
@@ -93,12 +93,12 @@ index.php?curid=16020133](/assets/images/2017/sorting_shellsort_anim.gif)
     ```
     
     // 递归增量分割的所有子序列，针对排序递归！
-void StraightInsertionSortInnerRecursion(int data[], int n, int currentIndex, int delta)  {
-    if (currentIndex >= n) return;
-    int tmp =  data[currentIndex];
-    data[StraightInsertionSortInnerRecursionIndex(data, currentIndex, delta)] = tmp; // 根据返回的索引修改该值，表示一趟排序完成
-    StraightInsertionSortInnerRecursion(data, n, currentIndex + delta, delta);
-}
+    void StraightInsertionSortInnerRecursion(int data[], int n, int currentIndex, int delta)  {
+        if (currentIndex >= n) return;
+        int tmp =  data[currentIndex];
+        data[StraightInsertionSortInnerRecursionIndex(data, currentIndex, delta)] = tmp; // 根据返回的索引修改该值，表示一趟排序完成
+        StraightInsertionSortInnerRecursion(data, n, currentIndex + delta, delta);
+    }
     
     ```
     
