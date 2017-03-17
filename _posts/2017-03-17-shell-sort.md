@@ -6,7 +6,7 @@ date: 2017-03-17 00:21:00.000 +09:00
 
 
 ![By Simpsons contributor - Own work, CC0, https://commons.wikimedia.org/w/
-index.php?curid=16020133](assets/images/2017/sorting_shellsort_anim.gif)
+index.php?curid=16020133](/assets/images/2017/sorting_shellsort_anim.gif)
 
 ## 前言
 
