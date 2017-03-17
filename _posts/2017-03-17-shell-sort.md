@@ -147,6 +147,6 @@ void StraightInsertionSortInnerRecursion(int data[], int n, int currentIndex, in
     
 ### 时间复杂度
 
-希尔排序的复杂度分析较为复杂，笔者高数较水，此处不做分析，感兴趣的同学可以参考：[传送门](https://en.wikipedia.org/wiki/Shellsort#Gap_sequences)。[源码地址](https://github.com/tingxins/tx-c-algorithm/tree/master/Classical%20Algorithm/GoldbachConjecture)
+希尔排序的复杂度分析较为复杂，笔者高数较水，此处不做分析，感兴趣的同学可以参考：[传送门](https://en.wikipedia.org/wiki/Shellsort#Gap_sequences)。[源码地址](https://github.com/tingxins/tx-c-algorithm/tree/master/Classical%20Algorithm/ShellSort)
 
 
