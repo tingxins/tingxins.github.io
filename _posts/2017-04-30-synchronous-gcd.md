@@ -144,7 +144,8 @@ value 可以理解为资源数量，以 value = 0 为例，调用 dispatch_semap
     });
 
 ```
-<img src="http://image.tingxins.cn/TXBrowser/browser-jd.png" width=300/>
+
+![browser-jd](http://image.tingxins.cn/Blog/browser-jd.png)
 
 对于熟悉 dispatch_group 的同学来说，可能会想，为何不用 dispatch_group_async？对于网络请求而言，请求发出时它就已经执行完毕，也就是 block 中还有个 completeHandler 的情况下，dispatch_group_async 并不会等待网络请求的回调，所以不符合我们要求。
 
