@@ -1,11 +1,10 @@
 ---
 layout: post
-title: [REVIEW] 关于 Objective-C 中的对象、类、元类
-date: 2017-05-31 00:22:01.59 +09:00
+title: 关于 Objective-C 中的对象、类、元类
+date: 2017-05-31 00:22:00.000 +09:00
 ---
-<p align="center">
-<img src="http://image.tingxins.cn/blog/images/2017/instance-class-meta_class-bg.png" width=400/>
-</p>
+
+![instance-class-meta_class-bg](http://image.tingxins.cn/blog/images/2017/instance-class-meta_class-bg.png)
 
 ## 前言
 
@@ -82,9 +81,7 @@ private:
 
 Greg Parker (@[gparker](https://twitter.com/gparker)) 给出了一张图，使得整个结构清晰明了：
 
-<p align="left">
-<img src="http://image.tingxins.cn/blog/images/2017/instance-class-meta_class.png" width=550/>
-</p>
+![instance-class-meta_class](http://image.tingxins.cn/blog/images/2017/instance-class-meta_class.png)
 
 
 ## 理解与探究
@@ -114,9 +111,7 @@ NSLog(@"NSObject:%p --- NSObject Meta Class:%p\nMeta super Class:%p --- Meta roo
 
 运行上述代码后，输出结果如下：
 
-<p align="left">
-<img src="http://image.tingxins.cn/blog/images/2017/instance-class-meta_class-loginfos.png" width=450/>
-</p>
+![instance-class-meta_class-loginfos](http://image.tingxins.cn/blog/images/2017/instance-class-meta_class-loginfos.png)
 
 ### By the way, happy Children's Day!🤡🤡🤡
 
