@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 关于 Objective-C 中的对象、类、元类
+title: Objective-C 中的对象、类、元类
 date: 2017-05-31 00:22:00.000 +09:00
 ---
 
