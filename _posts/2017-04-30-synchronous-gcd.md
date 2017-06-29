@@ -153,6 +153,12 @@ value 可以理解为资源数量，以 value = 0 为例，调用 dispatch_semap
 
 通过本文简单探究，展示了如何采用信号量机制模拟同步请求，在开发过程中，我们应尽量避免发送同步请求；并且在某个操作依赖于其他几个任务的完成时，采用 **dispatch_group_async** or **dispatch_group_enter/dispatch_group_leave** 来实现同步等处理。如果是进行网络请求同步，应采用后者。当然，如果感兴趣，我们可以在第三方网络库的基础上封装一层自己网络库。（[相关源码](https://github.com/tingxins/TXBrowser)）
 
+## 广告
+
+欢迎关注微信公众号
+
+![wechat-qrcode](http://image.tingxins.cn/adv/wechat-qrcode.jpg)
+
 
 
 

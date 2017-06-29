@@ -150,3 +150,10 @@ index.php?curid=16020133](/assets/images/2017/sorting_shellsort_anim.gif)
 希尔排序的复杂度分析较为复杂，笔者高数较水，此处不做分析，感兴趣的同学可以参考：[传送门](https://en.wikipedia.org/wiki/Shellsort#Gap_sequences)。[源码地址](https://github.com/tingxins/tx-c-algorithm/tree/master/Classical%20Algorithm/ShellSort)
 
 
+## 广告
+
+欢迎关注微信公众号
+
+![wechat-qrcode](http://image.tingxins.cn/adv/wechat-qrcode.jpg)
+
+

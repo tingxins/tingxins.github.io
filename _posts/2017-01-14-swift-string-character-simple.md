@@ -148,3 +148,10 @@ print("(tingPS as NSString).length")
 
 .length 与 .characters.count 返回值不总是相同的，.length 方法是采用 UTF-16 表示的编码单元为单位进行计算并返回的，即字母 i(U+0069) 、音调符（U+0304）会当做两个字符，因而长度为2。.character.count 的值是通过字形群集界限来确定字符数量的，如还不理解请查看上文。（PS：其实这里也是 Swift 中采用索引的方式访问字符串的原因）
 
+## 广告
+
+欢迎关注微信公众号
+
+![wechat-qrcode](http://image.tingxins.cn/adv/wechat-qrcode.jpg)
+
+

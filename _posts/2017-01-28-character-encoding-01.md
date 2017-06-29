@@ -111,4 +111,9 @@ UTF-16 辅助平面编码方式比较巧妙，从U+10000到U+10FFFF，共计FFFF
 5. [UTF-16 Wikipedia](https://zh.wikipedia.org/zh-cn/UTF-16)
 6. [Unicode 字符平面映射](https://zh.wikipedia.org/zh-cn/Unicode%E5%AD%97%E7%AC%A6%E5%B9%B3%E9%9D%A2%E6%98%A0%E5%B0%84)
 
+## 广告
+
+欢迎关注微信公众号
+
+![wechat-qrcode](http://image.tingxins.cn/adv/wechat-qrcode.jpg)
 

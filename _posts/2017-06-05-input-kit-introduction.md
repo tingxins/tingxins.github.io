@@ -121,3 +121,10 @@ textField.limitedRegExs = @[kTXLimitedTextFieldChineseOnlyRegex];
 
 GitHub 项目及 Demo 地址：https://github.com/tingxins/InputKit。有什么问题或者更好的建议，直接提 issue 或者 PR。
 
+
+## 广告
+
+欢迎关注微信公众号
+
+![wechat-qrcode](http://image.tingxins.cn/adv/wechat-qrcode.jpg)
+

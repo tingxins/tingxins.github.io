@@ -240,6 +240,12 @@ Show the (**garbage**) code!
 以上时间复杂度只是笔者通过简单粗略的分析得出，仅供参考。通过上述分析，我们发现算法A与算法B时间复杂度是一样的，感兴趣的童鞋可以自己计算上述两种算法的时间复杂度。笔者通过测试发现，相同的问题规模，随着 n 的增大，算法B的时间复杂度要远小于算法A。如：n = 100 时，算法B遍历次数是 6380 次左右，算法A遍历次数高达 15569 次（论算法糟糕的可怕性...）。[源码地址](https://github.com/tingxins/tx-c-algorithm/tree/master/Classical%20Algorithm/GoldbachConjecture)
  
 
+## 广告
+
+欢迎关注微信公众号
+
+![wechat-qrcode](http://image.tingxins.cn/adv/wechat-qrcode.jpg)
+
 
 
 

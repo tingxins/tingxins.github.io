@@ -118,4 +118,10 @@ static NSDateFormatter *cachedDateFormatter = nil;
 
 [1]:/assets/images/2016/date-formate-patterns.jpg
 
+## 广告
+
+欢迎关注微信公众号
+
+![wechat-qrcode](http://image.tingxins.cn/adv/wechat-qrcode.jpg)
+
 

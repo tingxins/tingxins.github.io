@@ -77,6 +77,12 @@ TXScrollLabelView *scrollLabelView = [TXScrollLabelView scrollWithTitle:scrollTi
 
 更多请详见Demo：<https://github.com/tingxins/TXScrollLabelView/tree/master/TXScrollLabelViewDemo>
     
+## 广告
+
+欢迎关注微信公众号
+
+![wechat-qrcode](http://image.tingxins.cn/adv/wechat-qrcode.jpg)
+
     
 
 

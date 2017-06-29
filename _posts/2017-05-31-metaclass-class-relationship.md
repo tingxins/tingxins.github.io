@@ -121,5 +121,10 @@ NSLog(@"NSObject:%p --- NSObject Meta Class:%p\nMeta super Class:%p --- Meta roo
 
 2. [Classes and metaclasses](http://www.sealiesoftware.com/blog/archive/2009/04/14/objc_explain_Classes_and_metaclasses.html)
 
+## 广告
+
+欢迎关注微信公众号
+
+![wechat-qrcode](http://image.tingxins.cn/adv/wechat-qrcode.jpg)
 
 
