@@ -411,8 +411,8 @@ extension Sequence where Iterator.Element: Equatable {
 但在 Swift 4 中， 针对 Sequence 做了一些小改进，使我们代码更加轻便，看起来更加清爽：
 
 ```
-extension Sequence where Iterator.Element: Equatable {
-    func containsOnly(_ value: Iterator.Element) -> Bool {
+extension Sequence where Element: Equatable {
+    func containsOnly(_ value: Element) -> Bool {
         return contains { (element) -> Bool in
             return element == value
         }
