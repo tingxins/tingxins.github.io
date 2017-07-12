@@ -68,7 +68,7 @@ extension UISlider: Shakeable { }
 
 ```
 
-\\[Type Name].[Property Name]
+\[Type Name].[Property Name]
 
 ```
 
@@ -96,7 +96,7 @@ func smartKeyPath() {
 
 ```
 
-\\.[Property Name]
+\.[Property Name]
 
 ```
 
