@@ -16,12 +16,13 @@ markdown: kramdown
 cover_color: slate
 
 # The blog button should not be removed.
-blog_button:
-    title: 博客
-    description: 访问博客
+# blog_button:
+#     title: 博客
+#     description: 访问博客
 
 # Navigation buttons in the front page.
 nav:
+    - {title: 博客, description: 访问我的新博客地址, url: 'http://tingxins.cn'}
     - {title: 项目, description: 我的项目, url: 'https://github.com/tingxins'}
     - {title: 关于, description: 我的简书, url: 'http://www.jianshu.com/users/5141561e4d59/latest_articles'}
 
