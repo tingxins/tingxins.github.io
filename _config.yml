@@ -1,7 +1,7 @@
 # Basic
 title: tingxins
 subtitle: Creep before you walk.
-welcome_message: <a href="https://github.com/tingxins" target="_blank">我的主页</a>
+#welcome_message: <a href="https://github.com/tingxins" target="_blank">我的主页</a>
 description: Hi，我是李昕，一名专注于移动开发的软件工程师，同时对 AIGC、AGI 领域保持深度探索，正在开启 AI 编程艺术之旅～
 
 url: "https://midaigc.com"
@@ -24,7 +24,7 @@ cover_color: slate
 nav:
     - {title: 博客, description: 访问我的新博客地址, url: 'http://www.tingxins.cn'}
     - {title: 项目, description: 我的项目, url: 'https://moss.midaigc.com'}
-    - {title: 关于, description: 我的简书, url: 'http://www.jianshu.com/users/5141561e4d59/latest_articles'}
+    - {title: 关于, description: Github, url: 'https://github.com/tingxins'}
 
 # Pagination
 gems: [jekyll-paginate]
