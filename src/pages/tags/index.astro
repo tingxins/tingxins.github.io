@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getAllPosts, getAllTags } from '../../lib/posts';
+
+const tags = getAllTags(await getAllPosts());
+---
+
+<BaseLayout title="标签" description="tingxins 博客主题标签索引。" canonicalPath="/tags/">
+  <section class="page-heading">
+    <p class="eyebrow">TOPIC MAP</p>
+    <h1>标签</h1>
+    <p>按主题回看历史笔记。</p>
+  </section>
+  <section class="tag-index">
+    {tags.map(({ tag, count }) => (
+      <a href={`/tags/${encodeURIComponent(tag)}/`}>
+        {tag}
+        <span>{count}</span>
+      </a>
+    ))}
+  </section>
+</BaseLayout>

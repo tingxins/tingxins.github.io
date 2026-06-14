@@ -1,0 +1,78 @@
+---
+interface Topic {
+  label: string;
+  description: string;
+  key: string;
+  status: string;
+}
+
+interface TagCount {
+  tag: string;
+  count: number;
+}
+
+interface Props {
+  tags: TagCount[];
+}
+
+const { tags } = Astro.props;
+const tagCounts = new Map(tags.map(({ tag, count }) => [tag, count]));
+const topics: Topic[] = [
+  {
+    label: 'AI Agent',
+    key: 'AI Agent',
+    description: '工具调用、记忆、检索、评估和工程化实践。',
+    status: 'active'
+  },
+  {
+    label: 'iOS',
+    key: 'iOS',
+    description: 'UIKit、输入系统、Runtime、工程架构与调试记录。',
+    status: 'core'
+  },
+  {
+    label: 'Swift',
+    key: 'Swift',
+    description: '语言演进、类型系统、标准库和 Apple 平台开发。',
+    status: 'lang'
+  },
+  {
+    label: 'Objective-C',
+    key: 'Objective-C',
+    description: '对象模型、消息发送、元类和历史项目迁移。',
+    status: 'runtime'
+  },
+  {
+    label: 'AIGC 实验',
+    key: 'AIGC',
+    description: '多模态生成、模型评测、创作工具与产品观察。',
+    status: 'lab'
+  }
+];
+---
+
+<section class="topic-section" aria-labelledby="topic-heading">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">TOPIC INDEX</p>
+      <h2 id="topic-heading">研究主题</h2>
+    </div>
+    <a href="/tags/">查看全部标签</a>
+  </div>
+  <div class="topic-grid">
+    {topics.map((topic, index) => {
+      const count = tagCounts.get(topic.key) ?? 0;
+      const href = count > 0 ? `/tags/${encodeURIComponent(topic.key)}/` : '/tags/';
+      return (
+        <a class="topic-card" href={href} data-index={String(index + 1).padStart(2, '0')}>
+          <h3>{topic.label}</h3>
+          <p>{topic.description}</p>
+          <div class="topic-stats">
+            <span>{count > 0 ? `${count} notes` : 'curated'}</span>
+            <span>{topic.status}</span>
+          </div>
+        </a>
+      );
+    })}
+  </div>
+</section>

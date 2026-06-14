@@ -1,0 +1,90 @@
+---
+import '../styles/global.css';
+import { SITE } from '../lib/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonicalPath?: string;
+  ogType?: 'website' | 'article';
+}
+
+const {
+  title = SITE.title,
+  description = SITE.description,
+  canonicalPath = '/',
+  ogType = 'website'
+} = Astro.props;
+const pageTitle = title === SITE.title ? SITE.title : `${title} | ${SITE.title}`;
+const canonical = new URL(canonicalPath, SITE.url).toString();
+const navItems = [
+  { label: '首页', href: '/' },
+  { label: '归档', href: '/blog/' },
+  { label: '标签', href: '/tags/' },
+  { label: '实验室', href: 'https://moss.midaigc.com' },
+  { label: 'GitHub', href: 'https://github.com/tingxins' }
+];
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={SITE.author} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={SITE.title} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" type="application/rss+xml" title={SITE.title} href="/feed.xml" />
+    <link rel="icon" href="/assets/images/avatar.jpg" />
+    <meta name="google-site-verification" content="1-1ZlHoRvM0T2FqPbW2S-qLgYXN6rsn52kErlMPd_gw" />
+  </head>
+  <body>
+    <a class="skip-link" href="#content">跳到正文</a>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label={`${SITE.title} 首页`}>
+        <span>{SITE.title}</span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        {navItems.map((item) => <a href={item.href}>{item.label}</a>)}
+      </nav>
+      <div class="nav-tools" aria-label="站点工具">
+        <span aria-hidden="true">⌕</span>
+        <span aria-hidden="true">&gt;_</span>
+      </div>
+      <details class="mobile-menu">
+        <summary aria-label="打开移动端导航"><span>Menu</span></summary>
+        <nav class="mobile-menu-panel" aria-label="移动端导航">
+          {navItems.map((item, index) => (
+            <a href={item.href}>
+              {item.label}
+              <span>{String(index + 1).padStart(2, '0')}</span>
+            </a>
+          ))}
+        </nav>
+      </details>
+    </header>
+    <main id="content">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="footer-brand">
+        <strong>{SITE.title}</strong>
+        <span>{SITE.description}</span>
+      </div>
+      <nav aria-label="社交链接">
+        {SITE.social.map((item) => <a href={item.href}>{item.label}</a>)}
+      </nav>
+      <p>
+        Built with Astro · <a href="/feed.xml">RSS</a> · <a href="/privacy/iRepeater_privacy.html">隐私</a> · midaigc.com
+      </p>
+    </footer>
+  </body>
+</html>

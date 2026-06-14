@@ -1,0 +1,64 @@
+---
+import { SITE } from '../lib/site';
+
+interface Props {
+  title: string;
+  path: string;
+}
+
+const { title, path } = Astro.props;
+const pageUrl = new URL(path, SITE.url).toString();
+const identifier = path;
+---
+
+<section class="comments-panel" aria-label="评论">
+  <div class="comments-panel__copy">
+    <strong>Comments</strong>
+    <p>评论服务会连接 Disqus。点击后再加载第三方脚本。</p>
+  </div>
+  <button
+    type="button"
+    class="button-secondary"
+    data-disqus-load
+    data-disqus-shortname={SITE.disqus}
+    data-disqus-title={title}
+    data-disqus-url={pageUrl}
+    data-disqus-identifier={identifier}
+  >
+    加载评论
+  </button>
+  <div id="disqus_thread"></div>
+</section>
+
+<script>
+  type DisqusContext = {
+    page: {
+      url?: string;
+      identifier?: string;
+      title?: string;
+    };
+  };
+
+  const browserWindow = window as typeof window & {
+    DISQUS?: unknown;
+    disqus_config?: (this: DisqusContext) => void;
+  };
+  const button = document.querySelector('[data-disqus-load]');
+  button?.addEventListener('click', () => {
+    if (browserWindow.DISQUS) return;
+    const target = button as HTMLButtonElement;
+    const shortname = target.dataset.disqusShortname;
+    browserWindow.disqus_config = function () {
+      this.page.url = target.dataset.disqusUrl;
+      this.page.identifier = target.dataset.disqusIdentifier;
+      this.page.title = target.dataset.disqusTitle;
+    };
+    const script = document.createElement('script');
+    script.src = `https://${shortname}.disqus.com/embed.js`;
+    script.async = true;
+    script.setAttribute('data-timestamp', String(Date.now()));
+    document.body.appendChild(script);
+    target.disabled = true;
+    target.textContent = '评论加载中';
+  });
+</script>

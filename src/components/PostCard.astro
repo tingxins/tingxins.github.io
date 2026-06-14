@@ -1,0 +1,38 @@
+---
+import type { BlogPost } from '../lib/posts';
+import { formatDate, getPostDescription, getPostPath, getReadingMinutes } from '../lib/posts';
+
+interface Props {
+  post: BlogPost;
+}
+
+const { post } = Astro.props;
+const path = getPostPath(post);
+const parts = new Intl.DateTimeFormat('zh-CN', {
+  month: '2-digit',
+  day: '2-digit'
+}).formatToParts(post.data.date);
+const month = parts.find((part) => part.type === 'month')?.value ?? '';
+const day = parts.find((part) => part.type === 'day')?.value ?? '';
+---
+
+<article class="post-card">
+  <div class="post-card__date" aria-label={formatDate(post.data.date)}>
+    <span>{month}-{day}</span>
+    <small>{post.data.date.getFullYear()}</small>
+  </div>
+  <span class="post-card__pin" aria-hidden="true"></span>
+  <div class="post-card__body">
+    <h2><a href={path}>{post.data.title}</a></h2>
+    <p>{getPostDescription(post)}</p>
+    {post.data.tags.length > 0 && (
+      <div class="tag-row compact">
+        {post.data.tags.map((tag) => <a href={`/tags/${encodeURIComponent(tag)}/`}>{tag}</a>)}
+      </div>
+    )}
+  </div>
+  <div class="post-card__meta">
+    <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
+    <span>阅读 {getReadingMinutes(post)} min</span>
+  </div>
+</article>

@@ -1,0 +1,26 @@
+---
+import PostCard from '../../../components/PostCard.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getAllPosts, getAllTags } from '../../../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = await getAllPosts();
+  return getAllTags(posts).map(({ tag }) => ({
+    params: { tag },
+    props: { tag, posts: posts.filter((post) => post.data.tags.includes(tag)) }
+  }));
+}
+
+const { tag, posts } = Astro.props;
+---
+
+<BaseLayout title={`标签：${tag}`} description={`tingxins 博客中关于 ${tag} 的文章。`} canonicalPath={`/tags/${encodeURIComponent(tag)}/`}>
+  <section class="page-heading">
+    <p class="eyebrow">TAG</p>
+    <h1>{tag}</h1>
+    <p>{posts.length} 篇文章</p>
+  </section>
+  <section class="post-list-page post-list">
+    {posts.map((post) => <PostCard post={post} />)}
+  </section>
+</BaseLayout>

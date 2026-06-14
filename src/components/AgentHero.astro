@@ -1,0 +1,120 @@
+---
+import type { BlogPost } from '../lib/posts';
+import { formatDate, getPostPath } from '../lib/posts';
+import { SITE } from '../lib/site';
+
+interface Props {
+  latest: BlogPost[];
+}
+
+const { latest } = Astro.props;
+const lead = latest[0];
+const graphNodes = latest.slice(0, 6);
+const retrieval = latest.slice(0, 3);
+---
+
+<section class="agent-hero" aria-label="Agent Research Console">
+  <aside class="hero-stack hero-stack--left" aria-label="站点运行状态">
+    <div class="console-panel">
+      <div class="panel-head"><span>Console</span></div>
+      <div class="console-lines">
+        <p>&gt; agent@tingxins</p>
+        <p>&gt; mission: research / build / share</p>
+        <p>&gt; status: running</p>
+        <p>&gt; mode: deep-research</p>
+        <p>&gt; build: astro / github pages</p>
+        <div class="signal-bars" aria-hidden="true">
+          {[6, 14, 10, 22, 12, 18, 9, 15, 21, 11, 8, 17, 23, 16, 20, 13, 19, 25].map((height) => (
+            <i style={`--h:${height}`}></i>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <div class="console-panel">
+      <div class="panel-head"><span>Latest Logs</span></div>
+      <div class="system-log">
+        {latest.slice(0, 5).map((post, index) => (
+          <p>
+            <time>{`10:23:${String(11 + index * 2).padStart(2, '0')}`}</time>
+            <span>{index === 0 ? 'Loaded latest note' : post.data.title}</span>
+          </p>
+        ))}
+      </div>
+    </div>
+
+    <div class="console-panel">
+      <div class="panel-head"><span>System Metrics</span></div>
+      <div class="metrics-list">
+        <div><span>Posts</span><strong>{latest.length}+</strong><i></i></div>
+        <div><span>Context</span><strong>62%</strong><i></i></div>
+        <div><span>Memory</span><strong>1287</strong><i></i></div>
+        <div><span>Tools</span><strong>8/16</strong><i></i></div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="memory-stage">
+    <div class="memory-label">Memory Graph<br />Content Nodes</div>
+    <div class="memory-map">
+      <svg viewBox="0 0 680 350" aria-hidden="true">
+        <g stroke="rgba(101, 217, 244, 0.34)" stroke-width="1">
+          <line x1="340" y1="175" x2="280" y2="32" />
+          <line x1="340" y1="175" x2="135" y2="105" />
+          <line x1="340" y1="175" x2="570" y2="40" />
+          <line x1="340" y1="175" x2="572" y2="169" />
+          <line x1="340" y1="175" x2="485" y2="302" />
+          <line x1="340" y1="175" x2="340" y2="322" />
+          <line x1="280" y1="32" x2="572" y2="169" opacity="0.5" />
+          <line x1="570" y1="40" x2="485" y2="302" opacity="0.45" />
+        </g>
+        <g stroke="rgba(105, 240, 164, 0.45)" stroke-width="1">
+          <line x1="278" y1="78" x2="300" y2="116" />
+          <line x1="236" y1="221" x2="314" y2="191" />
+          <line x1="404" y1="86" x2="366" y2="145" />
+        </g>
+      </svg>
+      <div class="memory-hub">
+        <strong>{SITE.title}</strong>
+        <small>knowledge base</small>
+      </div>
+      {graphNodes.map((post, index) => (
+        <a class={`memory-node node-${index + 1}`} href={getPostPath(post)}>
+          <span class="node-icon">▣</span>
+          <span>
+            <strong>{post.data.title}</strong>
+            <small>{formatDate(post.data.date)}</small>
+          </span>
+        </a>
+      ))}
+      <span class="micro-node micro-node--one"></span>
+      <span class="micro-node micro-node--two"></span>
+    </div>
+    <div class="hero-copy">
+      <p class="eyebrow">AI Agent Research Console / Mobile Engineering</p>
+      <h1>{SITE.title}</h1>
+      <p>{SITE.description}</p>
+      <div class="hero-actions">
+        <a class="button-primary" href="/blog/">&gt; 进入日志</a>
+        <a class="button-secondary" href="/tags/">▣ 浏览主题</a>
+        <a class="button-secondary" href="https://moss.midaigc.com">实验室</a>
+      </div>
+    </div>
+  </div>
+
+  <aside class="hero-stack hero-stack--right" aria-label="相关内容检索">
+    <div class="console-panel retrieval-panel">
+      <div class="panel-head"><span>Retrieval</span></div>
+      <div class="retrieval-list">
+        {retrieval.map((post, index) => (
+          <a class="retrieval-card" href={getPostPath(post)}>
+            <strong>{post.data.title}</strong>
+            <span>{`相似度 0.${92 - index * 5} · ${post.data.tags[0] ?? 'Note'}`}</span>
+            <em>&gt; 查看</em>
+          </a>
+        ))}
+      </div>
+      {lead && <a class="all-link" href={getPostPath(lead)}>查看最新文章</a>}
+    </div>
+  </aside>
+</section>

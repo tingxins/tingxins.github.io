@@ -1,0 +1,30 @@
+---
+import AgentHero from '../components/AgentHero.astro';
+import PostCard from '../components/PostCard.astro';
+import TopicSection from '../components/TopicSection.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getAllPosts, getAllTags } from '../lib/posts';
+import { SITE } from '../lib/site';
+
+const posts = await getAllPosts();
+const tags = getAllTags(posts);
+---
+
+<BaseLayout title={SITE.title} description={SITE.description}>
+  <AgentHero latest={posts.slice(0, 6)} />
+
+  <section class="section-band">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">LATEST NOTES</p>
+        <h2>最新文章</h2>
+      </div>
+      <a href="/blog/">全部文章</a>
+    </div>
+    <div class="post-list">
+      {posts.slice(0, 6).map((post) => <PostCard post={post} />)}
+    </div>
+  </section>
+
+  <TopicSection tags={tags} />
+</BaseLayout>

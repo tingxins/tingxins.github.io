@@ -1,0 +1,1825 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>tingxins - Agent Research Console Sectioned Visual Draft</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #05080a;
+        --bg-2: #081016;
+        --panel: rgba(11, 18, 23, 0.9);
+        --panel-2: rgba(15, 25, 31, 0.88);
+        --line: rgba(142, 174, 188, 0.2);
+        --line-hot: rgba(101, 217, 244, 0.46);
+        --text: #f7f3e9;
+        --muted: #a4b2b8;
+        --faint: #63747d;
+        --cyan: #65d9f4;
+        --green: #69f0a4;
+        --amber: #e6bf72;
+        --red: #f06d62;
+        --radius: 7px;
+        --shadow: 0 32px 90px rgba(0, 0, 0, 0.54);
+        --serif: Georgia, "Times New Roman", "Songti SC", serif;
+        --sans: "Avenir Next", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        --mono: "SFMono-Regular", "Cascadia Code", Menlo, monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        background: var(--bg);
+        scroll-behavior: smooth;
+      }
+
+      body {
+        min-width: 320px;
+        margin: 0;
+        background:
+          linear-gradient(rgba(255, 255, 255, 0.028) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+          linear-gradient(116deg, transparent 0 62%, rgba(101, 217, 244, 0.08) 62% 63%, transparent 63%),
+          linear-gradient(244deg, transparent 0 34%, rgba(105, 240, 164, 0.055) 34% 35%, transparent 35%),
+          #05080a;
+        background-size: 42px 42px, 42px 42px, auto, auto, auto;
+        color: var(--text);
+        font-family: var(--sans);
+        line-height: 1.45;
+        letter-spacing: 0;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      body::before {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        content: "";
+        background:
+          linear-gradient(90deg, rgba(5, 8, 10, 0.96), rgba(5, 8, 10, 0.7), rgba(5, 8, 10, 0.94)),
+          url("../../public/assets/images/ai_agent_background.jpeg") center / cover no-repeat;
+        opacity: 0.16;
+        mix-blend-mode: screen;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .page-shell {
+        width: min(1560px, calc(100% - 28px));
+        margin: 0 auto;
+        padding: 18px 0 72px;
+      }
+
+      .draft-header {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        display: grid;
+        grid-template-columns: minmax(260px, 1fr) auto;
+        gap: 24px;
+        align-items: center;
+        border: 1px solid rgba(142, 174, 188, 0.22);
+        border-radius: 9px;
+        background: rgba(5, 10, 13, 0.88);
+        box-shadow: 0 18px 55px rgba(0, 0, 0, 0.35);
+        backdrop-filter: blur(18px);
+        padding: 16px 18px;
+      }
+
+      .draft-title {
+        display: grid;
+        gap: 6px;
+      }
+
+      .draft-title strong {
+        color: var(--green);
+        font: 700 11px/1 var(--mono);
+        text-transform: uppercase;
+      }
+
+      .draft-title h1 {
+        margin: 0;
+        color: var(--text);
+        font: 700 clamp(26px, 4vw, 48px) / 0.95 var(--serif);
+        letter-spacing: 0;
+      }
+
+      .draft-nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+
+      .draft-nav a,
+      .chip,
+      .tag,
+      .btn {
+        border: 1px solid rgba(142, 174, 188, 0.28);
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.035);
+      }
+
+      .draft-nav a {
+        color: #d8e5e4;
+        padding: 8px 11px;
+        font: 12px/1 var(--mono);
+      }
+
+      .draft-nav a:hover {
+        border-color: var(--line-hot);
+        color: var(--cyan);
+      }
+
+      .section {
+        margin-top: 46px;
+        scroll-margin-top: 100px;
+      }
+
+      .section-label {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 18px;
+        align-items: end;
+        margin-bottom: 14px;
+        padding: 0 6px;
+      }
+
+      .section-label span {
+        color: var(--green);
+        font: 700 11px/1 var(--mono);
+        text-transform: uppercase;
+      }
+
+      .section-label h2 {
+        margin: 6px 0 0;
+        color: var(--text);
+        font: 700 clamp(24px, 3.4vw, 42px) / 1 var(--serif);
+      }
+
+      .section-label p {
+        max-width: 620px;
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+        text-align: right;
+      }
+
+      .browser {
+        overflow: hidden;
+        border: 1px solid rgba(142, 174, 188, 0.34);
+        border-radius: 9px;
+        background: rgba(5, 10, 13, 0.94);
+        box-shadow: var(--shadow);
+      }
+
+      .browser-bar {
+        display: grid;
+        grid-template-columns: 90px 1fr 70px;
+        align-items: center;
+        min-height: 42px;
+        border-bottom: 1px solid rgba(142, 174, 188, 0.18);
+        padding: 0 14px;
+        background: linear-gradient(180deg, rgba(28, 39, 47, 0.86), rgba(11, 17, 22, 0.88));
+        color: var(--muted);
+        font: 12px/1 var(--mono);
+      }
+
+      .dots {
+        display: flex;
+        gap: 8px;
+      }
+
+      .dots i {
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        background: var(--faint);
+      }
+
+      .dots i:nth-child(1) {
+        background: var(--red);
+      }
+
+      .dots i:nth-child(2) {
+        background: var(--amber);
+      }
+
+      .dots i:nth-child(3) {
+        background: var(--green);
+      }
+
+      .address {
+        justify-self: center;
+        width: min(520px, 100%);
+        overflow: hidden;
+        border: 1px solid rgba(142, 174, 188, 0.28);
+        border-radius: 6px;
+        background: rgba(5, 8, 10, 0.62);
+        padding: 7px 12px;
+        color: #d2d8d6;
+        text-align: center;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .reload {
+        justify-self: end;
+        color: var(--muted);
+      }
+
+      .site,
+      .article-site,
+      .notes-site,
+      .topics-site,
+      .mobile-stage {
+        background:
+          linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+          linear-gradient(180deg, rgba(12, 26, 34, 0.94), rgba(5, 9, 12, 0.98));
+        background-size: 48px 48px, 48px 48px, auto;
+      }
+
+      .site {
+        min-height: 760px;
+      }
+
+      .top-nav,
+      .article-nav {
+        display: grid;
+        grid-template-columns: 230px 1fr 112px;
+        align-items: center;
+        min-height: 74px;
+        border-bottom: 1px solid rgba(142, 174, 188, 0.18);
+        padding: 0 36px;
+      }
+
+      .brand {
+        color: var(--text);
+        font: 700 34px/1 var(--serif);
+        letter-spacing: 0;
+      }
+
+      .nav-links {
+        display: flex;
+        justify-content: center;
+        gap: 24px;
+        color: #d1d7d4;
+        font: 13px/1 var(--sans);
+      }
+
+      .nav-links a + a::before {
+        margin-right: 24px;
+        color: var(--faint);
+        content: "/";
+      }
+
+      .nav-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 16px;
+        color: var(--cyan);
+        font: 19px/1 var(--mono);
+      }
+
+      .home-grid {
+        display: grid;
+        grid-template-columns: 278px minmax(0, 1fr) 214px;
+        gap: 14px;
+        padding: 18px;
+      }
+
+      .stack {
+        display: grid;
+        gap: 14px;
+      }
+
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: linear-gradient(180deg, rgba(15, 25, 31, 0.88), rgba(7, 13, 17, 0.9));
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+      }
+
+      .panel-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(142, 174, 188, 0.13);
+        padding: 12px 14px;
+        color: #cad6d7;
+        font: 700 12px/1 var(--mono);
+        text-transform: uppercase;
+      }
+
+      .console {
+        min-height: 182px;
+        padding: 14px;
+        color: var(--green);
+        font: 12px/1.9 var(--mono);
+      }
+
+      .console p {
+        margin: 0;
+        color: #7df0a8;
+      }
+
+      .wave {
+        display: flex;
+        align-items: end;
+        gap: 3px;
+        height: 34px;
+        margin-top: 12px;
+      }
+
+      .wave i {
+        width: 3px;
+        height: calc(8px + var(--h) * 1px);
+        background: linear-gradient(180deg, var(--green), rgba(105, 240, 164, 0.24));
+      }
+
+      .logs {
+        display: grid;
+        gap: 7px;
+        padding: 14px;
+        color: #ccd5d4;
+        font: 11px/1.25 var(--mono);
+      }
+
+      .logs p {
+        display: grid;
+        grid-template-columns: 64px 1fr;
+        gap: 9px;
+        margin: 0;
+      }
+
+      .logs time {
+        color: var(--faint);
+      }
+
+      .metrics {
+        display: grid;
+        gap: 13px;
+        padding: 15px 14px 18px;
+      }
+
+      .metric {
+        display: grid;
+        grid-template-columns: 76px 54px 1fr;
+        gap: 10px;
+        align-items: center;
+        color: #d5ddda;
+        font: 12px/1 var(--mono);
+      }
+
+      .spark {
+        height: 22px;
+      }
+
+      .graph-stage {
+        position: relative;
+        min-height: 620px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background:
+          linear-gradient(rgba(255, 255, 255, 0.026) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+          linear-gradient(132deg, rgba(101, 217, 244, 0.05), transparent 42%),
+          rgba(7, 14, 18, 0.88);
+        background-size: 34px 34px, 34px 34px, auto, auto;
+      }
+
+      .graph-stage::before {
+        position: absolute;
+        inset: 0;
+        content: "";
+        background: linear-gradient(90deg, rgba(5, 8, 10, 0.22), transparent 24%, transparent 76%, rgba(5, 8, 10, 0.35));
+        pointer-events: none;
+      }
+
+      .memory-label {
+        position: absolute;
+        top: 18px;
+        left: 22px;
+        color: var(--cyan);
+        font: 700 11px/1.9 var(--mono);
+        text-transform: uppercase;
+      }
+
+      .memory-map {
+        position: absolute;
+        inset: 56px 36px 160px 36px;
+      }
+
+      .memory-map svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .hub {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        display: grid;
+        width: 92px;
+        height: 92px;
+        place-items: center;
+        border: 2px solid var(--cyan);
+        border-radius: 50%;
+        background: #0a171d;
+        color: var(--text);
+        box-shadow: 0 0 0 8px rgba(101, 217, 244, 0.08), 0 0 46px rgba(101, 217, 244, 0.26);
+        text-align: center;
+        transform: translate(-50%, -50%);
+      }
+
+      .hub strong {
+        display: block;
+        font: 700 17px/1 var(--serif);
+      }
+
+      .hub small {
+        display: block;
+        margin-top: 5px;
+        color: var(--cyan);
+        font: 8px/1 var(--mono);
+        text-transform: uppercase;
+      }
+
+      .node {
+        position: absolute;
+        display: grid;
+        grid-template-columns: 38px 1fr;
+        gap: 10px;
+        align-items: center;
+        min-width: 148px;
+        border: 1px solid rgba(101, 217, 244, 0.16);
+        border-radius: 7px;
+        background: rgba(15, 27, 35, 0.82);
+        padding: 11px 12px;
+        box-shadow: 0 18px 42px rgba(0, 0, 0, 0.3);
+      }
+
+      .node .icon {
+        display: grid;
+        width: 34px;
+        height: 34px;
+        place-items: center;
+        border: 1px solid currentColor;
+        border-radius: 50%;
+        color: var(--amber);
+        font: 15px/1 var(--mono);
+      }
+
+      .node strong {
+        display: block;
+        color: #ecf1eb;
+        font: 700 12px/1.2 var(--sans);
+      }
+
+      .node small {
+        display: block;
+        margin-top: 5px;
+        color: var(--faint);
+        font: 10px/1 var(--mono);
+      }
+
+      .n-inputkit {
+        left: 36%;
+        top: 2%;
+      }
+
+      .n-swift {
+        left: 9%;
+        top: 26%;
+      }
+
+      .n-llm {
+        right: 4%;
+        top: 0;
+      }
+
+      .n-aigc {
+        right: 5%;
+        top: 38%;
+      }
+
+      .n-agent {
+        right: 16%;
+        bottom: 2%;
+      }
+
+      .n-ios {
+        left: 49%;
+        bottom: 0;
+      }
+
+      .micro-dot {
+        position: absolute;
+        width: 28px;
+        height: 28px;
+        border: 1px solid rgba(101, 217, 244, 0.52);
+        border-radius: 50%;
+        background: rgba(7, 14, 18, 0.88);
+      }
+
+      .micro-dot.one {
+        left: 35%;
+        top: 39%;
+      }
+
+      .micro-dot.two {
+        left: 26%;
+        bottom: 22%;
+      }
+
+      .hero-copy {
+        position: absolute;
+        left: 24px;
+        right: 24px;
+        bottom: 24px;
+      }
+
+      .hero-copy h3 {
+        margin: 0;
+        color: var(--text);
+        font: 700 clamp(56px, 7vw, 96px) / 0.94 var(--serif);
+        letter-spacing: 0;
+      }
+
+      .hero-copy p {
+        max-width: 760px;
+        margin: 22px 0 0;
+        color: #f0f3ed;
+        font-size: clamp(18px, 2vw, 25px);
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 28px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        min-height: 38px;
+        color: #d9f8fb;
+        padding: 9px 13px;
+        font: 12px/1 var(--mono);
+      }
+
+      .btn.primary {
+        border-color: rgba(101, 217, 244, 0.78);
+        box-shadow: inset 0 -1px 0 rgba(101, 217, 244, 0.2);
+      }
+
+      .retrieval {
+        display: grid;
+        gap: 12px;
+        padding: 12px;
+      }
+
+      .retrieval-card {
+        border: 1px solid rgba(142, 174, 188, 0.18);
+        border-radius: 6px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.025));
+        padding: 13px;
+      }
+
+      .retrieval-card h3 {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        margin: 0;
+        color: #eef5f2;
+        font-size: 13px;
+      }
+
+      .retrieval-card h3::after {
+        width: 7px;
+        height: 7px;
+        margin-top: 4px;
+        border-radius: 50%;
+        background: var(--green);
+        content: "";
+      }
+
+      .retrieval-card p,
+      .retrieval-card a {
+        font: 11px/1 var(--mono);
+      }
+
+      .retrieval-card p {
+        margin: 13px 0 0;
+        color: var(--muted);
+      }
+
+      .retrieval-card a {
+        display: inline-block;
+        margin-top: 14px;
+        color: #d9f8fb;
+      }
+
+      .all-link {
+        padding: 0 14px 14px;
+        color: var(--cyan);
+        font: 12px/1 var(--mono);
+      }
+
+      .notes-site {
+        min-height: 570px;
+        padding: 34px;
+      }
+
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+
+      .section-head h3 {
+        margin: 0;
+        color: #dce8e7;
+        font: 18px/1 var(--mono);
+        text-transform: uppercase;
+      }
+
+      .filters,
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+      }
+
+      .chip,
+      .tag {
+        color: #d3dfdd;
+        padding: 7px 11px;
+        font: 12px/1 var(--sans);
+      }
+
+      .chip.active,
+      .tag.hot {
+        color: var(--cyan);
+        border-color: rgba(101, 217, 244, 0.42);
+      }
+
+      .note-list {
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        overflow: hidden;
+      }
+
+      .note-row {
+        display: grid;
+        grid-template-columns: 150px 18px minmax(0, 1fr) 150px 172px;
+        gap: 18px;
+        align-items: center;
+        min-height: 126px;
+        border-bottom: 1px solid rgba(142, 174, 188, 0.12);
+        background: rgba(9, 17, 22, 0.62);
+        padding: 16px 26px;
+      }
+
+      .note-row:last-child {
+        border-bottom: 0;
+      }
+
+      .date {
+        color: #d6dfdf;
+        font: 20px/1.15 var(--sans);
+      }
+
+      .date span {
+        display: block;
+        margin-top: 8px;
+        color: var(--muted);
+      }
+
+      .pin {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--green);
+        box-shadow: 0 0 18px rgba(105, 240, 164, 0.8);
+      }
+
+      .note-main h3 {
+        margin: 0;
+        color: var(--text);
+        font: 700 22px/1.15 var(--serif);
+      }
+
+      .note-main p {
+        margin: 12px 0 12px;
+        color: #aab8bd;
+        font-size: 14px;
+      }
+
+      .note-meta {
+        display: grid;
+        gap: 8px;
+        color: var(--muted);
+        font: 12px/1 var(--mono);
+        text-align: right;
+      }
+
+      .thumb {
+        height: 84px;
+        overflow: hidden;
+        border: 1px solid rgba(142, 174, 188, 0.2);
+        border-radius: 6px;
+        background:
+          linear-gradient(135deg, rgba(5, 8, 10, 0.2), rgba(5, 8, 10, 0.68)),
+          var(--img) center / cover;
+      }
+
+      .topics-site {
+        padding: 34px;
+      }
+
+      .topic-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .topic-card {
+        position: relative;
+        min-height: 230px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        background:
+          linear-gradient(150deg, rgba(101, 217, 244, 0.08), transparent 42%),
+          linear-gradient(180deg, rgba(15, 25, 31, 0.86), rgba(6, 12, 16, 0.94));
+        padding: 18px;
+      }
+
+      .topic-card::before {
+        position: absolute;
+        top: 18px;
+        right: 18px;
+        width: 38px;
+        height: 38px;
+        border: 1px solid rgba(101, 217, 244, 0.34);
+        border-radius: 50%;
+        color: var(--cyan);
+        content: attr(data-index);
+        display: grid;
+        place-items: center;
+        font: 12px/1 var(--mono);
+      }
+
+      .topic-card h3 {
+        max-width: 160px;
+        margin: 0;
+        color: var(--text);
+        font: 700 26px/1 var(--serif);
+      }
+
+      .topic-card p {
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .topic-stats {
+        position: absolute;
+        left: 18px;
+        right: 18px;
+        bottom: 18px;
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid rgba(142, 174, 188, 0.16);
+        padding-top: 14px;
+        color: var(--amber);
+        font: 12px/1 var(--mono);
+      }
+
+      .article-site {
+        min-height: 760px;
+      }
+
+      .article-nav {
+        grid-template-columns: 170px 1fr 68px;
+        min-height: 58px;
+        padding: 0 24px;
+      }
+
+      .article-nav .brand {
+        font-size: 25px;
+      }
+
+      .article-nav .nav-links {
+        gap: 16px;
+        font-size: 11px;
+      }
+
+      .article-layout {
+        display: grid;
+        grid-template-columns: 216px minmax(0, 1fr);
+        min-height: 700px;
+      }
+
+      .toc {
+        border-right: 1px solid rgba(142, 174, 188, 0.14);
+        padding: 28px 22px;
+      }
+
+      .toc h3 {
+        margin: 0 0 16px;
+        color: #d5e1df;
+        font: 12px/1 var(--mono);
+      }
+
+      .toc ol {
+        display: grid;
+        gap: 12px;
+        margin: 0;
+        padding-left: 14px;
+        color: #9eaeb5;
+        font-size: 12px;
+      }
+
+      .toc-card {
+        margin-top: 150px;
+        border: 1px solid rgba(101, 217, 244, 0.22);
+        border-radius: 6px;
+        background:
+          linear-gradient(135deg, transparent, rgba(101, 217, 244, 0.06)),
+          rgba(255, 255, 255, 0.025);
+        padding: 16px 14px 70px;
+        color: #dce7e5;
+        font-size: 13px;
+      }
+
+      .article {
+        padding: 34px 40px;
+      }
+
+      .article-meta {
+        color: var(--green);
+        font: 11px/1 var(--mono);
+        text-transform: uppercase;
+      }
+
+      .article h1 {
+        margin: 18px 0 14px;
+        color: var(--text);
+        font: 700 clamp(34px, 4vw, 54px) / 1.08 var(--serif);
+      }
+
+      .article p {
+        max-width: 850px;
+        margin: 14px 0;
+        color: #bdc8c9;
+        font-size: 15px;
+      }
+
+      .article h2 {
+        margin: 30px 0 14px;
+        color: #eff6f4;
+        font: 700 22px/1.2 var(--serif);
+      }
+
+      .diagram {
+        margin: 24px 0;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background:
+          linear-gradient(rgba(255, 255, 255, 0.026) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+          rgba(6, 13, 17, 0.82);
+        background-size: 28px 28px, 28px 28px, auto;
+        padding: 24px;
+      }
+
+      .flow {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 14px;
+        align-items: center;
+      }
+
+      .box {
+        border: 1px solid rgba(101, 217, 244, 0.45);
+        border-radius: 6px;
+        color: #e7f6f6;
+        padding: 13px 8px;
+        text-align: center;
+        font: 11px/1.25 var(--mono);
+      }
+
+      .box.active {
+        border-color: var(--cyan);
+        background: rgba(101, 217, 244, 0.09);
+        color: var(--cyan);
+      }
+
+      .box.green {
+        border-color: rgba(105, 240, 164, 0.54);
+        color: var(--green);
+      }
+
+      .article-code {
+        overflow: auto;
+        border: 1px solid rgba(142, 174, 188, 0.22);
+        border-radius: 6px;
+        background: rgba(2, 6, 8, 0.62);
+      }
+
+      .article-code pre {
+        margin: 0;
+        padding: 18px;
+        color: #d5e4de;
+        font: 12px/1.8 var(--mono);
+      }
+
+      .kw {
+        color: #ff7fc0;
+      }
+
+      .fn {
+        color: var(--cyan);
+      }
+
+      .comment-bar {
+        margin-top: 28px;
+        border: 1px solid rgba(142, 174, 188, 0.18);
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.025);
+        padding: 14px 16px;
+        color: #dce6e4;
+        font: 12px/1 var(--sans);
+      }
+
+      .mobile-stage {
+        display: grid;
+        grid-template-columns: minmax(320px, 0.82fr) minmax(460px, 1.18fr);
+        gap: 18px;
+        align-items: start;
+        padding: 34px;
+      }
+
+      .phone {
+        width: min(390px, 100%);
+        justify-self: center;
+        overflow: hidden;
+        border: 1px solid rgba(142, 174, 188, 0.32);
+        border-radius: 24px;
+        background: rgba(4, 8, 10, 0.96);
+        box-shadow: 0 28px 80px rgba(0, 0, 0, 0.46);
+      }
+
+      .phone-screen {
+        min-height: 720px;
+        padding: 18px;
+        background: linear-gradient(180deg, rgba(12, 22, 28, 0.96), rgba(5, 9, 12, 0.98));
+      }
+
+      .mobile-head {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .mobile-head .brand {
+        font-size: 28px;
+      }
+
+      .mobile-menu {
+        position: relative;
+        z-index: 5;
+      }
+
+      .mobile-menu summary {
+        list-style: none;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        cursor: pointer;
+        padding: 5px 8px;
+        color: var(--muted);
+        font: 15px/1 var(--mono);
+      }
+
+      .mobile-menu summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .mobile-menu summary span {
+        display: inline-block;
+        width: 14px;
+        color: transparent;
+      }
+
+      .mobile-menu summary span::before {
+        color: var(--muted);
+        content: "☰";
+      }
+
+      .mobile-menu[open] summary {
+        border-color: rgba(101, 217, 244, 0.7);
+        background: rgba(101, 217, 244, 0.1);
+        box-shadow: 0 0 0 3px rgba(101, 217, 244, 0.08);
+      }
+
+      .mobile-menu[open] summary span::before {
+        color: var(--cyan);
+        content: "×";
+      }
+
+      .mobile-menu-panel {
+        position: absolute;
+        top: 36px;
+        right: 0;
+        width: 218px;
+        border: 1px solid rgba(101, 217, 244, 0.38);
+        border-radius: 7px;
+        background: rgba(5, 12, 16, 0.98);
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.46);
+        padding: 10px;
+      }
+
+      .mobile-menu-panel a {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        border-bottom: 1px solid rgba(142, 174, 188, 0.12);
+        color: #dce8e7;
+        padding: 10px 8px;
+        font: 12px/1 var(--mono);
+      }
+
+      .mobile-menu-panel a:last-child {
+        border-bottom: 0;
+      }
+
+      .mobile-menu-panel a span {
+        color: var(--cyan);
+      }
+
+      .mobile-copy {
+        margin: 22px 0 18px;
+      }
+
+      .mobile-copy h3 {
+        margin: 0;
+        font: 700 36px/0.98 var(--serif);
+      }
+
+      .mobile-copy p {
+        margin: 12px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .mobile-chips {
+        display: flex;
+        gap: 6px;
+        margin: 18px 0;
+        overflow-x: auto;
+      }
+
+      .mobile-chips .chip {
+        flex: 0 0 auto;
+        padding: 6px 8px;
+        font-size: 10px;
+      }
+
+      .mobile-card {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 70px;
+        gap: 10px;
+        align-items: center;
+        border: 1px solid rgba(142, 174, 188, 0.18);
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.025);
+        margin-bottom: 9px;
+        padding: 12px;
+      }
+
+      .mobile-card h3 {
+        margin: 0 0 8px;
+        color: var(--text);
+        font: 700 15px/1.2 var(--serif);
+      }
+
+      .mobile-card p {
+        margin: 0;
+        color: var(--muted);
+        font: 10px/1 var(--mono);
+      }
+
+      .mini-thumb {
+        height: 58px;
+        border: 1px solid rgba(142, 174, 188, 0.2);
+        border-radius: 5px;
+        background:
+          linear-gradient(135deg, rgba(5, 8, 10, 0.18), rgba(5, 8, 10, 0.65)),
+          var(--img) center / cover;
+      }
+
+      .tablet {
+        overflow: hidden;
+        border: 1px solid rgba(142, 174, 188, 0.28);
+        border-radius: 12px;
+        background: rgba(6, 12, 16, 0.88);
+      }
+
+      .tablet-content {
+        padding: 24px;
+      }
+
+      .tablet-hero {
+        display: grid;
+        grid-template-columns: 1fr 220px;
+        gap: 18px;
+        align-items: center;
+        border-bottom: 1px solid rgba(142, 174, 188, 0.16);
+        padding-bottom: 24px;
+      }
+
+      .tablet-hero h3 {
+        margin: 0;
+        font: 700 42px/0.95 var(--serif);
+      }
+
+      .tablet-hero p,
+      .reader-preview p {
+        color: var(--muted);
+      }
+
+      .mini-graph {
+        position: relative;
+        height: 150px;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        background:
+          linear-gradient(rgba(255, 255, 255, 0.026) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+          rgba(5, 11, 15, 0.84);
+        background-size: 24px 24px, 24px 24px, auto;
+      }
+
+      .mini-graph::before,
+      .mini-graph::after {
+        position: absolute;
+        border-radius: 50%;
+        content: "";
+      }
+
+      .mini-graph::before {
+        left: 50%;
+        top: 50%;
+        width: 54px;
+        height: 54px;
+        border: 1px solid var(--cyan);
+        transform: translate(-50%, -50%);
+      }
+
+      .mini-graph::after {
+        left: 28%;
+        top: 30%;
+        width: 10px;
+        height: 10px;
+        background: var(--green);
+        box-shadow: 86px 14px 0 var(--amber), 52px 76px 0 var(--cyan);
+      }
+
+      .reader-preview {
+        display: grid;
+        grid-template-columns: 160px 1fr;
+        gap: 18px;
+        margin-top: 22px;
+      }
+
+      .reader-toc {
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        padding: 14px;
+        color: var(--muted);
+        font: 11px/1.8 var(--mono);
+      }
+
+      .reader-body {
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        padding: 18px;
+        background: rgba(255, 255, 255, 0.025);
+      }
+
+      .reader-body h3 {
+        margin: 0;
+        font: 700 24px/1.1 var(--serif);
+      }
+
+      .more {
+        display: block;
+        margin-top: 14px;
+        color: #d7f4f6;
+        text-align: center;
+        font: 11px/1 var(--sans);
+      }
+
+      .footer-line {
+        display: flex;
+        justify-content: space-between;
+        padding: 18px 34px 0;
+        color: var(--muted);
+        font: 12px/1 var(--sans);
+      }
+
+      @media (max-width: 1180px) {
+        .home-grid {
+          grid-template-columns: 248px minmax(0, 1fr);
+        }
+
+        .right-stack {
+          grid-column: 1 / -1;
+          grid-template-columns: repeat(3, 1fr);
+        }
+
+        .note-row {
+          grid-template-columns: 110px 14px minmax(0, 1fr) 120px;
+        }
+
+        .note-meta {
+          display: none;
+        }
+
+        .topic-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .mobile-stage {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .page-shell {
+          width: min(100% - 12px, 720px);
+          padding-top: 8px;
+        }
+
+        .draft-header,
+        .section-label {
+          grid-template-columns: 1fr;
+        }
+
+        .draft-header {
+          position: relative;
+        }
+
+        .draft-nav {
+          justify-content: flex-start;
+        }
+
+        .section-label p {
+          text-align: left;
+        }
+
+        .browser-bar {
+          grid-template-columns: 70px 1fr;
+        }
+
+        .reload {
+          display: none;
+        }
+
+        .top-nav,
+        .article-nav {
+          grid-template-columns: 1fr auto;
+          padding: 0 18px;
+        }
+
+        .nav-links {
+          display: none;
+        }
+
+        .home-grid,
+        .article-layout,
+        .reader-preview,
+        .tablet-hero {
+          grid-template-columns: 1fr;
+        }
+
+        .home-grid,
+        .notes-site,
+        .topics-site,
+        .mobile-stage {
+          padding: 14px;
+        }
+
+        .left-stack,
+        .right-stack {
+          display: none;
+        }
+
+        .site {
+          min-height: auto;
+        }
+
+        .graph-stage {
+          min-height: 520px;
+        }
+
+        .memory-map {
+          inset: 40px 12px 146px;
+        }
+
+        .node {
+          min-width: 124px;
+          grid-template-columns: 1fr;
+        }
+
+        .node .icon {
+          display: none;
+        }
+
+        .hero-copy {
+          left: 18px;
+          right: 18px;
+        }
+
+        .hero-copy h3 {
+          font-size: 58px;
+        }
+
+        .note-row {
+          grid-template-columns: 74px 10px 1fr;
+          padding: 14px;
+        }
+
+        .thumb {
+          display: none;
+        }
+
+        .topic-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .toc {
+          display: none;
+        }
+
+        .article-layout {
+          min-height: auto;
+        }
+
+        .article {
+          padding: 22px 18px;
+        }
+
+        .flow {
+          grid-template-columns: 1fr;
+        }
+
+        .phone {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page-shell" aria-label="Agent Research Console visual draft">
+      <header class="draft-header">
+        <div class="draft-title">
+          <strong>Agent Research Console Editorial</strong>
+          <h1>tingxins Web UI 纵向视觉稿</h1>
+        </div>
+        <nav class="draft-nav" aria-label="Visual draft sections">
+          <a href="#hero">首页首屏</a>
+          <a href="#latest">最新文章</a>
+          <a href="#topics">主题区</a>
+          <a href="#article">文章页</a>
+          <a href="#mobile">移动端</a>
+        </nav>
+      </header>
+
+      <section class="section" id="hero">
+        <div class="section-label">
+          <div><span>01 / Homepage Hero</span><h2>完整首页首屏</h2></div>
+          <p>桌面首屏承载品牌、Agent memory graph、控制台状态和文章检索入口，作为新版博客的一眼识别点。</p>
+        </div>
+        <article class="browser" aria-label="Desktop homepage hero visual draft">
+          <div class="browser-bar">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <div class="address">https://midaigc.com</div>
+            <div class="reload">⟳</div>
+          </div>
+
+          <div class="site">
+            <header class="top-nav">
+              <a class="brand" href="#">tingxins</a>
+              <nav class="nav-links" aria-label="Desktop navigation">
+                <a href="#">首页</a>
+                <a href="#">归档</a>
+                <a href="#">标签</a>
+                <a href="#">关于</a>
+                <a href="#">实验室</a>
+              </nav>
+              <div class="nav-actions"><span>⌕</span><span>&gt;_</span></div>
+            </header>
+
+            <section class="home-grid">
+              <aside class="stack left-stack">
+                <div class="panel">
+                  <div class="panel-head"><span>Console</span></div>
+                  <div class="console">
+                    <p>&gt; agent@tingxins</p>
+                    <p>&gt; mission: research / build / share</p>
+                    <p>&gt; status: running</p>
+                    <p>&gt; mode: deep-research</p>
+                    <p>&gt; started: 2024-05-16 10:23:11</p>
+                    <div class="wave" aria-hidden="true">
+                      <i style="--h:6"></i><i style="--h:14"></i><i style="--h:10"></i><i style="--h:22"></i>
+                      <i style="--h:12"></i><i style="--h:18"></i><i style="--h:9"></i><i style="--h:15"></i>
+                      <i style="--h:21"></i><i style="--h:11"></i><i style="--h:8"></i><i style="--h:17"></i>
+                      <i style="--h:23"></i><i style="--h:16"></i><i style="--h:20"></i><i style="--h:13"></i>
+                      <i style="--h:19"></i><i style="--h:25"></i><i style="--h:12"></i><i style="--h:15"></i>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="panel">
+                  <div class="panel-head"><span>Latest Logs</span></div>
+                  <div class="logs">
+                    <p><time>10:23:11</time><span>Planner initialized</span></p>
+                    <p><time>10:23:12</time><span>MemoryGraph loaded (1287 nodes)</span></p>
+                    <p><time>10:23:14</time><span>Retrieved 6 relevant notes</span></p>
+                    <p><time>10:23:15</time><span>ToolCall: search_codebase</span></p>
+                    <p><time>10:23:16</time><span>ToolCall: read_file</span></p>
+                    <p><time>10:23:18</time><span>ToolCall: run_tests</span></p>
+                    <p><time>10:23:21</time><span>Observation recorded</span></p>
+                    <p><time>10:23:22</time><span>Summary updated</span></p>
+                  </div>
+                </div>
+
+                <div class="panel">
+                  <div class="panel-head"><span>System Metrics</span></div>
+                  <div class="metrics">
+                    <div class="metric"><span>Tokens</span><strong>23.4k</strong><svg class="spark" viewBox="0 0 120 22"><polyline points="0,17 10,15 20,16 30,12 40,14 50,9 60,11 70,7 80,8 90,4 100,7 110,3 120,5" fill="none" stroke="#69f0a4" /></svg></div>
+                    <div class="metric"><span>Context</span><strong>62%</strong><svg class="spark" viewBox="0 0 120 22"><polyline points="0,18 10,16 20,17 30,15 40,11 50,13 60,9 70,10 80,7 90,5 100,8 110,4 120,6" fill="none" stroke="#69f0a4" /></svg></div>
+                    <div class="metric"><span>Memory</span><strong>1287</strong><svg class="spark" viewBox="0 0 120 22"><polyline points="0,19 10,18 20,16 30,17 40,13 50,15 60,10 70,12 80,7 90,9 100,5 110,7 120,2" fill="none" stroke="#69f0a4" /></svg></div>
+                    <div class="metric"><span>Tools</span><strong>8/16</strong><svg class="spark" viewBox="0 0 120 22"><polyline points="0,20 10,17 20,18 30,15 40,16 50,12 60,14 70,9 80,11 90,6 100,8 110,4 120,7" fill="none" stroke="#69f0a4" /></svg></div>
+                  </div>
+                </div>
+              </aside>
+
+              <section class="graph-stage" aria-label="Agent knowledge graph hero">
+                <div class="memory-label">Memory Graph<br />1287 Nodes</div>
+                <div class="memory-map">
+                  <svg viewBox="0 0 680 350" aria-hidden="true">
+                    <g stroke="rgba(101, 217, 244, 0.34)" stroke-width="1">
+                      <line x1="340" y1="175" x2="280" y2="32" />
+                      <line x1="340" y1="175" x2="135" y2="105" />
+                      <line x1="340" y1="175" x2="570" y2="40" />
+                      <line x1="340" y1="175" x2="572" y2="169" />
+                      <line x1="340" y1="175" x2="485" y2="302" />
+                      <line x1="340" y1="175" x2="340" y2="322" />
+                      <line x1="280" y1="32" x2="572" y2="169" opacity="0.5" />
+                      <line x1="570" y1="40" x2="485" y2="302" opacity="0.45" />
+                    </g>
+                    <g stroke="rgba(105, 240, 164, 0.45)" stroke-width="1">
+                      <line x1="278" y1="78" x2="300" y2="116" />
+                      <line x1="236" y1="221" x2="314" y2="191" />
+                      <line x1="404" y1="86" x2="366" y2="145" />
+                    </g>
+                  </svg>
+                  <div class="hub"><div><strong>tingxins</strong><small>knowledge base</small></div></div>
+                  <div class="node n-inputkit"><span class="icon">▣</span><span><strong>InputKit 研究</strong><small>2024-05-10</small></span></div>
+                  <div class="node n-swift"><span class="icon">▤</span><span><strong>Swift 语言演进</strong><small>2024-04-18</small></span></div>
+                  <div class="node n-llm"><span class="icon">↗</span><span><strong>LLM 工具调用</strong><small>2024-05-12</small></span></div>
+                  <div class="node n-aigc"><span class="icon">▦</span><span><strong>AIGC 实践记录</strong><small>2024-05-01</small></span></div>
+                  <div class="node n-agent"><span class="icon">▤</span><span><strong>Agent 架构笔记</strong><small>2024-04-20</small></span></div>
+                  <div class="node n-ios"><span class="icon">▤</span><span><strong>问题检索实践</strong><small>2024-05-08</small></span></div>
+                  <span class="micro-dot one"></span>
+                  <span class="micro-dot two"></span>
+                </div>
+                <div class="hero-copy">
+                  <h3>tingxins</h3>
+                  <p>AI Agent 研究日志 / 移动开发 / AIGC 实验</p>
+                  <div class="actions">
+                    <a class="btn primary" href="#latest">&gt; 进入日志</a>
+                    <a class="btn" href="#topics">▣ 浏览主题</a>
+                    <a class="btn" href="#article">ⓘ 阅读样张</a>
+                  </div>
+                </div>
+              </section>
+
+              <aside class="stack right-stack">
+                <div class="panel">
+                  <div class="panel-head"><span>Retrieval</span></div>
+                  <div class="retrieval">
+                    <article class="retrieval-card">
+                      <h3>InputKit 源码分析笔记</h3>
+                      <p>相似度 0.92 · iOS</p>
+                      <a href="#article">&gt; 查看</a>
+                    </article>
+                    <article class="retrieval-card">
+                      <h3>Swift Evolution 提案解读</h3>
+                      <p>相似度 0.86 · Swift</p>
+                      <a href="#latest">&gt; 查看</a>
+                    </article>
+                    <article class="retrieval-card">
+                      <h3>LLM Tool Use 最佳实践</h3>
+                      <p>相似度 0.85 · AI Agent</p>
+                      <a href="#topics">&gt; 查看</a>
+                    </article>
+                  </div>
+                  <div class="all-link">查看全部 (18)</div>
+                </div>
+              </aside>
+            </section>
+          </div>
+        </article>
+      </section>
+
+      <section class="section" id="latest">
+        <div class="section-label">
+          <div><span>02 / Latest Notes</span><h2>最新文章区</h2></div>
+          <p>文章列表独立成区，用时间轴和阅读数据提升扫描效率，同时保留技术长文的编辑感。</p>
+        </div>
+        <article class="browser" aria-label="Latest posts visual draft">
+          <div class="browser-bar">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <div class="address">https://midaigc.com/blog</div>
+            <div class="reload">⟳</div>
+          </div>
+          <div class="notes-site">
+            <div class="section-head">
+              <h3>Latest Notes</h3>
+              <div class="filters">
+                <span class="chip">全部</span>
+                <span class="chip active">iOS</span>
+                <span class="chip">Swift</span>
+                <span class="chip">Objective-C</span>
+                <span class="chip">AI Agent</span>
+                <span class="chip">AIGC</span>
+              </div>
+            </div>
+            <div class="note-list">
+              <article class="note-row">
+                <div class="date">05-16<span>2024</span></div>
+                <span class="pin"></span>
+                <div class="note-main">
+                  <h3>iOS 输入限制之 InputKit</h3>
+                  <p>深入 InputKit 框架，探索 iOS 文本输入的底层机制与输入限制的实现方式。</p>
+                  <div class="tags"><span class="tag hot">iOS</span><span class="tag">InputKit</span><span class="tag">Text Input</span></div>
+                </div>
+                <div class="note-meta"><span>阅读 1.2k</span><span>评论 8</span></div>
+                <div class="thumb" style="--img: url('../../public/assets/images/blog_build_cover.jpeg')"></div>
+              </article>
+              <article class="note-row">
+                <div class="date">05-12<span>2024</span></div>
+                <span class="pin"></span>
+                <div class="note-main">
+                  <h3>What's New in Swift 4</h3>
+                  <p>回顾 Swift 4 的重要特性与改进，以及对后续版本的影响。</p>
+                  <div class="tags"><span class="tag hot">Swift</span><span class="tag">Language</span></div>
+                </div>
+                <div class="note-meta"><span>阅读 2.1k</span><span>评论 12</span></div>
+                <div class="thumb" style="--img: url('../../public/assets/images/2017/algorithm-analyze-a.png')"></div>
+              </article>
+              <article class="note-row">
+                <div class="date">05-08<span>2024</span></div>
+                <span class="pin"></span>
+                <div class="note-main">
+                  <h3>Objective-C 中的对象、类、元类</h3>
+                  <p>从底层结构理解 Objective-C 的对象模型、类与元类的关系。</p>
+                  <div class="tags"><span class="tag hot">Objective-C</span><span class="tag">Runtime</span><span class="tag">Runtime</span></div>
+                </div>
+                <div class="note-meta"><span>阅读 1.6k</span><span>评论 6</span></div>
+                <div class="thumb" style="--img: url('../../public/assets/images/2017/algorithm-analyze-b.png')"></div>
+              </article>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="section" id="topics">
+        <div class="section-label">
+          <div><span>03 / Topic Index</span><h2>主题区</h2></div>
+          <p>主题入口作为首页第二层导航，帮助读者按研究方向进入文章集合，而不是只按时间流浏览。</p>
+        </div>
+        <article class="browser" aria-label="Topics visual draft">
+          <div class="browser-bar">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <div class="address">https://midaigc.com/tags</div>
+            <div class="reload">⟳</div>
+          </div>
+          <div class="topics-site">
+            <div class="section-head">
+              <h3>Research Topics</h3>
+              <div class="filters"><span class="chip active">按主题浏览</span><span class="chip">按时间归档</span><span class="chip">RSS</span></div>
+            </div>
+            <div class="topic-grid">
+              <article class="topic-card" data-index="01">
+                <h3>AI Agent</h3>
+                <p>工具调用、记忆、检索、评估和工程化实践。</p>
+                <div class="topic-stats"><span>18 notes</span><span>active</span></div>
+              </article>
+              <article class="topic-card" data-index="02">
+                <h3>iOS</h3>
+                <p>UIKit、输入系统、Runtime、工程架构与调试记录。</p>
+                <div class="topic-stats"><span>42 notes</span><span>core</span></div>
+              </article>
+              <article class="topic-card" data-index="03">
+                <h3>Swift</h3>
+                <p>语言演进、类型系统、标准库和 Apple 平台开发。</p>
+                <div class="topic-stats"><span>16 notes</span><span>lang</span></div>
+              </article>
+              <article class="topic-card" data-index="04">
+                <h3>Objective-C</h3>
+                <p>对象模型、消息发送、元类和历史项目迁移。</p>
+                <div class="topic-stats"><span>11 notes</span><span>runtime</span></div>
+              </article>
+              <article class="topic-card" data-index="05">
+                <h3>AIGC 实验</h3>
+                <p>多模态生成、模型评测、创作工具与产品观察。</p>
+                <div class="topic-stats"><span>9 notes</span><span>lab</span></div>
+              </article>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="section" id="article">
+        <div class="section-label">
+          <div><span>04 / Article Preview</span><h2>文章页预览区</h2></div>
+          <p>文章页强调阅读体验、目录、代码和技术图示，保持科技控制台气质但不牺牲长文可读性。</p>
+        </div>
+        <article class="browser" aria-label="Article page visual draft">
+          <div class="browser-bar">
+            <div class="dots"><i></i><i></i></div>
+            <div class="address">https://midaigc.com/2017/06/input-kit-introduction/</div>
+            <div class="reload">⟳</div>
+          </div>
+          <div class="article-site">
+            <header class="article-nav">
+              <a class="brand" href="#">tingxins</a>
+              <nav class="nav-links" aria-label="Article navigation">
+                <a href="#">首页</a><a href="#">归档</a><a href="#">标签</a><a href="#">关于</a><a href="#">实验室</a>
+              </nav>
+              <div class="nav-actions"><span>⌕</span><span>&gt;_</span></div>
+            </header>
+            <div class="article-layout">
+              <aside class="toc">
+                <h3>目录</h3>
+                <ol>
+                  <li>InputKit 简介</li>
+                  <li>输入流程概览</li>
+                  <li>核心类与协议</li>
+                  <li>输入限制的实现</li>
+                  <li>实践：自定义输入控制器</li>
+                  <li>调试与工具</li>
+                  <li>参考资料</li>
+                </ol>
+                <div class="toc-card">AI Agent 研究笔记<br />持续记录与分享<br /><br />&gt; 进入实验室</div>
+              </aside>
+              <article class="article">
+                <div class="article-meta">iOS · 发稿于 2017-06-05 · 阅读 1.2k · 评论 8</div>
+                <h1>iOS 输入限制之 InputKit</h1>
+                <p>深入 InputKit 框架，探索 iOS 文本输入的底层机制与输入限制的实现方式。</p>
+                <div class="tags"><span class="tag hot">iOS</span><span class="tag">InputKit</span><span class="tag">Text Input</span></div>
+                <div class="diagram">
+                  <div class="flow">
+                    <div class="box">App</div>
+                    <div class="box">UIResponder</div>
+                    <div class="box active">Input<br />Controller</div>
+                    <div class="box">InputKit</div>
+                    <div class="box">Keyboard<br />Extension</div>
+                    <div class="box green">Text Input</div>
+                    <div class="box green">Document Context</div>
+                    <div class="box green">Candidate List</div>
+                  </div>
+                </div>
+                <p>InputKit 是 iOS 中处理文本输入的核心框架。它连接了应用、系统输入设备和候选词系统，是理解输入体验的重要入口。</p>
+                <h2>核心类与协议</h2>
+                <p>InputKit 提供了一组类与协议来管理输入会话、文本处理与候选词。</p>
+                <div class="article-code">
+                  <div class="panel-head"><span>Swift</span><span>复制</span></div>
+<pre><span class="kw">import</span> InputKit
+
+<span class="kw">class</span> <span class="fn">MyInputController</span>: UIInputViewController, IKTextInput {
+    <span class="kw">override func</span> <span class="fn">textWillChange</span>(_ textInput: UITextInput?) {
+        // 在文本变化前处理
+    }
+
+    <span class="kw">override func</span> <span class="fn">textDidChange</span>(_ textInput: UITextInput?) {
+        // 应用输入限制
+    }
+}</pre>
+                </div>
+                <h2>输入限制的实现</h2>
+                <p>常见的输入限制包括长度限制、字符集限制与自定义规则限制。</p>
+                <div class="comment-bar">加载评论（8）</div>
+              </article>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="section" id="mobile">
+        <div class="section-label">
+          <div><span>05 / Mobile Preview</span><h2>移动端预览区</h2></div>
+          <p>同一视觉语言在手机和平板上转为紧凑信息流，保留品牌、主题筛选、文章卡片和阅读片段。</p>
+        </div>
+        <article class="browser" aria-label="Mobile and tablet visual draft">
+          <div class="browser-bar">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <div class="address">responsive preview</div>
+            <div class="reload">⟳</div>
+          </div>
+          <div class="mobile-stage">
+            <div class="phone">
+              <div class="phone-screen">
+                <header class="mobile-head">
+                  <a class="brand" href="#">tingxins</a>
+                  <details class="mobile-menu">
+                    <summary aria-label="打开移动端导航"><span>Menu</span></summary>
+                    <nav class="mobile-menu-panel" aria-label="Mobile navigation preview">
+                      <a href="#hero">首页首屏 <span>01</span></a>
+                      <a href="#latest">最新文章 <span>02</span></a>
+                      <a href="#topics">主题索引 <span>03</span></a>
+                      <a href="#article">文章样张 <span>04</span></a>
+                      <a href="#mobile">移动预览 <span>05</span></a>
+                    </nav>
+                  </details>
+                </header>
+                <div class="mobile-copy">
+                  <h3>Agent Notes</h3>
+                  <p>AI Agent 研究日志 / 移动开发 / AIGC 实验</p>
+                </div>
+                <div class="mobile-chips"><span class="chip active">全部</span><span class="chip">iOS</span><span class="chip">Swift</span><span class="chip">AI Agent</span></div>
+                <article class="mobile-card">
+                  <div><h3>iOS 输入限制之 InputKit</h3><p>05-16　阅读 1.2k</p></div>
+                  <div class="mini-thumb" style="--img: url('../../public/assets/images/blog_build_cover.jpeg')"></div>
+                </article>
+                <article class="mobile-card">
+                  <div><h3>What's New in Swift 4</h3><p>05-12　阅读 2.1k</p></div>
+                  <div class="mini-thumb" style="--img: url('../../public/assets/images/2017/algorithm-analyze-a.png')"></div>
+                </article>
+                <article class="mobile-card">
+                  <div><h3>Objective-C 中的对象、类、元类</h3><p>05-08　阅读 1.6k</p></div>
+                  <div class="mini-thumb" style="--img: url('../../public/assets/images/2017/algorithm-analyze-b.png')"></div>
+                </article>
+                <a class="more" href="#">查看全部文章 →</a>
+              </div>
+            </div>
+
+            <div class="tablet">
+              <div class="tablet-content">
+                <section class="tablet-hero">
+                  <div>
+                    <a class="brand" href="#">tingxins</a>
+                    <h3>AI Agent 研究日志</h3>
+                    <p>平板布局保留 memory graph 和文章阅读入口，适合横屏阅读与快速跳转。</p>
+                    <div class="actions"><a class="btn primary" href="#">&gt; 进入日志</a><a class="btn" href="#">▣ 主题</a></div>
+                  </div>
+                  <div class="mini-graph" aria-hidden="true"></div>
+                </section>
+                <section class="reader-preview">
+                  <aside class="reader-toc">目录<br />1. InputKit 简介<br />2. 输入流程<br />3. 核心协议<br />4. 代码实践</aside>
+                  <article class="reader-body">
+                    <h3>iOS 输入限制之 InputKit</h3>
+                    <p>文章阅读区在平板上保持两栏结构：左侧目录，右侧正文和代码块。</p>
+                    <div class="article-code">
+<pre><span class="kw">func</span> <span class="fn">validate</span>(_ text: String) -&gt; Bool {
+    text.count &lt; 140
+}</pre>
+                    </div>
+                  </article>
+                </section>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <footer class="footer-line"><span>© 2024 tingxins</span><span>Built with Astro · RSS · 隐私 · midaigc.com</span></footer>
+    </main>
+  </body>
+</html>

@@ -1,5 +1,9 @@
 _site
 .sass-cache
 .jekyll-metadata
+node_modules
+dist
+.astro
+.worktrees
 build.sh
 *._*

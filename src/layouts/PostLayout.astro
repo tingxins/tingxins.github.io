@@ -1,0 +1,63 @@
+---
+import type { MarkdownHeading } from 'astro';
+import type { BlogPost } from '../lib/posts';
+import { formatDate, getPostDescription, getPostPath, getReadingMinutes } from '../lib/posts';
+import BaseLayout from './BaseLayout.astro';
+import LazyComments from '../components/LazyComments.astro';
+
+interface Props {
+  post: BlogPost;
+  headings: MarkdownHeading[];
+}
+
+const { post, headings } = Astro.props;
+const path = getPostPath(post);
+const description = getPostDescription(post);
+const visibleHeadings = headings.filter((heading) => heading.depth > 1 && heading.depth <= 3);
+---
+
+<BaseLayout title={post.data.title} description={description} canonicalPath={path} ogType="article">
+  <article class="article-shell">
+    <header class="article-header">
+      <a class="back-link" href="/blog/">返回博客</a>
+      <div class="article-meta">
+        <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
+        <span>{getReadingMinutes(post)} min read</span>
+      </div>
+      <h1>{post.data.title}</h1>
+      {description && <p>{description}</p>}
+      {post.data.tags.length > 0 && (
+        <div class="tag-row" aria-label="标签">
+          {post.data.tags.map((tag) => <a href={`/tags/${encodeURIComponent(tag)}/`}>{tag}</a>)}
+        </div>
+      )}
+    </header>
+
+    <div class="article-grid">
+      <aside class="article-toc" aria-label="文章目录">
+        <strong>目录</strong>
+        {visibleHeadings.length > 0 ? (
+          <ol>
+            {visibleHeadings.map((heading) => (
+              <li class={`depth-${heading.depth}`}>
+                <a href={`#${heading.slug}`}>{heading.text}</a>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p>正文笔记</p>
+        )}
+        <div class="toc-card">
+          <strong>AI Agent 研究笔记</strong>
+          <span>持续记录与分享</span>
+          <a href="/tags/">进入主题索引</a>
+        </div>
+      </aside>
+      <div class="article-prose">
+        <slot />
+      </div>
+    </div>
+
+    <LazyComments title={post.data.title} path={path} />
+  </article>
+</BaseLayout>

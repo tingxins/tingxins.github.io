@@ -1,0 +1,23 @@
+---
+import { render } from 'astro:content';
+import PostLayout from '../../../../layouts/PostLayout.astro';
+import { getAllPosts, getPostDateParts } from '../../../../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = await getAllPosts();
+  return posts.map((post) => {
+    const { year, month } = getPostDateParts(post);
+    return {
+      params: { year, month, slug: post.data.legacySlug },
+      props: { post }
+    };
+  });
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+---
+
+<PostLayout post={post} headings={headings}>
+  <Content />
+</PostLayout>
