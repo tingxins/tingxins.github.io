@@ -1,10 +1,19 @@
 <!doctype html>
-<html lang="zh-Hans">
+<html lang="zh-Hans" data-current-lang="zh">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
   <title>iRepeater 隐私政策</title>
+  <script>
+    (function () {
+      var value = new URL(document.URL).searchParams.get("lang") || "";
+      var lang = /^en(?:-|$)/i.test(value) ? "en" : "zh";
+      document.documentElement.setAttribute("data-current-lang", lang);
+      document.documentElement.lang = lang === "en" ? "en" : "zh-Hans";
+      document.title = lang === "en" ? "iRepeater Privacy Policy" : "iRepeater 隐私政策";
+    })();
+  </script>
   <style>
     :root {
       --page: #f7f4ee;
@@ -72,6 +81,16 @@
       outline: 3px solid var(--accent);
       outline-offset: 3px;
       border-radius: 4px;
+    }
+
+    [data-lang-panel] {
+      display: none;
+    }
+
+    html[data-current-lang="zh"] [data-lang-panel="zh"],
+    html[data-current-lang="en"] [data-lang-panel="en"],
+    html:not([data-current-lang]) [data-lang-panel="zh"] {
+      display: block;
     }
 
     .shell {
@@ -350,10 +369,14 @@
         letter-spacing: 0.04em;
       }
 
-      .matrix td:nth-child(1)::before { content: "类别"; }
-      .matrix td:nth-child(2)::before { content: "处理位置"; }
-      .matrix td:nth-child(3)::before { content: "用途"; }
-      .matrix td:nth-child(4)::before { content: "保留与控制"; }
+      html[data-current-lang="zh"] .matrix td:nth-child(1)::before { content: "类别"; }
+      html[data-current-lang="zh"] .matrix td:nth-child(2)::before { content: "处理位置"; }
+      html[data-current-lang="zh"] .matrix td:nth-child(3)::before { content: "用途"; }
+      html[data-current-lang="zh"] .matrix td:nth-child(4)::before { content: "保留与控制"; }
+      html[data-current-lang="en"] .matrix td:nth-child(1)::before { content: "Category"; }
+      html[data-current-lang="en"] .matrix td:nth-child(2)::before { content: "Where processed"; }
+      html[data-current-lang="en"] .matrix td:nth-child(3)::before { content: "Purpose"; }
+      html[data-current-lang="en"] .matrix td:nth-child(4)::before { content: "Retention and control"; }
 
       .matrix tr {
         border-bottom: 1px solid var(--line);
@@ -398,14 +421,15 @@
   </style>
 </head>
 <body>
-  <div class="shell">
+  <div class="shell" data-lang-panel="zh" lang="zh-Hans">
     <header class="masthead">
       <div>
         <p class="eyebrow">iRepeater Legal</p>
         <h1>隐私政策</h1>
       </div>
       <nav class="nav" aria-label="法律页面">
-        <a href="./terms.html">服务条款</a>
+        <a href="./terms.html?lang=zh">服务条款</a>
+        <a href="./privacy.html?lang=en">English</a>
         <a href="mailto:irepeater@midaigc.com">联系我们</a>
       </nav>
     </header>
@@ -417,124 +441,64 @@
         <div class="notice">本页面用于产品透明度和平台提交，不构成法律意见。发布前仍建议由具备资质的法律或平台合规人员复核。</div>
       </div>
       <aside class="facts" aria-label="政策摘要">
-        <div class="fact">
-          <strong>生效日期</strong>
-          2026-06-14
-        </div>
-        <div class="fact">
-          <strong>联系方式</strong>
-          <a href="mailto:irepeater@midaigc.com">irepeater@midaigc.com</a>
-        </div>
-        <div class="fact">
-          <strong>核心承诺</strong>
-          不上传你的音频内容、文件名、完整路径或原始搜索词。
-        </div>
+        <div class="fact"><strong>生效日期</strong>2026-06-14</div>
+        <div class="fact"><strong>联系方式</strong><a href="mailto:irepeater@midaigc.com">irepeater@midaigc.com</a></div>
+        <div class="fact"><strong>核心承诺</strong>不上传你的音频内容、文件名、完整路径或原始搜索词。</div>
       </aside>
     </div>
 
     <div class="content">
       <aside class="toc" aria-label="目录">
         <strong>目录</strong>
-        <a href="#scope">适用范围</a>
-        <a href="#matrix">数据声明矩阵</a>
-        <a href="#analytics">产品分析</a>
-        <a href="#third-parties">第三方服务</a>
-        <a href="#choices">你的控制方式</a>
-        <a href="#retention">保留与删除</a>
-        <a href="#security">安全措施</a>
-        <a href="#children">未成年人</a>
-        <a href="#changes">政策变更</a>
+        <a href="#zh-scope">适用范围</a>
+        <a href="#zh-matrix">数据声明矩阵</a>
+        <a href="#zh-analytics">产品分析</a>
+        <a href="#zh-third-parties">第三方服务</a>
+        <a href="#zh-choices">你的控制方式</a>
+        <a href="#zh-retention">保留与删除</a>
+        <a href="#zh-security">安全措施</a>
+        <a href="#zh-children">未成年人</a>
+        <a href="#zh-changes">政策变更</a>
       </aside>
 
       <main>
-        <section id="scope">
+        <section id="zh-scope">
           <h2>1. 适用范围</h2>
           <p>本隐私政策适用于 iRepeater iOS 应用以及为该应用提供的静态法律页面。它不适用于你通过系统分享表、邮件客户端、App Store、Apple 服务或其他第三方服务单独提交给对应服务方的信息。</p>
           <p>iRepeater 当前不提供用户登录、在线素材托管、远程备份或社区发布能力。你导入的音频文件由系统文件选择、AirDrop 或文件共享等本地路径进入应用沙盒，应用不会把音频内容上传到我们的服务器。</p>
         </section>
 
-        <section id="matrix">
+        <section id="zh-matrix">
           <h2>2. 数据声明矩阵</h2>
           <table class="matrix">
-            <thead>
-              <tr>
-                <th>类别</th>
-                <th>处理位置</th>
-                <th>用途</th>
-                <th>保留与控制</th>
-              </tr>
-            </thead>
+            <thead><tr><th>类别</th><th>处理位置</th><th>用途</th><th>保留与控制</th></tr></thead>
             <tbody>
-              <tr>
-                <td>本地音频文件</td>
-                <td>设备内</td>
-                <td>导入、播放、A/B 复读、波形分析和素材管理。</td>
-                <td>你可以在 App 内删除素材，或通过系统文件管理方式处理 App 容器中的文件。</td>
-              </tr>
-              <tr>
-                <td>文件名、相对路径、播放进度</td>
-                <td>设备内</td>
-                <td>展示素材列表、恢复最近练习状态、连接学习记录和本地文件。</td>
-                <td>随本地素材和应用数据保留；清理素材或卸载应用会影响这些数据。</td>
-              </tr>
-              <tr>
-                <td>学习记录、收藏片段、A/B 标记</td>
-                <td>设备内</td>
-                <td>保存复读片段、收藏状态、复习列表和练习偏好。</td>
-                <td>可在设置中清除学习记录；清除后通常不能从 App 内恢复。</td>
-              </tr>
-              <tr>
-                <td>产品分析事件</td>
-                <td>发送给 Amplitude</td>
-                <td>理解页面访问、导入是否成功、播放控制、筛选、复习和设置开关等产品使用情况。</td>
-                <td>可在 App 设置中关闭分析开关；关闭后不再主动发送产品分析事件。</td>
-              </tr>
-              <tr>
-                <td>应用生命周期和会话信息</td>
-                <td>发送给 Amplitude</td>
-                <td>帮助判断应用启动、前后台切换、会话长度和基础稳定性。</td>
-                <td>由 Amplitude SDK 按其服务规则处理；你可以通过关闭分析开关停止后续发送。</td>
-              </tr>
-              <tr>
-                <td>设备或安装标识、应用版本等技术信息</td>
-                <td>可能发送给 Amplitude</td>
-                <td>用于去重、会话分析、兼容性判断和问题排查。</td>
-                <td>由第三方 SDK 按其服务规则处理；我们不主动将其与姓名或邮箱关联。</td>
-              </tr>
-              <tr>
-                <td>邮件反馈内容</td>
-                <td>你主动发送时离开设备</td>
-                <td>回复问题、排查故障、记录产品建议。</td>
-                <td>由你发送的邮件内容决定；你可以在邮件中说明希望删除或停止联系。</td>
-              </tr>
+              <tr><td>本地音频文件</td><td>设备内</td><td>导入、播放、A/B 复读、波形分析和素材管理。</td><td>你可以在 App 内删除素材，或通过系统文件管理方式处理 App 容器中的文件。</td></tr>
+              <tr><td>文件名、相对路径、播放进度</td><td>设备内</td><td>展示素材列表、恢复最近练习状态、连接学习记录和本地文件。</td><td>随本地素材和应用数据保留；清理素材或卸载应用会影响这些数据。</td></tr>
+              <tr><td>学习记录、收藏片段、A/B 标记</td><td>设备内</td><td>保存复读片段、收藏状态、复习列表和练习偏好。</td><td>可在设置中清除学习记录；清除后通常不能从 App 内恢复。</td></tr>
+              <tr><td>产品分析事件</td><td>发送给 Amplitude</td><td>理解页面访问、导入是否成功、播放控制、筛选、复习和设置开关等产品使用情况。</td><td>可在 App 设置中关闭分析开关；关闭后不再主动发送产品分析事件。</td></tr>
+              <tr><td>应用生命周期和会话信息</td><td>发送给 Amplitude</td><td>帮助判断应用启动、前后台切换、会话长度和基础稳定性。</td><td>由 Amplitude SDK 按其服务规则处理；你可以通过关闭分析开关停止后续发送。</td></tr>
+              <tr><td>设备或安装标识、应用版本等技术信息</td><td>可能发送给 Amplitude</td><td>用于去重、会话分析、兼容性判断和问题排查。</td><td>由第三方 SDK 按其服务规则处理；我们不主动将其与姓名或邮箱关联。</td></tr>
+              <tr><td>邮件反馈内容</td><td>你主动发送时离开设备</td><td>回复问题、排查故障、记录产品建议。</td><td>由你发送的邮件内容决定；你可以在邮件中说明希望删除或停止联系。</td></tr>
             </tbody>
           </table>
         </section>
 
-        <section id="analytics">
+        <section id="zh-analytics">
           <h2>3. 产品分析的边界</h2>
           <p>iRepeater 的产品分析通过本地的 TXAnalytics 门面进入 AmplitudeSwift。应用代码会在事件离开设备前过滤文件名、完整路径、原始搜索词和音频内容，并优先使用分桶值。</p>
           <p>可能发送的示例字段包括：</p>
-          <p>
-            <span class="tag">screen_name</span>
-            <span class="tag">entry_point</span>
-            <span class="tag">result</span>
-            <span class="tag">material_type</span>
-            <span class="tag">duration_bucket</span>
-            <span class="tag">segment_count_bucket</span>
-            <span class="tag">query_length_bucket</span>
-            <span class="tag">playback_rate</span>
-          </p>
+          <p><span class="tag">screen_name</span><span class="tag">entry_point</span><span class="tag">result</span><span class="tag">material_type</span><span class="tag">duration_bucket</span><span class="tag">segment_count_bucket</span><span class="tag">query_length_bucket</span><span class="tag">playback_rate</span></p>
           <p>这些字段用于理解功能是否可用、流程是否顺畅和哪些训练能力需要改进。我们不会为了产品分析上传你的音频内容、文件名、完整路径或原始搜索词。</p>
         </section>
 
-        <section id="third-parties">
+        <section id="zh-third-parties">
           <h2>4. 第三方服务</h2>
           <p>当前版本使用 AmplitudeSwift 进行产品分析。Amplitude 可能接收产品分析事件、会话信息、应用生命周期信息、设备或安装标识和应用版本等技术信息。我们使用这些信息的目的限于产品改进、稳定性观察和问题排查。</p>
           <p>App 也可能通过 Apple 的系统能力完成安装、更新、文件导入、邮件发送和系统备份等操作。对于 Apple 或你设备上其他应用独立处理的数据，请以对应服务方的政策为准。</p>
         </section>
 
-        <section id="choices">
+        <section id="zh-choices">
           <h2>5. 你的控制方式</h2>
           <ul>
             <li>你可以在 App 设置中关闭分析开关。关闭后，iRepeater 不再主动发送产品分析事件。</li>
@@ -544,31 +508,148 @@
           </ul>
         </section>
 
-        <section id="retention">
+        <section id="zh-retention">
           <h2>6. 保留与删除</h2>
           <p>本地音频、学习记录、播放进度和偏好会保留在设备内，直到你删除素材、清除记录、卸载应用或系统清理相关数据。由于这些数据主要在设备内处理，我们通常无法远程访问或恢复它们。</p>
           <p>产品分析数据由 Amplitude 根据其服务规则保留。我们会尽量限制发送字段，只保留改进产品所需的概括性使用信息。你主动发送给我们的邮件反馈会按处理问题和维护沟通所需的时间保留。</p>
         </section>
 
-        <section id="security">
+        <section id="zh-security">
           <h2>7. 安全措施</h2>
           <p>iRepeater 依赖 iOS 沙盒、本地文件系统和系统文件选择能力来隔离应用数据。我们在产品分析前进行字段过滤，避免把本地素材名称、路径和原始搜索内容作为分析字段发送。</p>
           <p>没有任何安全措施能保证绝对安全。请只导入你有权使用且愿意保存在本设备上的音频文件，并根据需要自行做好设备级备份与访问保护。</p>
         </section>
 
-        <section id="children">
+        <section id="zh-children">
           <h2>8. 未成年人</h2>
           <p>iRepeater 面向一般语言学习和听说训练场景，并不主动面向儿童收集资料。若你认为未成年人向我们发送了不适合保留的反馈内容，请通过 <a href="mailto:irepeater@midaigc.com">irepeater@midaigc.com</a> 联系我们处理。</p>
         </section>
 
-        <section id="changes">
+        <section id="zh-changes">
           <h2>9. 政策变更</h2>
           <p>当 iRepeater 的功能、数据处理方式、第三方服务或平台要求发生变化时，我们会更新本政策，并调整页面顶部的生效日期。重大变化会尽量通过 App 内入口或发布说明提示。</p>
         </section>
 
         <footer class="foot">
           <p>如需咨询本政策，请发送邮件至 <a href="mailto:irepeater@midaigc.com">irepeater@midaigc.com</a>。</p>
-          <p><a href="./terms.html">查看 iRepeater 服务条款</a></p>
+          <p><a href="./terms.html?lang=zh">查看 iRepeater 服务条款</a></p>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <div class="shell" data-lang-panel="en" lang="en">
+    <header class="masthead">
+      <div>
+        <p class="eyebrow">iRepeater Legal</p>
+        <h1>Privacy Policy</h1>
+      </div>
+      <nav class="nav" aria-label="Legal pages">
+        <a href="./terms.html?lang=en">Terms</a>
+        <a href="./privacy.html?lang=zh">中文</a>
+        <a href="mailto:irepeater@midaigc.com">Contact</a>
+      </nav>
+    </header>
+
+    <div class="summary">
+      <div class="lead">
+        <p>iRepeater is a local audio training app. Our privacy baseline is simple and verifiable: your audio files, file names, paths, learning records, and saved clips mainly stay on your device. Data that leaves the device is limited to product analytics, app lifecycle information, and feedback you choose to send us.</p>
+        <p>This policy explains how the current version of iRepeater handles data. If app features or third-party services change, we will update this page and the related App Store privacy disclosures.</p>
+        <div class="notice">This page is provided for product transparency and platform submission. It is not legal advice, and it should still be reviewed by qualified legal or platform compliance reviewers before release.</div>
+      </div>
+      <aside class="facts" aria-label="Policy summary">
+        <div class="fact"><strong>Effective date</strong>2026-06-14</div>
+        <div class="fact"><strong>Contact</strong><a href="mailto:irepeater@midaigc.com">irepeater@midaigc.com</a></div>
+        <div class="fact"><strong>Core promise</strong>We do not upload your audio content, file names, full paths, or raw search text.</div>
+      </aside>
+    </div>
+
+    <div class="content">
+      <aside class="toc" aria-label="Table of contents">
+        <strong>Contents</strong>
+        <a href="#en-scope">Scope</a>
+        <a href="#en-matrix">Data matrix</a>
+        <a href="#en-analytics">Analytics</a>
+        <a href="#en-third-parties">Third-party services</a>
+        <a href="#en-choices">Your controls</a>
+        <a href="#en-retention">Retention and deletion</a>
+        <a href="#en-security">Security</a>
+        <a href="#en-children">Children</a>
+        <a href="#en-changes">Changes</a>
+      </aside>
+
+      <main>
+        <section id="en-scope">
+          <h2>1. Scope</h2>
+          <p>This Privacy Policy applies to the iRepeater iOS app and the static legal pages provided for the app. It does not apply to information you separately provide to Apple, your email client, the system share sheet, App Store services, or other third-party services.</p>
+          <p>iRepeater currently does not provide user login, online material hosting, remote backup, or community publishing features. Audio files you import enter the app sandbox through local system flows such as the document picker, AirDrop, or file sharing. The app does not upload audio content to our servers.</p>
+        </section>
+
+        <section id="en-matrix">
+          <h2>2. Data matrix</h2>
+          <table class="matrix">
+            <thead><tr><th>Category</th><th>Where processed</th><th>Purpose</th><th>Retention and control</th></tr></thead>
+            <tbody>
+              <tr><td>Local audio files</td><td>On device</td><td>Import, playback, A/B repeat training, waveform analysis, and material management.</td><td>You can delete materials in the app or manage files in the app container through system file-management flows.</td></tr>
+              <tr><td>File names, relative paths, playback progress</td><td>On device</td><td>Display the material list, restore recent practice state, and connect learning records with local files.</td><td>Retained with local materials and app data; deleting materials or uninstalling the app may affect this data.</td></tr>
+              <tr><td>Learning records, saved clips, A/B markers</td><td>On device</td><td>Save repeat clips, favorites, review lists, and practice preferences.</td><td>You can clear learning records in Settings; cleared records usually cannot be restored from the app.</td></tr>
+              <tr><td>Product analytics events</td><td>Sent to Amplitude</td><td>Understand page visits, import results, playback controls, filters, review flows, and settings changes.</td><td>You can turn off analytics in app Settings. After that, iRepeater stops actively sending product analytics events.</td></tr>
+              <tr><td>App lifecycle and session information</td><td>Sent to Amplitude</td><td>Understand launches, foreground/background transitions, session length, and basic stability.</td><td>Handled by the Amplitude SDK under its service rules. You can stop future sending by turning off analytics.</td></tr>
+              <tr><td>Device or installation identifiers, app version, and similar technical information</td><td>May be sent to Amplitude</td><td>Deduplication, session analysis, compatibility checks, and troubleshooting.</td><td>Handled by the third-party SDK under its service rules. We do not intentionally associate it with your name or email address.</td></tr>
+              <tr><td>Email feedback content</td><td>Leaves the device only when you send it</td><td>Reply to questions, troubleshoot issues, and record product suggestions.</td><td>Depends on the email content you send. You may ask us to delete it or stop contacting you.</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="en-analytics">
+          <h2>3. Analytics boundary</h2>
+          <p>iRepeater sends product analytics through the local TXAnalytics facade to AmplitudeSwift. Before events leave the device, app code filters file names, full paths, raw search text, and audio content, and prefers bucketed values.</p>
+          <p>Example fields may include:</p>
+          <p><span class="tag">screen_name</span><span class="tag">entry_point</span><span class="tag">result</span><span class="tag">material_type</span><span class="tag">duration_bucket</span><span class="tag">segment_count_bucket</span><span class="tag">query_length_bucket</span><span class="tag">playback_rate</span></p>
+          <p>These fields help us understand whether features work, where flows are difficult, and which training capabilities need improvement. We do not upload your audio content, file names, full paths, or raw search text for product analytics.</p>
+        </section>
+
+        <section id="en-third-parties">
+          <h2>4. Third-party services</h2>
+          <p>The current version uses AmplitudeSwift for product analytics. Amplitude may receive product analytics events, session information, app lifecycle information, device or installation identifiers, app version, and similar technical information. We use this information only for product improvement, stability observation, and troubleshooting.</p>
+          <p>The app may also use Apple system capabilities for installation, updates, file import, email sending, and system backup. For data independently handled by Apple or other apps on your device, please refer to the policies of those service providers.</p>
+        </section>
+
+        <section id="en-choices">
+          <h2>5. Your controls</h2>
+          <ul>
+            <li>You can turn off analytics in app Settings. After that, iRepeater stops actively sending product analytics events.</li>
+            <li>You can delete local audio materials. Deleting materials does not automatically delete saved learning records, but records may not be playable without the local file.</li>
+            <li>You can clear learning records in Settings, including recent playback, favorite clips, and saved clips.</li>
+            <li>You can contact us at <a href="mailto:irepeater@midaigc.com">irepeater@midaigc.com</a> to request access, correction, or deletion of information related to feedback you sent us.</li>
+          </ul>
+        </section>
+
+        <section id="en-retention">
+          <h2>6. Retention and deletion</h2>
+          <p>Local audio, learning records, playback progress, and preferences stay on the device until you delete materials, clear records, uninstall the app, or the system removes related data. Because this data is mainly processed on device, we generally cannot remotely access or restore it.</p>
+          <p>Product analytics data is retained by Amplitude under its service rules. We limit the fields we send and keep analytics focused on summarized information needed to improve the product. Email feedback you send us is retained only as needed to handle the issue and maintain the conversation.</p>
+        </section>
+
+        <section id="en-security">
+          <h2>7. Security</h2>
+          <p>iRepeater relies on the iOS sandbox, the local file system, and system file-selection capabilities to isolate app data. We filter analytics fields before sending product analytics, so local material names, paths, and raw search text are not sent as analytics fields.</p>
+          <p>No security measure is absolute. Please import only audio files you have the right to use and are comfortable keeping on this device, and keep your own device-level backups and access protection as needed.</p>
+        </section>
+
+        <section id="en-children">
+          <h2>8. Children</h2>
+          <p>iRepeater is intended for general language learning and listening/speaking practice. It does not intentionally collect information from children. If you believe a child sent us feedback that should not be retained, contact us at <a href="mailto:irepeater@midaigc.com">irepeater@midaigc.com</a>.</p>
+        </section>
+
+        <section id="en-changes">
+          <h2>9. Changes</h2>
+          <p>If iRepeater features, data practices, third-party services, or platform requirements change, we will update this policy and the effective date above. For significant changes, we will try to provide notice through the app or release notes.</p>
+        </section>
+
+        <footer class="foot">
+          <p>Questions about this policy can be sent to <a href="mailto:irepeater@midaigc.com">irepeater@midaigc.com</a>.</p>
+          <p><a href="./terms.html?lang=en">View the iRepeater Terms of Service</a></p>
         </footer>
       </main>
     </div>
