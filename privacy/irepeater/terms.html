@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>iRepeater 服务条款</title>
+  <style>
+    :root {
+      --page: #f5f7f1;
+      --ink: #20231f;
+      --muted: #667064;
+      --line: #d4d9ce;
+      --panel: #fbfff6;
+      --panel-soft: rgba(251, 255, 246, 0.86);
+      --panel-faint: rgba(251, 255, 246, 0.78);
+      --accent: #335f2e;
+      --accent-soft: #e0ecd9;
+      --caution: #6d5311;
+      --caution-soft: #f5ecd0;
+      --caution-border: rgba(109, 83, 17, 0.38);
+      --shadow: 0 24px 70px rgba(34, 47, 29, 0.11);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --page: #161916;
+        --ink: #ecefe7;
+        --muted: #afb8ac;
+        --line: #353d33;
+        --panel: #20251e;
+        --panel-soft: rgba(32, 37, 30, 0.86);
+        --panel-faint: rgba(32, 37, 30, 0.78);
+        --accent: #a8d59b;
+        --accent-soft: #22371e;
+        --caution: #eccd7f;
+        --caution-soft: #352b12;
+        --caution-border: rgba(236, 205, 127, 0.42);
+        --shadow: none;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background:
+        linear-gradient(140deg, rgba(51, 95, 46, 0.1), transparent 31rem),
+        linear-gradient(320deg, rgba(109, 83, 17, 0.1), transparent 28rem),
+        var(--page);
+      color: var(--ink);
+      font-family: ui-serif, "Songti SC", "Noto Serif CJK SC", Georgia, serif;
+      font-size: 17px;
+      line-height: 1.78;
+      overflow-wrap: break-word;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration-thickness: 0.08em;
+      text-underline-offset: 0.18em;
+      overflow-wrap: anywhere;
+    }
+
+    a:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+
+    .shell {
+      width: min(1060px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 48px 0 72px;
+    }
+
+    .masthead {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 24px;
+      align-items: start;
+      margin-bottom: 28px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--accent);
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      line-height: 1.22;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      max-width: 740px;
+      font-size: clamp(2.25rem, 6vw, 5.5rem);
+      font-weight: 800;
+    }
+
+    h2 {
+      margin-top: 40px;
+      font-size: clamp(1.55rem, 3vw, 2.35rem);
+    }
+
+    h3 {
+      margin-top: 24px;
+      font-size: 1.15rem;
+    }
+
+    p {
+      margin: 14px 0 0;
+    }
+
+    ul {
+      margin: 12px 0 0;
+      padding-left: 1.35rem;
+    }
+
+    li + li {
+      margin-top: 8px;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+      font-size: 0.95rem;
+    }
+
+    .nav a {
+      display: inline-flex;
+      min-height: 40px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0 14px;
+      background: var(--panel-soft);
+      text-decoration: none;
+    }
+
+    .intro {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 0.34fr);
+      gap: 28px;
+      align-items: stretch;
+      margin: 28px 0 38px;
+    }
+
+    .lead {
+      min-width: 0;
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .lead p:first-child {
+      margin-top: 0;
+      font-size: 1.15rem;
+    }
+
+    .facts {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .fact {
+      min-width: 0;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-faint);
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+      font-size: 0.95rem;
+    }
+
+    .fact strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--ink);
+    }
+
+    .caution {
+      margin-top: 18px;
+      padding: 16px 18px;
+      border: 1px solid var(--caution-border);
+      border-radius: 8px;
+      background: var(--caution-soft);
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+      font-size: 0.95rem;
+    }
+
+    .content {
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      gap: 36px;
+      align-items: start;
+    }
+
+    .toc {
+      position: sticky;
+      top: 18px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-soft);
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+      font-size: 0.92rem;
+    }
+
+    .toc strong {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .toc a {
+      display: block;
+      padding: 7px 0;
+      text-decoration: none;
+    }
+
+    main {
+      min-width: 0;
+    }
+
+    section {
+      padding-bottom: 10px;
+    }
+
+    .callout {
+      min-width: 0;
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+      font-size: 0.95rem;
+    }
+
+    .callout strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .foot {
+      margin-top: 52px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 820px) {
+      body {
+        font-size: 16px;
+      }
+
+      .shell {
+        width: min(720px, calc(100% - 24px));
+        padding-top: 28px;
+      }
+
+      .masthead,
+      .intro,
+      .content {
+        grid-template-columns: 1fr;
+      }
+
+      .nav {
+        justify-content: flex-start;
+      }
+
+      .lead {
+        padding: 20px;
+      }
+
+      .toc {
+        position: static;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        color: #000;
+        font-size: 12pt;
+      }
+
+      .shell {
+        width: 100%;
+        padding: 0;
+      }
+
+      .nav,
+      .toc {
+        display: none;
+      }
+
+      .masthead,
+      .intro,
+      .content {
+        display: block;
+      }
+
+      .lead,
+      .fact,
+      .caution,
+      .callout {
+        box-shadow: none;
+        background: #fff;
+      }
+
+      a {
+        color: #000;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="masthead">
+      <div>
+        <p class="eyebrow">iRepeater Legal</p>
+        <h1>服务条款</h1>
+      </div>
+      <nav class="nav" aria-label="法律页面">
+        <a href="./privacy.html">隐私政策</a>
+        <a href="mailto:irepeater@midaigc.com">联系我们</a>
+      </nav>
+    </header>
+
+    <div class="intro">
+      <div class="lead">
+        <p>感谢你使用 iRepeater。iRepeater 是一个本地音频听说训练工具，用于导入音频、播放练习、设置 A/B 复读片段、保存收藏片段和复习学习记录。</p>
+        <p>使用 iRepeater 即表示你理解并同意本服务条款。若你不同意本条款，请停止使用本应用。</p>
+        <div class="caution">本页面用于说明 iRepeater 的基本使用规则，不构成法律意见。App Store 分发版本的使用许可同时受 Apple 标准许可条款约束。</div>
+      </div>
+      <aside class="facts" aria-label="条款摘要">
+        <div class="fact">
+          <strong>生效日期</strong>
+          2026-06-14
+        </div>
+        <div class="fact">
+          <strong>联系方式</strong>
+          <a href="mailto:irepeater@midaigc.com">irepeater@midaigc.com</a>
+        </div>
+        <div class="fact">
+          <strong>相关页面</strong>
+          <a href="./privacy.html">iRepeater 隐私政策</a>
+        </div>
+      </aside>
+    </div>
+
+    <div class="content">
+      <aside class="toc" aria-label="目录">
+        <strong>目录</strong>
+        <a href="#license">使用许可</a>
+        <a href="#purpose">应用用途</a>
+        <a href="#content">你的内容</a>
+        <a href="#rules">使用规则</a>
+        <a href="#data">本地数据和备份</a>
+        <a href="#feedback">反馈</a>
+        <a href="#opensource">开源许可</a>
+        <a href="#warranty">免责声明</a>
+        <a href="#updates">变更与终止</a>
+        <a href="#contact">联系</a>
+      </aside>
+
+      <main>
+        <section id="license">
+          <h2>1. 使用许可</h2>
+          <p>如果你通过 App Store 获取 iRepeater，该应用是许可给你使用，而不是出售给你。除非另有单独书面条款，App Store 分发版本适用 Apple 的 <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/">Licensed Application End User License Agreement</a>。</p>
+          <p>在遵守本条款、Apple 适用规则和相关法律的前提下，你可以在自己拥有或控制的 Apple 设备上使用 iRepeater。</p>
+        </section>
+
+        <section id="purpose">
+          <h2>2. 应用用途</h2>
+          <p>iRepeater 用于个人语言学习、听说训练和本地音频复读。应用提供的播放、波形、片段保存、收藏和复习能力仅作为学习辅助工具，不保证适合所有文件、学习目标或设备状态。</p>
+          <p>你理解，iRepeater 依赖本地文件、iOS 系统能力和设备性能。音频格式、文件损坏、系统限制或设备存储状态可能影响导入、播放和记录保存。</p>
+        </section>
+
+        <section id="content">
+          <h2>3. 你的内容</h2>
+          <p>你对导入 iRepeater 的音频文件及相关学习记录负责。请确保你有权使用这些音频文件，并且你的使用方式不会侵犯他人的版权、隐私、肖像、商标或其他合法权益。</p>
+          <p>iRepeater 不主张拥有你导入的音频文件或你在本地生成的学习记录。应用仅在实现本地训练功能所需范围内处理这些内容。</p>
+        </section>
+
+        <section id="rules">
+          <h2>4. 使用规则</h2>
+          <p>你同意不会使用 iRepeater 从事以下行为：</p>
+          <ul>
+            <li>导入、保存或传播你无权使用的内容。</li>
+            <li>规避 iOS、App Store 或第三方服务的安全限制。</li>
+            <li>干扰应用、设备、系统服务或第三方服务的正常运行。</li>
+            <li>以违反适用法律或侵害他人权益的方式使用应用。</li>
+          </ul>
+        </section>
+
+        <section id="data">
+          <h2>5. 本地数据和备份</h2>
+          <p>iRepeater 的核心数据主要保存在设备内，包括导入的音频文件、播放进度、A/B 标记、收藏片段、复习记录和偏好设置。你应自行管理重要音频文件的原始副本和设备备份。</p>
+          <p>删除素材、清除学习记录、卸载应用、系统清理存储或设备故障都可能导致数据不可恢复。更多数据处理说明请查看 <a href="./privacy.html">隐私政策</a>。</p>
+        </section>
+
+        <section id="feedback">
+          <h2>6. 反馈</h2>
+          <p>如果你向我们发送问题、建议、错误报告或其他反馈，你授权我们在不向你支付报酬的情况下使用这些反馈来改进 iRepeater。我们会按照隐私政策处理你主动发送的邮件内容和联系方式。</p>
+        </section>
+
+        <section id="opensource">
+          <h2>7. 开源许可</h2>
+          <p>如果你基于开源许可取得 iRepeater 源码、第三方组件或相关材料，你在对应开源许可下享有的权利和义务以该开源许可为准。本服务条款不限制相关开源许可已经授予你的权利。</p>
+        </section>
+
+        <section id="warranty">
+          <h2>8. 免责声明与责任限制</h2>
+          <p>在法律允许的范围内，iRepeater 按现状提供，不保证应用在所有设备、系统版本、文件格式或使用场景下持续、无错误或满足你的全部预期。</p>
+          <p>在法律允许的范围内，我们不对因使用或无法使用 iRepeater 导致的间接损失、数据丢失、学习中断、设备问题或第三方服务问题承担责任。某些地区不允许排除或限制特定责任时，相应限制将以当地法律允许的最大范围适用。</p>
+        </section>
+
+        <section id="updates">
+          <h2>9. 变更与终止</h2>
+          <p>我们可能为了功能改进、平台要求、安全原因或维护需要更新 iRepeater 或本服务条款。条款更新后，我们会调整页面顶部的生效日期。你继续使用应用，即表示你接受更新后的条款。</p>
+          <p>如果你违反本条款，或你的使用方式给应用、用户、平台或第三方造成风险，我们可以在法律允许范围内限制或终止向你提供相关服务。</p>
+        </section>
+
+        <section id="contact">
+          <h2>10. 联系我们</h2>
+          <p>如对本服务条款或 iRepeater 有任何问题，请发送邮件至 <a href="mailto:irepeater@midaigc.com">irepeater@midaigc.com</a>。</p>
+          <div class="callout">
+            <strong>发布前提醒</strong>
+            如果未来增加新的联网能力、付费能力、素材托管、多人互动或其他重大功能，应在发布前同步复核本条款和隐私政策。
+          </div>
+        </section>
+
+        <footer class="foot">
+          <p><a href="./privacy.html">查看 iRepeater 隐私政策</a></p>
+        </footer>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
