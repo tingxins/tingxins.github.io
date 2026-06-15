@@ -1,0 +1,1170 @@
+<!doctype html>
+<html lang="zh-Hans" data-current-lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="句练是一个本地音频听说训练工具，用于逐句练习、A/B 片段复读、本地素材管理和收藏复习。">
+  <title>句练 - 本地音频听说训练</title>
+  <script>
+    (function () {
+      var value = new URL(document.URL).searchParams.get("lang") || "";
+      var lang = /^en(?:-|$)/i.test(value) ? "en" : "zh";
+      var descriptions = {
+        zh: "句练是一个本地音频听说训练工具，用于逐句练习、A/B 片段复读、本地素材管理和收藏复习。",
+        en: "Vocer is a local audio listening and speaking practice app for sentence-by-sentence practice, A/B loops, local materials, and saved segment review."
+      };
+      document.documentElement.setAttribute("data-current-lang", lang);
+      document.documentElement.lang = lang === "en" ? "en" : "zh-Hans";
+      document.title = lang === "en" ? "Vocer - Local Audio Practice" : "句练 - 本地音频听说训练";
+      var meta = document.querySelector('meta[name="description"]');
+      if (meta) meta.setAttribute("content", descriptions[lang]);
+    })();
+  </script>
+  <style>
+    :root {
+      --page: #eeece3;
+      --ink: #17231f;
+      --muted: #59655f;
+      --line: rgba(67, 83, 72, 0.18);
+      --panel: #fbfaf4;
+      --panel-strong: #f1eee4;
+      --accent: #174f43;
+      --accent-2: #9c7048;
+      --gold: #c5a45a;
+      --sage: #d9e3d8;
+      --hero-wash: rgba(23, 79, 67, 0.08);
+      --section-wash: rgba(23, 79, 67, 0.055);
+      --pill-bg: rgba(255, 252, 244, 0.68);
+      --pill-border: rgba(67, 83, 72, 0.18);
+      --proof-bg: rgba(23, 79, 67, 0.075);
+      --proof-border: rgba(23, 79, 67, 0.2);
+      --proof-text: #203b34;
+      --proof-dot: #c5a45a;
+      --topbar-bg: rgba(238, 236, 227, 0.82);
+      --brand-mark-start: #1d6254;
+      --brand-mark-end: #0f3d35;
+      --panel-gradient: linear-gradient(145deg, rgba(255, 252, 244, 0.96), rgba(241, 238, 228, 0.9));
+      --shadow: 0 24px 70px rgba(28, 40, 34, 0.14);
+      --radius: 8px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --page: #0f1513;
+        --ink: #f3efe4;
+        --muted: #adb6ad;
+        --line: rgba(227, 214, 181, 0.16);
+        --panel: #151d1a;
+        --panel-strong: #1c2823;
+        --accent: #d2b66b;
+        --accent-2: #c58d64;
+        --gold: #d2b66b;
+        --sage: #88a99a;
+        --hero-wash: rgba(210, 182, 107, 0.07);
+        --section-wash: rgba(136, 169, 154, 0.07);
+        --pill-bg: rgba(243, 239, 228, 0.07);
+        --pill-border: rgba(227, 214, 181, 0.16);
+        --proof-bg: rgba(243, 239, 228, 0.055);
+        --proof-border: rgba(210, 182, 107, 0.22);
+        --proof-text: #ede6d3;
+        --proof-dot: #d2b66b;
+        --topbar-bg: rgba(13, 19, 17, 0.82);
+        --brand-mark-start: #d2b66b;
+        --brand-mark-end: #8a6f36;
+        --panel-gradient: linear-gradient(145deg, rgba(25, 35, 31, 0.96), rgba(16, 24, 21, 0.9));
+        --shadow: 0 30px 90px rgba(0, 0, 0, 0.32);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background:
+        linear-gradient(135deg, var(--hero-wash), transparent 31rem),
+        linear-gradient(315deg, rgba(197, 164, 90, 0.12), transparent 36rem),
+        var(--page);
+      color: var(--ink);
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Avenir Next", "PingFang SC", "Segoe UI", sans-serif;
+      line-height: 1.6;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 3px solid var(--gold);
+      outline-offset: 4px;
+      border-radius: 6px;
+    }
+
+    [data-lang-panel] {
+      display: none;
+    }
+
+    html[data-current-lang="zh"] [data-lang-panel="zh"],
+    html[data-current-lang="en"] [data-lang-panel="en"],
+    html:not([data-current-lang]) [data-lang-panel="zh"] {
+      display: block;
+    }
+
+    .site-shell {
+      min-height: 100vh;
+    }
+
+    .topbar {
+      position: sticky;
+      z-index: 10;
+      top: 0;
+      border-bottom: 1px solid var(--line);
+      background: var(--topbar-bg);
+      backdrop-filter: blur(18px);
+    }
+
+    .topbar-inner,
+    .section-inner,
+    .footer-inner {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar-inner {
+      display: flex;
+      min-height: 68px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      overflow: hidden;
+      border: 1px solid rgba(255, 252, 244, 0.18);
+      border-radius: 10px;
+      background: linear-gradient(145deg, var(--brand-mark-start), var(--brand-mark-end));
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+    }
+
+    .brand-mark img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px 16px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .nav a {
+      text-decoration: none;
+    }
+
+    .nav a:hover {
+      color: var(--ink);
+    }
+
+    .nav .language {
+      border: 1px solid var(--pill-border);
+      border-radius: 999px;
+      padding: 7px 12px;
+      background: var(--pill-bg);
+      color: var(--ink);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 74px 0 42px;
+    }
+
+    .hero::after {
+      position: absolute;
+      inset: auto -8vw 0 auto;
+      width: min(54vw, 680px);
+      height: 40%;
+      background: linear-gradient(120deg, rgba(197, 164, 90, 0.22), rgba(136, 169, 154, 0.08));
+      clip-path: polygon(24% 10%, 100% 0, 86% 100%, 0 76%);
+      content: "";
+      opacity: 0.68;
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 0.94fr) minmax(340px, 0.86fr);
+      gap: 44px;
+      align-items: center;
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 720px;
+      font-size: clamp(4.8rem, 14vw, 10.5rem);
+      font-weight: 900;
+      line-height: 0.86;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      max-width: 690px;
+      margin-top: 26px;
+      color: var(--muted);
+      font-size: clamp(1.16rem, 2.4vw, 1.52rem);
+      line-height: 1.52;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px 18px;
+      margin-top: 30px;
+    }
+
+    .store-link {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+
+    .actions .store-link {
+      transition: transform 180ms ease, opacity 180ms ease;
+    }
+
+    .actions .store-link:hover {
+      opacity: 0.94;
+      transform: translateY(-1px);
+    }
+
+    .actions .store-link:active {
+      transform: translateY(0);
+    }
+
+    .store-badge {
+      display: block;
+      width: auto;
+      height: 46px;
+    }
+
+    .actions .store-badge {
+      height: 60px;
+    }
+
+    .proof-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 28px;
+    }
+
+    .proof {
+      display: inline-flex;
+      min-height: 34px;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--proof-border);
+      border-radius: 999px;
+      padding: 6px 11px 6px 9px;
+      background: var(--proof-bg);
+      color: var(--proof-text);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      line-height: 1;
+    }
+
+    .proof::before {
+      width: 6px;
+      height: 6px;
+      flex: 0 0 auto;
+      border-radius: 999px;
+      background: var(--proof-dot);
+      box-shadow: 0 0 0 3px rgba(197, 164, 90, 0.12);
+      content: "";
+    }
+
+    .phone-stage {
+      position: relative;
+      min-height: 650px;
+    }
+
+    .phone-shot {
+      position: absolute;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .phone-shot img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .phone-shot.primary {
+      z-index: 3;
+      right: 20%;
+      bottom: 0;
+      width: min(330px, 52vw);
+    }
+
+    .phone-shot.secondary {
+      z-index: 2;
+      right: 0;
+      bottom: 86px;
+      width: min(250px, 39vw);
+      opacity: 0.92;
+    }
+
+    .phone-shot.tertiary {
+      z-index: 1;
+      left: 0;
+      bottom: 118px;
+      width: min(230px, 36vw);
+      opacity: 0.74;
+    }
+
+    .band {
+      padding: 70px 0;
+    }
+
+    .band.alt {
+      background: linear-gradient(180deg, transparent, var(--section-wash), transparent);
+    }
+
+    .section-heading {
+      max-width: 760px;
+      margin-bottom: 34px;
+    }
+
+    h2 {
+      font-size: clamp(2rem, 5vw, 4.4rem);
+      font-weight: 900;
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    .section-heading p {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 1.1rem;
+    }
+
+    .feature-row {
+      display: grid;
+      grid-template-columns: minmax(0, 0.62fr) minmax(280px, 0.38fr);
+      gap: 34px;
+      align-items: center;
+      padding: 34px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .feature-row.reverse {
+      grid-template-columns: minmax(280px, 0.38fr) minmax(0, 0.62fr);
+    }
+
+    .feature-row.reverse .feature-copy {
+      order: 2;
+    }
+
+    .feature-row.reverse .feature-visual {
+      order: 1;
+    }
+
+    .feature-kicker {
+      display: inline-flex;
+      margin-bottom: 10px;
+      border: 1px solid rgba(197, 164, 90, 0.24);
+      border-radius: 999px;
+      padding: 4px 9px;
+      background: rgba(197, 164, 90, 0.075);
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h3 {
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-weight: 900;
+      line-height: 1.05;
+    }
+
+    .feature-copy p {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .feature-list {
+      display: grid;
+      gap: 10px;
+      margin: 20px 0 0;
+      padding: 0;
+      list-style: none;
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .feature-list li {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+    }
+
+    .feature-list li::before {
+      flex: 0 0 auto;
+      width: 8px;
+      height: 8px;
+      margin-top: 0.58em;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 0 3px rgba(197, 164, 90, 0.12);
+      content: "";
+    }
+
+    .feature-visual {
+      display: flex;
+      justify-content: center;
+    }
+
+    .feature-visual img {
+      display: block;
+      width: min(280px, 100%);
+      height: auto;
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+    }
+
+    .trust-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 0.7fr) minmax(260px, 0.3fr);
+      gap: 28px;
+      align-items: start;
+      padding: 34px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-gradient);
+      box-shadow: var(--shadow);
+    }
+
+    .trust-layout p {
+      color: var(--muted);
+      font-size: 1.08rem;
+    }
+
+    .trust-points {
+      display: grid;
+      gap: 12px;
+    }
+
+    .trust-point {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 15px;
+      background: var(--pill-bg);
+    }
+
+    .trust-point strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .trust-point span {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .faq-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .faq-item {
+      border-top: 1px solid var(--line);
+      padding: 22px 0 4px;
+    }
+
+    .faq-item h3 {
+      font-size: 1.2rem;
+    }
+
+    .faq-item p {
+      margin-top: 9px;
+      color: var(--muted);
+    }
+
+    .download-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 26px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 30px;
+      background:
+        linear-gradient(135deg, rgba(197, 164, 90, 0.16), transparent 46%),
+        var(--panel-gradient);
+      box-shadow: var(--shadow);
+    }
+
+    .download-panel p {
+      margin-top: 10px;
+      color: var(--muted);
+    }
+
+    .footer {
+      padding: 32px 0 42px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 18px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 18px;
+    }
+
+    .footer a {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        padding-top: 46px;
+      }
+
+      .hero-grid,
+      .feature-row,
+      .feature-row.reverse,
+      .trust-layout,
+      .download-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-row.reverse .feature-copy,
+      .feature-row.reverse .feature-visual {
+        order: initial;
+      }
+
+      .phone-stage {
+        min-height: 560px;
+      }
+
+      .phone-shot.primary {
+        right: 24%;
+        width: min(300px, 58vw);
+      }
+
+      .phone-shot.secondary {
+        right: 2%;
+        width: min(230px, 43vw);
+      }
+
+      .phone-shot.tertiary {
+        width: min(210px, 40vw);
+      }
+
+      .download-panel {
+        justify-items: start;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar-inner,
+      .section-inner,
+      .footer-inner,
+      .hero-grid {
+        width: min(100% - 24px, 560px);
+      }
+
+      .topbar {
+        position: static;
+      }
+
+      .topbar-inner {
+        min-height: 76px;
+        align-items: flex-start;
+        padding: 16px 0;
+      }
+
+      .nav {
+        gap: 8px 10px;
+        font-size: 0.9rem;
+      }
+
+      .brand-text {
+        max-width: 88px;
+        line-height: 1.1;
+      }
+
+      h1 {
+        font-size: clamp(4.2rem, 22vw, 6.2rem);
+      }
+
+      .hero-copy {
+        font-size: 1.08rem;
+      }
+
+      .actions .store-badge {
+        height: 56px;
+      }
+
+      .phone-stage {
+        min-height: 462px;
+      }
+
+      .phone-shot {
+        border-radius: 24px;
+      }
+
+      .phone-shot.primary {
+        right: 22%;
+        width: 220px;
+      }
+
+      .phone-shot.secondary {
+        right: 0;
+        bottom: 68px;
+        width: 168px;
+      }
+
+      .phone-shot.tertiary {
+        left: 0;
+        bottom: 84px;
+        width: 152px;
+      }
+
+      .band {
+        padding: 50px 0;
+      }
+
+      .feature-row {
+        gap: 22px;
+        padding: 28px 0;
+      }
+
+      .feature-visual img {
+        width: min(240px, 88%);
+      }
+
+      .trust-layout,
+      .download-panel {
+        padding: 22px;
+      }
+
+      .faq-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="site-shell" data-lang-panel="zh" lang="zh-Hans">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="./index.html?lang=zh" aria-label="句练首页">
+          <span class="brand-mark"><img src="./assets/app-icon.png" width="256" height="256" alt="" aria-hidden="true"></span>
+          <span class="brand-text">句练</span>
+        </a>
+          <nav class="nav" aria-label="主导航">
+            <a href="#features">功能</a>
+            <a href="#faq">FAQ</a>
+            <a href="./privacy.html?lang=zh">隐私政策</a>
+            <a href="./terms.html?lang=zh">服务条款</a>
+            <a class="language" href="./index.html?lang=en">English</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="zh-hero-title">
+        <div class="hero-grid">
+          <div>
+            <p class="eyebrow">Local audio practice</p>
+            <h1 id="zh-hero-title">句练</h1>
+            <p class="hero-copy">把一段音频拆成真正能练会的句子。导入本地音频，设置 A/B 片段，慢速复读，收藏关键句，再回到复习列表里反复打磨。</p>
+            <div class="actions">
+              <a class="store-link" href="https://apps.apple.com/app/id6780488152" aria-label="在 App Store 下载句练">
+                <img class="store-badge" src="./assets/app-store-badge-zh.svg" width="109" height="40" alt="在 App Store 下载">
+              </a>
+            </div>
+            <div class="proof-strip" aria-label="产品特点">
+              <span class="proof">本地音频</span>
+              <span class="proof">A/B 复读</span>
+              <span class="proof">收藏复习</span>
+              <span class="proof">可关闭分析</span>
+            </div>
+          </div>
+          <div class="phone-stage" aria-label="句练应用截图预览">
+            <div class="phone-shot tertiary">
+              <img src="./assets/screenshot-library.png" width="647" height="1400" alt="句练素材库截图">
+            </div>
+            <div class="phone-shot secondary">
+              <img src="./assets/screenshot-review.png" width="647" height="1400" alt="句练复习页面截图">
+            </div>
+            <div class="phone-shot primary">
+              <img src="./assets/screenshot-ab-loop.png" width="647" height="1400" alt="句练 A/B 复读训练页面截图">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="band" id="features" aria-labelledby="zh-features-title">
+        <div class="section-inner">
+          <div class="section-heading">
+            <p class="eyebrow">Practice flow</p>
+            <h2 id="zh-features-title">从导入到复习，围绕一句话完成闭环。</h2>
+            <p>句练不把你带进复杂学习系统，只把本地音频训练这件事做清楚：找到一句、重复一句、保存一句、回看一句。</p>
+          </div>
+
+          <div class="feature-row">
+            <div class="feature-copy">
+              <span class="feature-kicker">01 Practice</span>
+              <h3>逐句听说训练</h3>
+              <p>打开音频后，从当前句子开始练。播放、暂停、回退和继续练习都围绕同一个训练现场，不需要在文件列表和播放器之间来回找。</p>
+              <ul class="feature-list">
+                <li>继续最近练习，减少重新查找时间。</li>
+                <li>适合听写、跟读、影子练习和精听。</li>
+              </ul>
+            </div>
+            <div class="feature-visual">
+              <img src="./assets/screenshot-practice.png" width="647" height="1400" loading="lazy" alt="句练首页逐句练习截图">
+            </div>
+          </div>
+
+          <div class="feature-row reverse">
+            <div class="feature-copy">
+              <span class="feature-kicker">02 Loop</span>
+              <h3>A/B 片段复读</h3>
+              <p>把难句的开始和结束点标出来，只重复那一小段。可以调整速度和复读次数，让耳朵真正跟上细节。</p>
+              <ul class="feature-list">
+                <li>精确复读短句、连读、停顿和语调。</li>
+                <li>保存片段后，下次直接回到重点。</li>
+              </ul>
+            </div>
+            <div class="feature-visual">
+              <img src="./assets/screenshot-ab-loop.png" width="647" height="1400" loading="lazy" alt="句练 A/B 片段复读截图">
+            </div>
+          </div>
+
+          <div class="feature-row">
+            <div class="feature-copy">
+              <span class="feature-kicker">03 Library</span>
+              <h3>本地素材库</h3>
+              <p>从 Files、AirDrop 或文件共享导入音频，整理成自己的训练材料。素材以本地库为中心，不把应用变成杂乱的文件浏览器。</p>
+              <ul class="feature-list">
+                <li>本地导入，本地管理。</li>
+                <li>保留音频、片段和练习记录之间的连接。</li>
+              </ul>
+            </div>
+            <div class="feature-visual">
+              <img src="./assets/screenshot-library.png" width="647" height="1400" loading="lazy" alt="句练本地素材库截图">
+            </div>
+          </div>
+
+          <div class="feature-row reverse">
+            <div class="feature-copy">
+              <span class="feature-kicker">04 Review</span>
+              <h3>收藏片段复习</h3>
+              <p>把真正值得反复练的片段留下来。复习页帮你回到收藏和保存的句段，而不是重新听完整音频找重点。</p>
+              <ul class="feature-list">
+                <li>收藏片段和保存片段集中复习。</li>
+                <li>让复读训练从一次播放变成持续积累。</li>
+              </ul>
+            </div>
+            <div class="feature-visual">
+              <img src="./assets/screenshot-review.png" width="647" height="1400" loading="lazy" alt="句练收藏片段复习截图">
+            </div>
+          </div>
+
+          <div class="feature-row">
+            <div class="feature-copy">
+              <span class="feature-kicker">05 Settings</span>
+              <h3>复读习惯自己定</h3>
+              <p>默认复读次数、播放速度、导入后是否直接练习、本地记录清理和分析开关，都放在设置里清清楚楚。</p>
+              <ul class="feature-list">
+                <li>控制复读次数、倍速和导入行为。</li>
+                <li>可以清除学习记录，也可以关闭产品分析。</li>
+              </ul>
+            </div>
+            <div class="feature-visual">
+              <img src="./assets/screenshot-settings.png" width="647" height="1400" loading="lazy" alt="句练设置页面截图">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="band alt" id="privacy" aria-labelledby="zh-privacy-title">
+        <div class="section-inner">
+          <div class="trust-layout">
+            <div>
+              <p class="eyebrow">Local-first privacy</p>
+              <h2 id="zh-privacy-title">训练材料主要留在你的设备里。</h2>
+              <p>句练的核心数据围绕本地音频、播放进度、A/B 标记、收藏片段和复习记录展开。产品分析只用于理解功能是否顺畅，并过滤音频内容、文件名、完整路径和原始搜索词。</p>
+            </div>
+            <div class="trust-points">
+              <div class="trust-point">
+                <strong>不上传音频内容</strong>
+                <span>导入的音频用于本地播放、复读和波形训练。</span>
+              </div>
+              <div class="trust-point">
+                <strong>本地学习记录</strong>
+                <span>播放进度、片段和收藏主要保存在设备内。</span>
+              </div>
+              <div class="trust-point">
+                <strong>可关闭分析</strong>
+                <span>设置里可以停止后续产品分析事件发送。</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="band" id="faq" aria-labelledby="zh-faq-title">
+        <div class="section-inner">
+          <div class="section-heading">
+            <p class="eyebrow">FAQ</p>
+            <h2 id="zh-faq-title">开始前你可能会问。</h2>
+          </div>
+          <div class="faq-grid">
+            <div class="faq-item">
+              <h3>适合哪些材料？</h3>
+              <p>适合播客、讲座音频、听力材料、口语跟读素材和自己收集的本地音频。</p>
+            </div>
+            <div class="faq-item">
+              <h3>会替我管理学习计划吗？</h3>
+              <p>不会。句练是一个本地听说训练工具，重点是导入音频、复读片段、保存重点和复习。</p>
+            </div>
+            <div class="faq-item">
+              <h3>为什么强调 A/B 复读？</h3>
+              <p>因为语言训练常常卡在几秒钟的连读、弱读、语调和停顿上。短片段重复比整段重听更有效。</p>
+            </div>
+            <div class="faq-item">
+              <h3>隐私政策在哪里？</h3>
+              <p>你可以查看 <a href="./privacy.html?lang=zh">隐私政策</a> 和 <a href="./terms.html?lang=zh">服务条款</a>，了解数据处理和使用规则。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="band" aria-labelledby="zh-download-title">
+        <div class="section-inner">
+          <div class="download-panel">
+            <div>
+              <p class="eyebrow">Ready to practice</p>
+              <h2 id="zh-download-title">从下一句开始。</h2>
+              <p>下载句练，把你已经拥有的音频变成可以反复打磨的听说训练材料。</p>
+            </div>
+            <a class="store-link" href="https://apps.apple.com/app/id6780488152" aria-label="在 App Store 下载句练">
+              <img class="store-badge" src="./assets/app-store-badge-zh.svg" width="109" height="40" loading="lazy" alt="在 App Store 下载">
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <span>© 2026 句练 / Vocer</span>
+        <div class="footer-links">
+          <a href="./privacy.html?lang=zh">隐私政策</a>
+          <a href="./terms.html?lang=zh">服务条款</a>
+          <a href="mailto:irepeater@midaigc.com">联系</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <div class="site-shell" data-lang-panel="en" lang="en">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="./index.html?lang=en" aria-label="Vocer home">
+          <span class="brand-mark"><img src="./assets/app-icon.png" width="256" height="256" alt="" aria-hidden="true"></span>
+          <span class="brand-text">Vocer</span>
+        </a>
+          <nav class="nav" aria-label="Primary navigation">
+            <a href="#en-features">Features</a>
+            <a href="#en-faq">FAQ</a>
+            <a href="./privacy.html?lang=en">Privacy Policy</a>
+            <a href="./terms.html?lang=en">Terms</a>
+            <a class="language" href="./index.html?lang=zh">中文</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="en-hero-title">
+        <div class="hero-grid">
+          <div>
+            <p class="eyebrow">Local audio practice</p>
+            <h1 id="en-hero-title">Vocer</h1>
+            <p class="hero-copy">Practice one sentence at a time. Import local audio, loop the exact phrase, slow it down, save the moments that matter, and return to them when you review.</p>
+            <div class="actions">
+              <a class="store-link" href="https://apps.apple.com/app/id6780488152" aria-label="Download Vocer on the App Store">
+                <img class="store-badge" src="./assets/app-store-badge-en.svg" width="120" height="40" alt="Download on the App Store">
+              </a>
+            </div>
+            <div class="proof-strip" aria-label="Product highlights">
+              <span class="proof">Local audio</span>
+              <span class="proof">A/B repeat</span>
+              <span class="proof">Saved review</span>
+              <span class="proof">Analytics opt-out</span>
+            </div>
+          </div>
+          <div class="phone-stage" aria-label="Vocer app screenshot preview">
+            <div class="phone-shot tertiary">
+              <img src="./assets/screenshot-library.png" width="647" height="1400" alt="Vocer library screenshot">
+            </div>
+            <div class="phone-shot secondary">
+              <img src="./assets/screenshot-review.png" width="647" height="1400" alt="Vocer review screenshot">
+            </div>
+            <div class="phone-shot primary">
+              <img src="./assets/screenshot-ab-loop.png" width="647" height="1400" alt="Vocer A/B loop practice screenshot">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="band" id="en-features" aria-labelledby="en-features-title">
+        <div class="section-inner">
+          <div class="section-heading">
+            <p class="eyebrow">Practice flow</p>
+            <h2 id="en-features-title">From import to review, built around the sentence you are practicing.</h2>
+            <p>Vocer keeps the workflow focused: find a phrase, repeat it, save it, and come back when it is time to review.</p>
+          </div>
+
+          <div class="feature-row">
+            <div class="feature-copy">
+              <span class="feature-kicker">01 Practice</span>
+              <h3>Practice one sentence at a time</h3>
+              <p>Start from the current sentence and stay in the practice context. Playback, pause, rewind, and continue are all close to the material you are training on.</p>
+              <ul class="feature-list">
+                <li>Resume recent practice without hunting through files.</li>
+                <li>Useful for dictation, shadowing, close listening, and speaking practice.</li>
+              </ul>
+            </div>
+            <div class="feature-visual">
+              <img src="./assets/screenshot-practice.png" width="647" height="1400" loading="lazy" alt="Vocer one sentence practice screenshot">
+            </div>
+          </div>
+
+          <div class="feature-row reverse">
+            <div class="feature-copy">
+              <span class="feature-kicker">02 Loop</span>
+              <h3>Loop the exact phrase</h3>
+              <p>Set A and B points around the hard phrase, then repeat just that moment. Adjust speed and repeat count until the details become clear.</p>
+              <ul class="feature-list">
+                <li>Repeat short phrases, connected speech, pauses, and intonation.</li>
+                <li>Save segments so you can return directly to the important part.</li>
+              </ul>
+            </div>
+            <div class="feature-visual">
+              <img src="./assets/screenshot-ab-loop.png" width="647" height="1400" loading="lazy" alt="Vocer A/B loop screenshot">
+            </div>
+          </div>
+
+          <div class="feature-row">
+            <div class="feature-copy">
+              <span class="feature-kicker">03 Library</span>
+              <h3>Import audio your way</h3>
+              <p>Bring in audio from Files, AirDrop, or file sharing, then keep it in a clean local materials library. Vocer stays centered on practice instead of becoming a generic file browser.</p>
+              <ul class="feature-list">
+                <li>Local import and local material management.</li>
+                <li>Keep audio, segments, and learning records connected.</li>
+              </ul>
+            </div>
+            <div class="feature-visual">
+              <img src="./assets/screenshot-library.png" width="647" height="1400" loading="lazy" alt="Vocer local library screenshot">
+            </div>
+          </div>
+
+          <div class="feature-row reverse">
+            <div class="feature-copy">
+              <span class="feature-kicker">04 Review</span>
+              <h3>Review what matters</h3>
+              <p>Save the clips that deserve another pass. The review page brings you back to favorite and saved segments instead of making you scan the full recording again.</p>
+              <ul class="feature-list">
+                <li>Review favorite and saved clips in one place.</li>
+                <li>Turn repetition into a growing practice record.</li>
+              </ul>
+            </div>
+            <div class="feature-visual">
+              <img src="./assets/screenshot-review.png" width="647" height="1400" loading="lazy" alt="Vocer saved segment review screenshot">
+            </div>
+          </div>
+
+          <div class="feature-row">
+            <div class="feature-copy">
+              <span class="feature-kicker">05 Settings</span>
+              <h3>Personalize every repeat</h3>
+              <p>Default repeat count, playback speed, import behavior, local data cleanup, and analytics controls are kept clear in Settings.</p>
+              <ul class="feature-list">
+                <li>Control repeat count, speed, and import behavior.</li>
+                <li>Clear learning records or turn off product analytics.</li>
+              </ul>
+            </div>
+            <div class="feature-visual">
+              <img src="./assets/screenshot-settings.png" width="647" height="1400" loading="lazy" alt="Vocer settings screenshot">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="band alt" id="en-privacy" aria-labelledby="en-privacy-title">
+        <div class="section-inner">
+          <div class="trust-layout">
+            <div>
+              <p class="eyebrow">Local-first privacy</p>
+              <h2 id="en-privacy-title">Your practice materials mainly stay on your device.</h2>
+              <p>Vocer is built around local audio, playback progress, A/B markers, saved clips, and review records. Product analytics are used only to understand whether features work smoothly, and app code filters audio content, file names, full paths, and raw search text.</p>
+            </div>
+            <div class="trust-points">
+              <div class="trust-point">
+                <strong>No audio upload</strong>
+                <span>Imported audio is used for local playback, repeating, and waveform practice.</span>
+              </div>
+              <div class="trust-point">
+                <strong>Local learning records</strong>
+                <span>Playback progress, segments, and favorites mainly stay on device.</span>
+              </div>
+              <div class="trust-point">
+                <strong>Analytics opt-out</strong>
+                <span>You can stop future product analytics events in Settings.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="band" id="en-faq" aria-labelledby="en-faq-title">
+        <div class="section-inner">
+          <div class="section-heading">
+            <p class="eyebrow">FAQ</p>
+            <h2 id="en-faq-title">Before you start.</h2>
+          </div>
+          <div class="faq-grid">
+            <div class="faq-item">
+              <h3>What materials work well?</h3>
+              <p>Podcasts, lecture audio, listening materials, speaking practice files, and local recordings you already have the right to use.</p>
+            </div>
+            <div class="faq-item">
+              <h3>Does Vocer manage study plans?</h3>
+              <p>No. Vocer is a local listening and speaking practice tool focused on import, repeat loops, saved clips, and review.</p>
+            </div>
+            <div class="faq-item">
+              <h3>Why focus on A/B repeat?</h3>
+              <p>Language practice often breaks down in a few seconds of connected speech, weak forms, intonation, or pauses. Short-loop repetition is more focused than replaying an entire file.</p>
+            </div>
+            <div class="faq-item">
+              <h3>Where is the privacy policy?</h3>
+              <p>You can read the <a href="./privacy.html?lang=en">Privacy Policy</a> and <a href="./terms.html?lang=en">Terms of Service</a> for data handling and use rules.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="band" aria-labelledby="en-download-title">
+        <div class="section-inner">
+          <div class="download-panel">
+            <div>
+              <p class="eyebrow">Ready to practice</p>
+              <h2 id="en-download-title">Start with the next sentence.</h2>
+              <p>Download Vocer and turn audio you already have into repeatable listening and speaking practice.</p>
+            </div>
+            <a class="store-link" href="https://apps.apple.com/app/id6780488152" aria-label="Download Vocer on the App Store">
+              <img class="store-badge" src="./assets/app-store-badge-en.svg" width="120" height="40" loading="lazy" alt="Download on the App Store">
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <span>© 2026 Vocer / 句练</span>
+        <div class="footer-links">
+          <a href="./privacy.html?lang=en">Privacy Policy</a>
+          <a href="./terms.html?lang=en">Terms of Service</a>
+          <a href="mailto:irepeater@midaigc.com">Contact</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
