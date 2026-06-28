@@ -3,3 +3,6 @@ _site
 .jekyll-metadata
 build.sh
 *._*
+
+irepeater/models/**/.DS_Store
+.DS_Store
