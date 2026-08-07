@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terms of Service — Citizenship</title>
+<meta name="description" content="Terms for using Citizenship, including the limits of what its results can and cannot establish.">
+<script>
+/* Language comes from ?lang=zh in the URL — set on <html> before first paint so there
+   is no flash. Switching is a normal link; nothing is stored client-side. */
+(function () {
+  var lang = (location.search.match(/[?&]lang=(zh|en)/) || [])[1];
+  if (lang === "zh") { document.documentElement.className = "zh"; document.documentElement.lang = "zh-Hans"; }
+})();
+</script>
+<style>
+/* Citizenship site — mirrors the app's DesignKit tokens (docs/DESIGN.md) so the web
+   presence and the product read as one thing. Light/dark, no build step, no fonts or
+   scripts fetched from anywhere. */
+
+:root {
+  --canvas: #F8FAFC;
+  --card: #FFFFFF;
+  --ink: #0F172A;
+  --ink-2: #475569;
+  --line: #E2E8F0;
+  --blue: #1D4ED8;
+  --amber: #B45309;
+  --teal: #0F766E;
+  --purple: #6D28D9;
+  --gray: #6B7280;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --canvas: #0B1220;
+    --card: #111827;
+    --ink: #E5E7EB;
+    --ink-2: #94A3B8;
+    --line: #1F2937;
+    --blue: #60A5FA;
+    --amber: #FBBF24;
+    --teal: #2DD4BF;
+    --purple: #A78BFA;
+    --gray: #9CA3AF;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui,
+        "PingFang SC", "Hiragino Sans GB", sans-serif;
+  -webkit-text-size-adjust: 100%;
+}
+
+main { max-width: 720px; margin: 0 auto; padding: 32px 20px 96px; }
+
+header.site {
+  display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+  padding-bottom: 18px; border-bottom: 1px solid var(--line); margin-bottom: 28px;
+}
+header.site .wordmark { font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
+header.site nav { margin-left: auto; display: flex; gap: 16px; flex-wrap: wrap; }
+
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+h1 { font-size: 30px; line-height: 1.25; letter-spacing: -.02em; margin: 0 0 10px;
+     text-wrap: balance; }
+h2 { font-size: 19px; margin: 34px 0 10px; letter-spacing: -.01em; }
+h3 { font-size: 15.5px; margin: 22px 0 6px; }
+p, li { color: var(--ink-2); }
+p { margin: 0 0 12px; }
+ul { margin: 0 0 12px; padding-left: 20px; }
+li { margin-bottom: 6px; }
+strong { color: var(--ink); font-weight: 600; }
+
+.lede { font-size: 17.5px; color: var(--ink-2); margin-bottom: 26px; }
+.updated { font: 500 12px ui-monospace, Menlo, monospace; color: var(--ink-2);
+           letter-spacing: .04em; text-transform: uppercase; margin-bottom: 26px; }
+
+/* Evidence tiers — the app's symbol language, reused verbatim. */
+.tiers { display: grid; gap: 10px; margin: 18px 0 24px; }
+.tier { display: flex; gap: 12px; align-items: flex-start;
+        background: var(--card); border: 1px solid var(--line);
+        border-radius: 14px; padding: 13px 15px; }
+.tier .glyph { flex: none; width: 22px; text-align: center; font-size: 17px; }
+.tier b { display: block; font-size: 14px; color: var(--ink); margin-bottom: 2px; }
+.tier span.desc { font-size: 13.5px; color: var(--ink-2); }
+.s .glyph { color: var(--blue); }
+.d .glyph { color: var(--amber); }
+.w .glyph { color: var(--teal); }
+.i .glyph, .c .glyph { color: var(--gray); }
+
+.card { background: var(--card); border: 1px solid var(--line);
+        border-radius: 16px; padding: 18px 20px; margin: 22px 0; }
+.card.accent { border-left: 5px solid var(--purple); }
+
+table { width: 100%; border-collapse: collapse; margin: 14px 0 22px; font-size: 14.5px;
+        display: block; overflow-x: auto; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line);
+         vertical-align: top; }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: .06em;
+     color: var(--ink-2); font-weight: 600; }
+td { color: var(--ink-2); }
+
+footer.site { border-top: 1px solid var(--line); margin-top: 44px; padding-top: 18px;
+              font-size: 13px; color: var(--ink-2);
+              display: flex; gap: 16px; flex-wrap: wrap; }
+
+/* Language toggle: both languages ship in one file; no request, no flash.
+   Only ever HIDES — it must never set `display` on the visible language, or a `revert`
+   would clobber a component's own value (a `<b>` styled `display: block` fell back to
+   inline in Chinese, running headings into their body text). Leaving the shown side
+   unstyled lets each component's rule apply untouched.
+   `html body…` + !important so the hide always outranks component selectors. */
+html:not(.zh) [lang="zh"],
+html.zh [lang="en"] { display: none !important; }
+.langswitch { margin-left: auto; border: 1px solid var(--line); border-radius: 7px;
+              padding: 4px 11px; font: 500 13px inherit; text-decoration: none;
+              color: var(--ink); }
+.langswitch:hover { border-color: var(--ink-2); text-decoration: none; }
+
+</style>
+</head>
+<body>
+<main>
+    <header class="site">
+      <span class="wordmark">Citizenship</span>
+      <nav>
+        <a href="privacy.html" lang="en">Privacy</a><a href="privacy.html?lang=zh" lang="zh">隐私政策</a>
+        <a href="terms.html" lang="en">Terms</a><a href="terms.html?lang=zh" lang="zh">使用条款</a>
+      </nav>
+      <a class="langswitch" href="?lang=zh" lang="en">中文</a><a class="langswitch" href="?lang=en" lang="zh">English</a>
+    </header>
+
+  <div lang="en">
+    <h1>Terms of Service</h1>
+    <p class="updated">Last updated 7 August 2026</p>
+
+    <p>These terms cover your use of the Citizenship iOS app. By using the app you accept
+      them. If you do not, please stop using the app.</p>
+
+    <h2>What the app does</h2>
+    <p>Citizenship reads provenance information that files carry — cryptographic Content
+      Credentials (C2PA), plaintext declarations such as China's GB 45438 AIGC labels and
+      IPTC metadata, and openly readable watermarks — and reports what it found, together
+      with how much weight each finding carries.</p>
+
+    <h2>The limits of a result — please read this part</h2>
+    <div class="card accent">
+      <p><strong>A result describes a file. It never describes a person.</strong> The app
+        makes no statement about who created something, whether anyone acted dishonestly,
+        or whether a claim is true.</p>
+      <p style="margin:0"><strong>The app cannot determine whether content is AI-generated.</strong>
+        It can only report evidence a file carries, and that evidence is frequently absent.</p>
+    </div>
+    <ul>
+      <li><strong>"No AI indicators found" is not a finding of authenticity.</strong> Most
+        sharing, re-saving, and screenshotting strips provenance. An empty result is the
+        expected outcome for a great many genuine <em>and</em> AI-generated files alike.</li>
+      <li><strong>Declarations and watermarks can be forged or removed.</strong> Only the
+        signed layer is tamper-evident, and even a valid signature proves who signed a file
+        and that it has not changed since — not that what it depicts is real.</li>
+      <li><strong>A camera signature does not prove what the camera was pointed at.</strong>
+        A signed photograph of a screen is still a signed photograph.</li>
+      <li><strong>Absence of a watermark proves nothing.</strong> The app reads only openly
+        documented schemes; most commercial watermarks cannot be read by any third party.</li>
+      <li><strong>Trust lists change.</strong> A signature considered valid today may be
+        reported differently later if a certificate is revoked. Results are a snapshot of
+        the moment they were made.</li>
+    </ul>
+
+    <h2>Do not use results as proof</h2>
+    <p>Results are informational. They are not legal evidence, not a forensic examination,
+      and not a basis on which to accuse anyone of anything. Do not rely on them for legal,
+      journalistic, employment, academic-misconduct, safety, or financial decisions without
+      independent verification. Where a matter is consequential, consult a qualified
+      professional and obtain the original file from its source.</p>
+
+    <h2>Your responsibilities</h2>
+    <ul>
+      <li>Only check files you have the right to access.</li>
+      <li>Do not present a result as something it is not — in particular, do not describe
+        an empty result as confirmation that a file is genuine.</li>
+      <li>Do not use the app to harass, defame, or accuse.</li>
+    </ul>
+
+    <h2>No warranty</h2>
+    <p>The app is provided "as is", without warranty of any kind, express or implied,
+      including fitness for a particular purpose and accuracy of results. Provenance
+      standards, watermarking schemes, and trust lists evolve independently of this app,
+      and support for them may change or break.</p>
+
+    <h2>Limitation of liability</h2>
+    <p>To the maximum extent permitted by law, the developer is not liable for any damages
+      arising from use of the app or from reliance on its results — including decisions
+      made, or not made, on the basis of a verdict. Some jurisdictions do not allow certain
+      exclusions, in which case those exclusions may not apply to you.</p>
+
+    <h2>Open-source components</h2>
+    <p>The app includes third-party open-source software under permissive licences. The
+      full texts are in the app under Settings ▸ Open-Source Licenses.</p>
+
+    <h2>Cost and accounts</h2>
+    <p>The app has no accounts, no subscriptions, and no in-app purchases. It performs all
+      work on your device.</p>
+
+    <h2>Changes</h2>
+    <p>These terms may be updated as the app changes; the date above reflects the current
+      version. Continuing to use the app after an update means you accept the revised terms.</p>
+
+    <h2>Contact</h2>
+    <p><a href="mailto:citizenship@midaigc.com">citizenship@midaigc.com</a></p>
+  </div>
+
+  <div lang="zh">
+    <h1>使用条款</h1>
+    <p class="updated">最后更新：2026 年 8 月 7 日</p>
+
+    <p>本条款适用于你对 Citizenship iOS 应用的使用。使用即表示接受本条款；若不接受，请停止使用。</p>
+
+    <h2>本应用做什么</h2>
+    <p>Citizenship 读取文件携带的溯源信息——加密内容凭证（C2PA）、明文声明（如中国 GB 45438
+      的 AIGC 标识与 IPTC 元数据）以及可公开读取的水印——并报告发现的内容及其分量。</p>
+
+    <h2>结论的局限——请务必阅读</h2>
+    <div class="card accent">
+      <p><strong>结论描述的是文件，绝不描述人。</strong>本应用不对内容由谁创作、
+        是否有人存在不诚实行为、或某项主张是否属实作出任何判断。</p>
+      <p style="margin:0"><strong>本应用无法判定内容是否由 AI 生成。</strong>
+        它只能报告文件所携带的证据，而这些证据经常是缺失的。</p>
+    </div>
+    <ul>
+      <li><strong>「未发现 AI 痕迹」不等于认定内容真实。</strong>大多数分享、另存与截图都会剥离溯源信息。
+        对于大量真实<em>以及</em> AI 生成的文件而言，空结果都是意料之中的。</li>
+      <li><strong>声明与水印可被伪造或移除。</strong>只有签名层可发现篡改；
+        而即使签名有效，也只能证明文件由谁签署、且此后未被修改——并不能证明其所呈现的内容属实。</li>
+      <li><strong>相机签名无法证明相机拍摄的对象。</strong>对着屏幕拍摄的照片，依然是一张有签名的照片。</li>
+      <li><strong>读不到水印不能说明任何问题。</strong>本应用只读取公开记录的方案；
+        多数商业水印无法被任何第三方读取。</li>
+      <li><strong>信任列表会变化。</strong>今天被判定有效的签名，若证书日后被吊销，结论可能不同。
+        结论只是作出当时的快照。</li>
+    </ul>
+
+    <h2>请勿将结论用作证据</h2>
+    <p>结论仅供参考。它不是法律证据，不是司法鉴定，也不能作为指控他人的依据。
+      在未经独立核实的情况下，请勿据此作出法律、新闻、雇佣、学术不端、安全或财务方面的决定。
+      事关重大时，请咨询有资质的专业人士，并向来源方索取原始文件。</p>
+
+    <h2>你的责任</h2>
+    <ul>
+      <li>只检测你有权访问的文件。</li>
+      <li>不要把结论说成它本不是的东西——尤其不要将空结果描述为文件真实的证明。</li>
+      <li>不得利用本应用进行骚扰、诽谤或指控。</li>
+    </ul>
+
+    <h2>免责声明</h2>
+    <p>本应用按「现状」提供，不作任何明示或默示的保证，包括适销性、特定用途适用性与结论准确性。
+      溯源标准、水印方案与信任列表的演进独立于本应用，相关支持可能变更或失效。</p>
+
+    <h2>责任限制</h2>
+    <p>在法律允许的最大范围内，开发者不对因使用本应用或依赖其结论而产生的任何损害承担责任——
+      包括基于结论作出或未作出的决定。某些司法辖区不允许特定的责任排除，
+      在该等情形下相关排除条款可能对你不适用。</p>
+
+    <h2>开源组件</h2>
+    <p>本应用包含依据宽松许可证发布的第三方开源软件，完整许可证文本见应用内
+      设置 ▸ 开源许可证。</p>
+
+    <h2>费用与账号</h2>
+    <p>本应用没有账号、订阅或应用内购买，所有处理均在你的设备上完成。</p>
+
+    <h2>条款变更</h2>
+    <p>本条款可能随应用更新而修订，上方日期代表当前版本。更新后继续使用即表示接受修订后的条款。</p>
+
+    <h2>联系方式</h2>
+    <p><a href="mailto:citizenship@midaigc.com">citizenship@midaigc.com</a></p>
+  </div>
+
+  <footer class="site">
+    <a href="index.html" lang="en">Home</a><a href="index.html?lang=zh" lang="zh">首页</a>
+    <a href="privacy.html" lang="en">Privacy Policy</a><a href="privacy.html?lang=zh" lang="zh">隐私政策</a>
+    <a href="terms.html" lang="en">Terms of Service</a><a href="terms.html?lang=zh" lang="zh">使用条款</a>
+    <a href="https://apps.apple.com/app/id6799147056">App Store</a>
+  </footer>
+</main>
+</body>
+</html>

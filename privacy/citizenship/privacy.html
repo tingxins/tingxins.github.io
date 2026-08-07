@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy — Citizenship</title>
+<meta name="description" content="Citizenship collects nothing. Every check runs on your device and the app makes no network requests.">
+<script>
+/* Language comes from ?lang=zh in the URL — set on <html> before first paint so there
+   is no flash. Switching is a normal link; nothing is stored client-side. */
+(function () {
+  var lang = (location.search.match(/[?&]lang=(zh|en)/) || [])[1];
+  if (lang === "zh") { document.documentElement.className = "zh"; document.documentElement.lang = "zh-Hans"; }
+})();
+</script>
+<style>
+/* Citizenship site — mirrors the app's DesignKit tokens (docs/DESIGN.md) so the web
+   presence and the product read as one thing. Light/dark, no build step, no fonts or
+   scripts fetched from anywhere. */
+
+:root {
+  --canvas: #F8FAFC;
+  --card: #FFFFFF;
+  --ink: #0F172A;
+  --ink-2: #475569;
+  --line: #E2E8F0;
+  --blue: #1D4ED8;
+  --amber: #B45309;
+  --teal: #0F766E;
+  --purple: #6D28D9;
+  --gray: #6B7280;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --canvas: #0B1220;
+    --card: #111827;
+    --ink: #E5E7EB;
+    --ink-2: #94A3B8;
+    --line: #1F2937;
+    --blue: #60A5FA;
+    --amber: #FBBF24;
+    --teal: #2DD4BF;
+    --purple: #A78BFA;
+    --gray: #9CA3AF;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui,
+        "PingFang SC", "Hiragino Sans GB", sans-serif;
+  -webkit-text-size-adjust: 100%;
+}
+
+main { max-width: 720px; margin: 0 auto; padding: 32px 20px 96px; }
+
+header.site {
+  display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+  padding-bottom: 18px; border-bottom: 1px solid var(--line); margin-bottom: 28px;
+}
+header.site .wordmark { font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
+header.site nav { margin-left: auto; display: flex; gap: 16px; flex-wrap: wrap; }
+
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+h1 { font-size: 30px; line-height: 1.25; letter-spacing: -.02em; margin: 0 0 10px;
+     text-wrap: balance; }
+h2 { font-size: 19px; margin: 34px 0 10px; letter-spacing: -.01em; }
+h3 { font-size: 15.5px; margin: 22px 0 6px; }
+p, li { color: var(--ink-2); }
+p { margin: 0 0 12px; }
+ul { margin: 0 0 12px; padding-left: 20px; }
+li { margin-bottom: 6px; }
+strong { color: var(--ink); font-weight: 600; }
+
+.lede { font-size: 17.5px; color: var(--ink-2); margin-bottom: 26px; }
+.updated { font: 500 12px ui-monospace, Menlo, monospace; color: var(--ink-2);
+           letter-spacing: .04em; text-transform: uppercase; margin-bottom: 26px; }
+
+/* Evidence tiers — the app's symbol language, reused verbatim. */
+.tiers { display: grid; gap: 10px; margin: 18px 0 24px; }
+.tier { display: flex; gap: 12px; align-items: flex-start;
+        background: var(--card); border: 1px solid var(--line);
+        border-radius: 14px; padding: 13px 15px; }
+.tier .glyph { flex: none; width: 22px; text-align: center; font-size: 17px; }
+.tier b { display: block; font-size: 14px; color: var(--ink); margin-bottom: 2px; }
+.tier span.desc { font-size: 13.5px; color: var(--ink-2); }
+.s .glyph { color: var(--blue); }
+.d .glyph { color: var(--amber); }
+.w .glyph { color: var(--teal); }
+.i .glyph, .c .glyph { color: var(--gray); }
+
+.card { background: var(--card); border: 1px solid var(--line);
+        border-radius: 16px; padding: 18px 20px; margin: 22px 0; }
+.card.accent { border-left: 5px solid var(--purple); }
+
+table { width: 100%; border-collapse: collapse; margin: 14px 0 22px; font-size: 14.5px;
+        display: block; overflow-x: auto; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line);
+         vertical-align: top; }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: .06em;
+     color: var(--ink-2); font-weight: 600; }
+td { color: var(--ink-2); }
+
+footer.site { border-top: 1px solid var(--line); margin-top: 44px; padding-top: 18px;
+              font-size: 13px; color: var(--ink-2);
+              display: flex; gap: 16px; flex-wrap: wrap; }
+
+/* Language toggle: both languages ship in one file; no request, no flash.
+   Only ever HIDES — it must never set `display` on the visible language, or a `revert`
+   would clobber a component's own value (a `<b>` styled `display: block` fell back to
+   inline in Chinese, running headings into their body text). Leaving the shown side
+   unstyled lets each component's rule apply untouched.
+   `html body…` + !important so the hide always outranks component selectors. */
+html:not(.zh) [lang="zh"],
+html.zh [lang="en"] { display: none !important; }
+.langswitch { margin-left: auto; border: 1px solid var(--line); border-radius: 7px;
+              padding: 4px 11px; font: 500 13px inherit; text-decoration: none;
+              color: var(--ink); }
+.langswitch:hover { border-color: var(--ink-2); text-decoration: none; }
+
+</style>
+</head>
+<body>
+<main>
+    <header class="site">
+      <span class="wordmark">Citizenship</span>
+      <nav>
+        <a href="privacy.html" lang="en">Privacy</a><a href="privacy.html?lang=zh" lang="zh">隐私政策</a>
+        <a href="terms.html" lang="en">Terms</a><a href="terms.html?lang=zh" lang="zh">使用条款</a>
+      </nav>
+      <a class="langswitch" href="?lang=zh" lang="en">中文</a><a class="langswitch" href="?lang=en" lang="zh">English</a>
+    </header>
+
+  <div lang="en">
+    <h1>Privacy Policy</h1>
+    <p class="updated">Last updated 7 August 2026</p>
+
+    <div class="card accent">
+      <p style="margin:0"><strong>Citizenship collects no data about you.</strong> There is no
+      account, no analytics, no advertising, no tracking, and no server. The app makes no
+      network requests at all — the files you check never leave your device, because there
+      is nowhere for them to go.</p>
+    </div>
+
+    <h2>What the app stores, and where</h2>
+    <p>Everything below stays in the app's own storage on your device. It is included in
+      your device backups if you have those enabled, and it is deleted when you delete
+      the app.</p>
+    <table>
+      <tr><th>Data</th><th>Why</th><th>Your control</th></tr>
+      <tr>
+        <td><strong>Scan history</strong> — the verdict, the evidence list, a small
+            thumbnail, and the time of the check</td>
+        <td>So you can look back at a previous result</td>
+        <td>Settings ▸ Keep history. Turning it off deletes what was stored, including
+            thumbnails. History ▸ Clear removes it at any time.</td>
+      </tr>
+      <tr>
+        <td><strong>Two preferences</strong> — whether onboarding was completed, and the
+            keep-history setting</td>
+        <td>So the app behaves the way you left it</td>
+        <td>Removed with the app</td>
+      </tr>
+      <tr>
+        <td><strong>Temporary copies</strong> of a file being checked</td>
+        <td>Some formats must be read from disk (video hashing, documents)</td>
+        <td>Replaced on the next scan and cleared by the system; cancelling a scan
+            deletes the copy immediately</td>
+      </tr>
+    </table>
+
+    <h2>What the app accesses while you use it</h2>
+    <ul>
+      <li><strong>Photos you pick.</strong> Selection uses Apple's system photo picker,
+        which runs outside the app. Citizenship receives only the item you chose and
+        never gets access to your photo library — which is why it never asks for photo
+        permission.</li>
+      <li><strong>Files you choose or share.</strong> Only the specific file you select,
+        or the one you send in via the share sheet.</li>
+      <li><strong>The clipboard, only when you tap Paste.</strong> The app checks whether
+        the clipboard holds an image or text so it can enable or grey out the Paste row;
+        it reads the contents only when you explicitly tap it.</li>
+    </ul>
+    <p>The share extension behaves the same way, and writes no history at all.</p>
+
+    <h2>What is never collected</h2>
+    <p>No personal information, no contact details, no location, no device or advertising
+      identifiers, no usage or crash analytics, no diagnostics. Nothing is shared with any
+      third party, because nothing is transmitted anywhere. The app's App Store privacy
+      manifest declares zero collected data types and no tracking.</p>
+
+    <h2>Children</h2>
+    <p>The app is not directed at children and collects nothing from anyone, regardless
+      of age.</p>
+
+    <h2>Changes</h2>
+    <p>If a future version ever transmits anything — for example an optional cloud check —
+      this policy will be updated before that version ships, and the app will ask for your
+      explicit consent each time, on a per-scan basis. No such feature exists today.</p>
+
+    <h2>Contact</h2>
+    <p>Questions about this policy: <a href="mailto:citizenship@midaigc.com">citizenship@midaigc.com</a></p>
+  </div>
+
+  <div lang="zh">
+    <h1>隐私政策</h1>
+    <p class="updated">最后更新：2026 年 8 月 7 日</p>
+
+    <div class="card accent">
+      <p style="margin:0"><strong>Citizenship 不收集任何关于你的数据。</strong>没有账号、
+      没有数据分析、没有广告、没有追踪，也没有服务器。应用不发起任何网络请求——
+      你检测的文件不会离开设备，因为它根本无处可去。</p>
+    </div>
+
+    <h2>应用存储什么，存在哪里</h2>
+    <p>以下内容全部保存在设备上应用自己的存储空间中。若你启用了设备备份，它们会包含在备份内；
+      删除应用时会一并删除。</p>
+    <table>
+      <tr><th>数据</th><th>用途</th><th>你的控制方式</th></tr>
+      <tr>
+        <td><strong>检测历史</strong>——结论、证据列表、一张小缩略图与检测时间</td>
+        <td>方便你回看此前的结果</td>
+        <td>设置 ▸ 保留历史记录。关闭即删除已存储内容（含缩略图）。历史记录 ▸ 清除可随时清空。</td>
+      </tr>
+      <tr>
+        <td><strong>两项偏好设置</strong>——是否已完成引导，以及是否保留历史记录</td>
+        <td>让应用保持你上次的使用状态</td>
+        <td>随应用一并删除</td>
+      </tr>
+      <tr>
+        <td>被检测文件的<strong>临时副本</strong></td>
+        <td>部分格式必须从磁盘读取（视频哈希、文档）</td>
+        <td>下次扫描时替换，并由系统清理；取消扫描会立即删除该副本</td>
+      </tr>
+    </table>
+
+    <h2>使用期间应用会访问什么</h2>
+    <ul>
+      <li><strong>你选择的照片。</strong>选择过程使用 Apple 的系统照片选择器，它在应用之外运行。
+        Citizenship 只会收到你选中的那一项，永远无法访问你的照片图库——这也是它从不索取照片权限的原因。</li>
+      <li><strong>你选择或分享的文件。</strong>仅限你选中的那个文件，或你通过分享面板发送进来的文件。</li>
+      <li><strong>剪贴板，且仅在你点按「粘贴」时。</strong>应用会检查剪贴板中是否有图片或文本，
+        以便决定「粘贴」一行是可用还是置灰；只有在你明确点按时才会读取其内容。</li>
+    </ul>
+    <p>分享扩展的行为完全相同，并且不写入任何历史记录。</p>
+
+    <h2>绝不收集的内容</h2>
+    <p>不收集个人信息、联系方式、位置、设备或广告标识符、使用或崩溃分析、诊断数据。
+      不会与任何第三方共享，因为没有任何内容被传输出去。应用的 App Store 隐私清单
+      声明了零收集数据类型且无追踪。</p>
+
+    <h2>儿童</h2>
+    <p>本应用并非面向儿童，且不收集任何人的任何数据，无论年龄。</p>
+
+    <h2>政策变更</h2>
+    <p>如果未来版本会传输任何内容——例如可选的云端检测——本政策会在该版本发布前更新，
+      并且应用会在每次扫描时单独征求你的明确同意。目前不存在此类功能。</p>
+
+    <h2>联系方式</h2>
+    <p>关于本政策的问题：<a href="mailto:citizenship@midaigc.com">citizenship@midaigc.com</a></p>
+  </div>
+
+  <footer class="site">
+    <a href="index.html" lang="en">Home</a><a href="index.html?lang=zh" lang="zh">首页</a>
+    <a href="privacy.html" lang="en">Privacy Policy</a><a href="privacy.html?lang=zh" lang="zh">隐私政策</a>
+    <a href="terms.html" lang="en">Terms of Service</a><a href="terms.html?lang=zh" lang="zh">使用条款</a>
+    <a href="https://apps.apple.com/app/id6799147056">App Store</a>
+  </footer>
+</main>
+</body>
+</html>
