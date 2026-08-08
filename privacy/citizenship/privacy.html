@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Privacy Policy — Citizenship</title>
-<meta name="description" content="Citizenship collects nothing. Every check runs on your device and the app makes no network requests.">
+<meta name="description" content="The files you check never leave your device. Citizenship runs every check on-device and sends only anonymous usage statistics.">
 <script>
 /* Language comes from ?lang=zh in the URL — set on <html> before first paint so there
    is no flash. Switching is a normal link; nothing is stored client-side. */
@@ -143,10 +143,13 @@ html.zh [lang="en"] { display: none !important; }
     <p class="updated">Last updated 7 August 2026</p>
 
     <div class="card accent">
-      <p style="margin:0"><strong>Citizenship collects no data about you.</strong> There is no
-      account, no analytics, no advertising, no tracking, and no server. The app makes no
-      network requests at all — the files you check never leave your device, because there
-      is nowhere for them to go.</p>
+      <p style="margin:0"><strong>The files you check never leave your device.</strong> Every
+      check runs on your phone. Nothing you scan — no image, video, document, or text — is
+      ever uploaded, and there is no server that holds your content. There is no account,
+      no advertising, and no tracking.</p>
+      <p style="margin:.8em 0 0"><strong>The app does collect anonymous usage statistics</strong>
+      — which screens you open, which button started a check, and what kind of result it
+      produced. Never the file, its name, or anything inside it. Details below.</p>
     </div>
 
     <h2>What the app stores, and where</h2>
@@ -190,20 +193,48 @@ html.zh [lang="en"] { display: none !important; }
     </ul>
     <p>The share extension behaves the same way, and writes no history at all.</p>
 
+    <h2>Usage analytics</h2>
+    <p>To understand which parts of the app are actually used, Citizenship sends anonymous
+      product-usage events to <a href="https://amplitude.com/privacy">Amplitude</a>, an
+      analytics provider based in the United States. This is the only network request the
+      app makes.</p>
+    <p><strong>What is sent:</strong></p>
+    <ul>
+      <li>When the app is launched, and which screens you open.</li>
+      <li>Which control started a check — the Photos tile, the Files tile, Browse, or Paste.</li>
+      <li>For a completed check: the <em>kind</em> of file (image, video, audio, document or
+        text), the result band, and roughly how long it took, rounded to a range such as
+        "1–3s".</li>
+      <li>A random identifier created the first time you open the app, so that repeat use is
+        counted as one person rather than many. It is not your device's identifier, it is
+        shared with no one, and deleting the app discards it.</li>
+      <li>Your device model, system version, app version, and language.</li>
+    </ul>
+    <p><strong>What is never sent:</strong> the file itself, its name, its size, its
+      dimensions, its contents, any thumbnail, any text you paste, or any of your history.
+      Your IP address, city and region are switched off in our configuration, as are your
+      mobile carrier and Apple's vendor identifier.</p>
+    <p>These events describe how the app is used. Because a completed check reports its
+      result band, they do reveal that <em>someone</em> checked a file of a certain kind and
+      what the app concluded — never which file, and never anything inside it.</p>
+    <p>Analytics is on by default, and the app does not currently offer a switch to turn it
+      off. If you would like your data excluded or deleted, write to the address below.</p>
+
     <h2>What is never collected</h2>
-    <p>No personal information, no contact details, no location, no device or advertising
-      identifiers, no usage or crash analytics, no diagnostics. Nothing is shared with any
-      third party, because nothing is transmitted anywhere. The app's App Store privacy
-      manifest declares zero collected data types and no tracking.</p>
+    <p>No personal information, no contact details, no location, no advertising identifier,
+      no crash or diagnostic reports, and no content from any file you check. Nothing is
+      sold, and nothing is shared with data brokers. The app performs no cross-app or
+      cross-site tracking, and its App Store privacy manifest declares no tracking.</p>
 
     <h2>Children</h2>
-    <p>The app is not directed at children and collects nothing from anyone, regardless
-      of age.</p>
+    <p>The app is not directed at children. It collects no personal information from anyone,
+      regardless of age; the usage statistics described above are anonymous.</p>
 
     <h2>Changes</h2>
-    <p>If a future version ever transmits anything — for example an optional cloud check —
-      this policy will be updated before that version ships, and the app will ask for your
-      explicit consent each time, on a per-scan basis. No such feature exists today.</p>
+    <p>If a future version ever transmits the contents of a file you check — for example an
+      optional cloud check — this policy will be updated before that version ships, and the
+      app will ask for your explicit consent each time, on a per-scan basis. No such feature
+      exists today.</p>
 
     <h2>Contact</h2>
     <p>Questions about this policy: <a href="mailto:citizenship@midaigc.com">citizenship@midaigc.com</a></p>
@@ -214,9 +245,12 @@ html.zh [lang="en"] { display: none !important; }
     <p class="updated">最后更新：2026 年 8 月 7 日</p>
 
     <div class="card accent">
-      <p style="margin:0"><strong>Citizenship 不收集任何关于你的数据。</strong>没有账号、
-      没有数据分析、没有广告、没有追踪，也没有服务器。应用不发起任何网络请求——
-      你检测的文件不会离开设备，因为它根本无处可去。</p>
+      <p style="margin:0"><strong>你检测的文件不会离开设备。</strong>所有检测都在你的手机上完成，
+      你扫描的任何内容——图片、视频、文档或文本——都不会被上传，也没有任何服务器保存你的内容。
+      没有账号、没有广告，也没有追踪。</p>
+      <p style="margin:.8em 0 0"><strong>应用会收集匿名的使用统计</strong>——你打开了哪些界面、
+      通过哪个按钮发起检测，以及得到了哪一类结论。绝不包含文件本身、文件名或其中的任何内容。
+      详见下文。</p>
     </div>
 
     <h2>应用存储什么，存在哪里</h2>
@@ -251,16 +285,38 @@ html.zh [lang="en"] { display: none !important; }
     </ul>
     <p>分享扩展的行为完全相同，并且不写入任何历史记录。</p>
 
+    <h2>使用统计</h2>
+    <p>为了解应用的哪些部分真正被使用，Citizenship 会向
+      <a href="https://amplitude.com/privacy">Amplitude</a>（一家位于美国的分析服务商）
+      发送匿名的产品使用事件。这是应用发起的唯一网络请求。</p>
+    <p><strong>会发送的内容：</strong></p>
+    <ul>
+      <li>应用何时启动，以及你打开了哪些界面。</li>
+      <li>通过哪个控件发起检测——照片磁贴、文件磁贴、浏览或粘贴。</li>
+      <li>检测完成时：文件的<em>类别</em>（图片、视频、音频、文档或文本）、结论分级，
+        以及大致耗时区间（例如「1–3 秒」）。</li>
+      <li>首次打开应用时生成的一个随机标识符，用于把重复使用计为同一个人而非多人。
+        它不是你的设备标识符，不与任何人共享，删除应用即失效。</li>
+      <li>设备型号、系统版本、应用版本与语言。</li>
+    </ul>
+    <p><strong>绝不会发送的内容：</strong>文件本身、文件名、大小、尺寸、内容、任何缩略图、
+      你粘贴的任何文本，以及你的任何历史记录。我们在配置中关闭了 IP 地址、城市与地区，
+      同时也关闭了运营商信息与 Apple 的供应商标识符（IDFV）。</p>
+    <p>这些事件描述的是应用如何被使用。由于检测完成时会上报结论分级，它们确实会显示
+      「有人检测了某一类文件」以及应用得出的结论——但绝不包含是哪个文件，也绝不包含其中的任何内容。</p>
+    <p>使用统计默认开启，应用目前未提供关闭开关。若你希望排除或删除自己的数据，
+      请通过下方邮箱联系我们。</p>
+
     <h2>绝不收集的内容</h2>
-    <p>不收集个人信息、联系方式、位置、设备或广告标识符、使用或崩溃分析、诊断数据。
-      不会与任何第三方共享，因为没有任何内容被传输出去。应用的 App Store 隐私清单
-      声明了零收集数据类型且无追踪。</p>
+    <p>不收集个人信息、联系方式、位置、广告标识符、崩溃或诊断报告，也不收集你所检测文件的任何内容。
+      不出售任何数据，不与数据经纪商共享。应用不进行跨应用或跨网站追踪，其 App Store
+      隐私清单声明无追踪。</p>
 
     <h2>儿童</h2>
-    <p>本应用并非面向儿童，且不收集任何人的任何数据，无论年龄。</p>
+    <p>本应用并非面向儿童。无论年龄，应用都不收集任何人的个人信息；上述使用统计为匿名数据。</p>
 
     <h2>政策变更</h2>
-    <p>如果未来版本会传输任何内容——例如可选的云端检测——本政策会在该版本发布前更新，
+    <p>如果未来版本会传输你所检测文件的内容——例如可选的云端检测——本政策会在该版本发布前更新，
       并且应用会在每次扫描时单独征求你的明确同意。目前不存在此类功能。</p>
 
     <h2>联系方式</h2>
