@@ -2,1169 +2,687 @@
 <html lang="zh-Hans" data-current-lang="zh">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f1eee5" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#080d0c" media="(prefers-color-scheme: dark)">
   <meta name="description" content="句练是一个本地音频听说训练工具，用于逐句练习、A/B 片段复读、本地素材管理和收藏复习。">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="句练 / Vocer - 本地音频听说训练">
+  <meta property="og:description" content="导入本地音频，设置 A/B 片段，慢速复读，收藏关键句，再回到复习列表里反复打磨。">
+  <meta property="og:image" content="./assets/screenshot-ab-loop.png">
+  <meta name="twitter:card" content="summary_large_image">
   <title>句练 - 本地音频听说训练</title>
+  <link rel="icon" href="./assets/app-icon.png">
+  <link rel="apple-touch-icon" href="./assets/app-icon.png">
   <script>
     (function () {
+      var d = document.documentElement;
+      d.classList.add("js");
+      try {
+        var stored = localStorage.getItem("vocer-theme");
+        if (stored === "dark" || stored === "light") d.setAttribute("data-theme", stored);
+      } catch (e) {}
       var value = new URL(document.URL).searchParams.get("lang") || "";
       var lang = /^en(?:-|$)/i.test(value) ? "en" : "zh";
       var descriptions = {
         zh: "句练是一个本地音频听说训练工具，用于逐句练习、A/B 片段复读、本地素材管理和收藏复习。",
         en: "Vocer is a local audio listening and speaking practice app for sentence-by-sentence practice, A/B loops, local materials, and saved segment review."
       };
-      document.documentElement.setAttribute("data-current-lang", lang);
-      document.documentElement.lang = lang === "en" ? "en" : "zh-Hans";
+      d.setAttribute("data-current-lang", lang);
+      d.lang = lang === "en" ? "en" : "zh-Hans";
       document.title = lang === "en" ? "Vocer - Local Audio Practice" : "句练 - 本地音频听说训练";
       var meta = document.querySelector('meta[name="description"]');
       if (meta) meta.setAttribute("content", descriptions[lang]);
     })();
   </script>
   <style>
-    :root {
-      --page: #eeece3;
-      --ink: #17231f;
-      --muted: #59655f;
-      --line: rgba(67, 83, 72, 0.18);
-      --panel: #fbfaf4;
-      --panel-strong: #f1eee4;
-      --accent: #174f43;
-      --accent-2: #9c7048;
-      --gold: #c5a45a;
-      --sage: #d9e3d8;
-      --hero-wash: rgba(23, 79, 67, 0.08);
-      --section-wash: rgba(23, 79, 67, 0.055);
-      --pill-bg: rgba(255, 252, 244, 0.68);
-      --pill-border: rgba(67, 83, 72, 0.18);
-      --proof-bg: rgba(23, 79, 67, 0.075);
-      --proof-border: rgba(23, 79, 67, 0.2);
-      --proof-text: #203b34;
-      --proof-dot: #c5a45a;
-      --topbar-bg: rgba(238, 236, 227, 0.82);
-      --brand-mark-start: #1d6254;
-      --brand-mark-end: #0f3d35;
-      --panel-gradient: linear-gradient(145deg, rgba(255, 252, 244, 0.96), rgba(241, 238, 228, 0.9));
-      --shadow: 0 24px 70px rgba(28, 40, 34, 0.14);
-      --radius: 8px;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --page: #0f1513;
-        --ink: #f3efe4;
-        --muted: #adb6ad;
-        --line: rgba(227, 214, 181, 0.16);
-        --panel: #151d1a;
-        --panel-strong: #1c2823;
-        --accent: #d2b66b;
-        --accent-2: #c58d64;
-        --gold: #d2b66b;
-        --sage: #88a99a;
-        --hero-wash: rgba(210, 182, 107, 0.07);
-        --section-wash: rgba(136, 169, 154, 0.07);
-        --pill-bg: rgba(243, 239, 228, 0.07);
-        --pill-border: rgba(227, 214, 181, 0.16);
-        --proof-bg: rgba(243, 239, 228, 0.055);
-        --proof-border: rgba(210, 182, 107, 0.22);
-        --proof-text: #ede6d3;
-        --proof-dot: #d2b66b;
-        --topbar-bg: rgba(13, 19, 17, 0.82);
-        --brand-mark-start: #d2b66b;
-        --brand-mark-end: #8a6f36;
-        --panel-gradient: linear-gradient(145deg, rgba(25, 35, 31, 0.96), rgba(16, 24, 21, 0.9));
-        --shadow: 0 30px 90px rgba(0, 0, 0, 0.32);
-      }
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      background:
-        linear-gradient(135deg, var(--hero-wash), transparent 31rem),
-        linear-gradient(315deg, rgba(197, 164, 90, 0.12), transparent 36rem),
-        var(--page);
-      color: var(--ink);
-      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Avenir Next", "PingFang SC", "Segoe UI", sans-serif;
-      line-height: 1.6;
-      overflow-wrap: break-word;
-      text-rendering: optimizeLegibility;
-    }
-
-    a {
-      color: inherit;
-    }
-
-    a:focus-visible,
-    button:focus-visible {
-      outline: 3px solid var(--gold);
-      outline-offset: 4px;
-      border-radius: 6px;
-    }
-
-    [data-lang-panel] {
-      display: none;
-    }
-
+    /* critical: avoid a flash of both language panels before site.css loads */
+    body { margin: 0; background: #f1eee5; }
+    @media (prefers-color-scheme: dark) { body { background: #080d0c; } }
+    [data-lang-panel] { display: none; }
     html[data-current-lang="zh"] [data-lang-panel="zh"],
     html[data-current-lang="en"] [data-lang-panel="en"],
-    html:not([data-current-lang]) [data-lang-panel="zh"] {
-      display: block;
-    }
-
-    .site-shell {
-      min-height: 100vh;
-    }
-
-    .topbar {
-      position: sticky;
-      z-index: 10;
-      top: 0;
-      border-bottom: 1px solid var(--line);
-      background: var(--topbar-bg);
-      backdrop-filter: blur(18px);
-    }
-
-    .topbar-inner,
-    .section-inner,
-    .footer-inner {
-      width: min(1160px, calc(100% - 32px));
-      margin: 0 auto;
-    }
-
-    .topbar-inner {
-      display: flex;
-      min-height: 68px;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-      font-weight: 800;
-      letter-spacing: 0;
-    }
-
-    .brand-mark {
-      display: grid;
-      width: 38px;
-      height: 38px;
-      place-items: center;
-      overflow: hidden;
-      border: 1px solid rgba(255, 252, 244, 0.18);
-      border-radius: 10px;
-      background: linear-gradient(145deg, var(--brand-mark-start), var(--brand-mark-end));
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
-    }
-
-    .brand-mark img {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .nav {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 8px 16px;
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    .nav a {
-      text-decoration: none;
-    }
-
-    .nav a:hover {
-      color: var(--ink);
-    }
-
-    .nav .language {
-      border: 1px solid var(--pill-border);
-      border-radius: 999px;
-      padding: 7px 12px;
-      background: var(--pill-bg);
-      color: var(--ink);
-    }
-
-    .hero {
-      position: relative;
-      overflow: hidden;
-      padding: 74px 0 42px;
-    }
-
-    .hero::after {
-      position: absolute;
-      inset: auto -8vw 0 auto;
-      width: min(54vw, 680px);
-      height: 40%;
-      background: linear-gradient(120deg, rgba(197, 164, 90, 0.22), rgba(136, 169, 154, 0.08));
-      clip-path: polygon(24% 10%, 100% 0, 86% 100%, 0 76%);
-      content: "";
-      opacity: 0.68;
-      pointer-events: none;
-    }
-
-    .hero-grid {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      grid-template-columns: minmax(0, 0.94fr) minmax(340px, 0.86fr);
-      gap: 44px;
-      align-items: center;
-      width: min(1160px, calc(100% - 32px));
-      margin: 0 auto;
-    }
-
-    .eyebrow {
-      margin: 0 0 14px;
-      color: var(--accent);
-      font-size: 0.78rem;
-      font-weight: 800;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-
-    h1,
-    h2,
-    h3,
-    p {
-      margin: 0;
-    }
-
-    h1 {
-      max-width: 720px;
-      font-size: clamp(4.8rem, 14vw, 10.5rem);
-      font-weight: 900;
-      line-height: 0.86;
-      letter-spacing: 0;
-    }
-
-    .hero-copy {
-      max-width: 690px;
-      margin-top: 26px;
-      color: var(--muted);
-      font-size: clamp(1.16rem, 2.4vw, 1.52rem);
-      line-height: 1.52;
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 16px 18px;
-      margin-top: 30px;
-    }
-
-    .store-link {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-    }
-
-    .actions .store-link {
-      transition: transform 180ms ease, opacity 180ms ease;
-    }
-
-    .actions .store-link:hover {
-      opacity: 0.94;
-      transform: translateY(-1px);
-    }
-
-    .actions .store-link:active {
-      transform: translateY(0);
-    }
-
-    .store-badge {
-      display: block;
-      width: auto;
-      height: 46px;
-    }
-
-    .actions .store-badge {
-      height: 60px;
-    }
-
-    .proof-strip {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 9px;
-      margin-top: 28px;
-    }
-
-    .proof {
-      display: inline-flex;
-      min-height: 34px;
-      align-items: center;
-      gap: 8px;
-      border: 1px solid var(--proof-border);
-      border-radius: 999px;
-      padding: 6px 11px 6px 9px;
-      background: var(--proof-bg);
-      color: var(--proof-text);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
-      font-size: 0.82rem;
-      font-weight: 800;
-      letter-spacing: 0.02em;
-      line-height: 1;
-    }
-
-    .proof::before {
-      width: 6px;
-      height: 6px;
-      flex: 0 0 auto;
-      border-radius: 999px;
-      background: var(--proof-dot);
-      box-shadow: 0 0 0 3px rgba(197, 164, 90, 0.12);
-      content: "";
-    }
-
-    .phone-stage {
-      position: relative;
-      min-height: 650px;
-    }
-
-    .phone-shot {
-      position: absolute;
-      overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: 30px;
-      background: var(--panel);
-      box-shadow: var(--shadow);
-    }
-
-    .phone-shot img {
-      display: block;
-      width: 100%;
-      height: auto;
-    }
-
-    .phone-shot.primary {
-      z-index: 3;
-      right: 20%;
-      bottom: 0;
-      width: min(330px, 52vw);
-    }
-
-    .phone-shot.secondary {
-      z-index: 2;
-      right: 0;
-      bottom: 86px;
-      width: min(250px, 39vw);
-      opacity: 0.92;
-    }
-
-    .phone-shot.tertiary {
-      z-index: 1;
-      left: 0;
-      bottom: 118px;
-      width: min(230px, 36vw);
-      opacity: 0.74;
-    }
-
-    .band {
-      padding: 70px 0;
-    }
-
-    .band.alt {
-      background: linear-gradient(180deg, transparent, var(--section-wash), transparent);
-    }
-
-    .section-heading {
-      max-width: 760px;
-      margin-bottom: 34px;
-    }
-
-    h2 {
-      font-size: clamp(2rem, 5vw, 4.4rem);
-      font-weight: 900;
-      line-height: 0.98;
-      letter-spacing: 0;
-    }
-
-    .section-heading p {
-      margin-top: 16px;
-      color: var(--muted);
-      font-size: 1.1rem;
-    }
-
-    .feature-row {
-      display: grid;
-      grid-template-columns: minmax(0, 0.62fr) minmax(280px, 0.38fr);
-      gap: 34px;
-      align-items: center;
-      padding: 34px 0;
-      border-top: 1px solid var(--line);
-    }
-
-    .feature-row.reverse {
-      grid-template-columns: minmax(280px, 0.38fr) minmax(0, 0.62fr);
-    }
-
-    .feature-row.reverse .feature-copy {
-      order: 2;
-    }
-
-    .feature-row.reverse .feature-visual {
-      order: 1;
-    }
-
-    .feature-kicker {
-      display: inline-flex;
-      margin-bottom: 10px;
-      border: 1px solid rgba(197, 164, 90, 0.24);
-      border-radius: 999px;
-      padding: 4px 9px;
-      background: rgba(197, 164, 90, 0.075);
-      color: var(--accent);
-      font-size: 0.78rem;
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    h3 {
-      font-size: clamp(1.5rem, 3vw, 2.5rem);
-      font-weight: 900;
-      line-height: 1.05;
-    }
-
-    .feature-copy p {
-      margin-top: 14px;
-      color: var(--muted);
-      font-size: 1.05rem;
-    }
-
-    .feature-list {
-      display: grid;
-      gap: 10px;
-      margin: 20px 0 0;
-      padding: 0;
-      list-style: none;
-      color: var(--ink);
-      font-weight: 700;
-    }
-
-    .feature-list li {
-      display: flex;
-      gap: 9px;
-      align-items: flex-start;
-    }
-
-    .feature-list li::before {
-      flex: 0 0 auto;
-      width: 8px;
-      height: 8px;
-      margin-top: 0.58em;
-      border-radius: 50%;
-      background: var(--gold);
-      box-shadow: 0 0 0 3px rgba(197, 164, 90, 0.12);
-      content: "";
-    }
-
-    .feature-visual {
-      display: flex;
-      justify-content: center;
-    }
-
-    .feature-visual img {
-      display: block;
-      width: min(280px, 100%);
-      height: auto;
-      border: 1px solid var(--line);
-      border-radius: 26px;
-      box-shadow: var(--shadow);
-    }
-
-    .trust-layout {
-      display: grid;
-      grid-template-columns: minmax(0, 0.7fr) minmax(260px, 0.3fr);
-      gap: 28px;
-      align-items: start;
-      padding: 34px;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: var(--panel-gradient);
-      box-shadow: var(--shadow);
-    }
-
-    .trust-layout p {
-      color: var(--muted);
-      font-size: 1.08rem;
-    }
-
-    .trust-points {
-      display: grid;
-      gap: 12px;
-    }
-
-    .trust-point {
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 15px;
-      background: var(--pill-bg);
-    }
-
-    .trust-point strong {
-      display: block;
-      margin-bottom: 4px;
-    }
-
-    .trust-point span {
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    .faq-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .faq-item {
-      border-top: 1px solid var(--line);
-      padding: 22px 0 4px;
-    }
-
-    .faq-item h3 {
-      font-size: 1.2rem;
-    }
-
-    .faq-item p {
-      margin-top: 9px;
-      color: var(--muted);
-    }
-
-    .download-panel {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 26px;
-      align-items: center;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 30px;
-      background:
-        linear-gradient(135deg, rgba(197, 164, 90, 0.16), transparent 46%),
-        var(--panel-gradient);
-      box-shadow: var(--shadow);
-    }
-
-    .download-panel p {
-      margin-top: 10px;
-      color: var(--muted);
-    }
-
-    .footer {
-      padding: 32px 0 42px;
-      border-top: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    .footer-inner {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px 18px;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px 18px;
-    }
-
-    .footer a {
-      color: var(--accent);
-      font-weight: 700;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        scroll-behavior: auto !important;
-      }
-    }
-
-    @media (max-width: 900px) {
-      .hero {
-        padding-top: 46px;
-      }
-
-      .hero-grid,
-      .feature-row,
-      .feature-row.reverse,
-      .trust-layout,
-      .download-panel {
-        grid-template-columns: 1fr;
-      }
-
-      .feature-row.reverse .feature-copy,
-      .feature-row.reverse .feature-visual {
-        order: initial;
-      }
-
-      .phone-stage {
-        min-height: 560px;
-      }
-
-      .phone-shot.primary {
-        right: 24%;
-        width: min(300px, 58vw);
-      }
-
-      .phone-shot.secondary {
-        right: 2%;
-        width: min(230px, 43vw);
-      }
-
-      .phone-shot.tertiary {
-        width: min(210px, 40vw);
-      }
-
-      .download-panel {
-        justify-items: start;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .topbar-inner,
-      .section-inner,
-      .footer-inner,
-      .hero-grid {
-        width: min(100% - 24px, 560px);
-      }
-
-      .topbar {
-        position: static;
-      }
-
-      .topbar-inner {
-        min-height: 76px;
-        align-items: flex-start;
-        padding: 16px 0;
-      }
-
-      .nav {
-        gap: 8px 10px;
-        font-size: 0.9rem;
-      }
-
-      .brand-text {
-        max-width: 88px;
-        line-height: 1.1;
-      }
-
-      h1 {
-        font-size: clamp(4.2rem, 22vw, 6.2rem);
-      }
-
-      .hero-copy {
-        font-size: 1.08rem;
-      }
-
-      .actions .store-badge {
-        height: 56px;
-      }
-
-      .phone-stage {
-        min-height: 462px;
-      }
-
-      .phone-shot {
-        border-radius: 24px;
-      }
-
-      .phone-shot.primary {
-        right: 22%;
-        width: 220px;
-      }
-
-      .phone-shot.secondary {
-        right: 0;
-        bottom: 68px;
-        width: 168px;
-      }
-
-      .phone-shot.tertiary {
-        left: 0;
-        bottom: 84px;
-        width: 152px;
-      }
-
-      .band {
-        padding: 50px 0;
-      }
-
-      .feature-row {
-        gap: 22px;
-        padding: 28px 0;
-      }
-
-      .feature-visual img {
-        width: min(240px, 88%);
-      }
-
-      .trust-layout,
-      .download-panel {
-        padding: 22px;
-      }
-
-      .faq-grid {
-        grid-template-columns: 1fr;
-      }
-    }
+    html:not([data-current-lang]) [data-lang-panel="zh"] { display: block; }
   </style>
+  <link rel="stylesheet" href="./assets/site.css">
+  <script defer src="./assets/site.js"></script>
 </head>
 <body>
-  <div class="site-shell" data-lang-panel="zh" lang="zh-Hans">
-    <header class="topbar">
-      <div class="topbar-inner">
-        <a class="brand" href="./index.html?lang=zh" aria-label="句练首页">
-          <span class="brand-mark"><img src="./assets/app-icon.png" width="256" height="256" alt="" aria-hidden="true"></span>
-          <span class="brand-text">句练</span>
-        </a>
-          <nav class="nav" aria-label="主导航">
-            <a href="#features">功能</a>
-            <a href="#faq">FAQ</a>
-            <a href="./privacy.html?lang=zh">隐私政策</a>
-            <a href="./terms.html?lang=zh">服务条款</a>
-            <a class="language" href="./index.html?lang=en">English</a>
-        </nav>
-      </div>
-    </header>
 
-    <main>
-      <section class="hero" aria-labelledby="zh-hero-title">
-        <div class="hero-grid">
-          <div>
-            <p class="eyebrow">Local audio practice</p>
-            <h1 id="zh-hero-title">句练</h1>
-            <p class="hero-copy">把一段音频拆成真正能练会的句子。导入本地音频，设置 A/B 片段，慢速复读，收藏关键句，再回到复习列表里反复打磨。</p>
-            <div class="actions">
+<div class="fx" aria-hidden="true">
+  <span class="fx__orb fx__orb--a"></span>
+  <span class="fx__orb fx__orb--b"></span>
+  <span class="fx__orb fx__orb--c"></span>
+  <span class="fx__grid"></span>
+  <span class="fx__noise"></span>
+</div>
+
+<!-- ==================== 中文 ==================== -->
+<div class="site-shell" data-lang-panel="zh" lang="zh-Hans">
+  <a class="skip-link" href="#zh-main">跳到主要内容</a>
+
+  <header class="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="./index.html?lang=zh" aria-label="句练首页">
+        <span class="brand__mark"><img src="./assets/app-icon.png" width="256" height="256" alt="" aria-hidden="true"></span>
+        <span>句练</span>
+      </a>
+
+      <nav class="nav" id="nav-zh" aria-label="主导航" data-spy>
+        <a href="#zh-features">功能</a>
+        <a href="#zh-privacy">隐私</a>
+        <a href="#zh-faq">FAQ</a>
+        <a href="./privacy.html?lang=zh">隐私政策</a>
+        <a href="./terms.html?lang=zh">服务条款</a>
+        <a class="nav__lang" href="./index.html?lang=en">English</a>
+      </nav>
+
+      <div class="topbar__tools">
+        <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="切换深色 / 浅色主题">
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+        <button class="icon-btn nav-toggle" type="button" data-nav-toggle aria-controls="nav-zh" aria-expanded="false" aria-label="展开导航菜单">
+          <span class="bars" aria-hidden="true"><span></span><span></span><span></span></span>
+        </button>
+      </div>
+    </div>
+    <span class="topbar__progress" aria-hidden="true"></span>
+  </header>
+
+  <main id="zh-main">
+
+    <section class="hero" aria-labelledby="zh-hero-title">
+      <div class="shell">
+        <div class="hero__inner">
+          <div class="hero__copy">
+            <p class="eyebrow" data-reveal>Local audio practice</p>
+            <h1 id="zh-hero-title"><span class="word"><span style="--rise-delay:80ms">句练</span></span></h1>
+            <p class="hero__sub" data-reveal style="--reveal-delay:220ms">把一段音频，拆成真正能练会的句子。</p>
+            <p class="hero__text" data-reveal style="--reveal-delay:300ms">导入本地音频，设置 A/B 片段，慢速复读，收藏关键句，再回到复习列表里反复打磨。</p>
+
+            <div class="hero__cta" data-reveal style="--reveal-delay:380ms">
               <a class="store-link" href="https://apps.apple.com/app/id6780488152" aria-label="在 App Store 下载句练">
                 <img class="store-badge" src="./assets/app-store-badge-zh.svg" width="109" height="40" alt="在 App Store 下载">
               </a>
+              <a class="btn btn--ghost" href="#zh-features">
+                看看怎么练
+                <svg class="btn__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
             </div>
-            <div class="proof-strip" aria-label="产品特点">
-              <span class="proof">本地音频</span>
-              <span class="proof">A/B 复读</span>
-              <span class="proof">收藏复习</span>
-              <span class="proof">可关闭分析</span>
-            </div>
+
+            <ul class="proof-strip" data-reveal style="--reveal-delay:460ms" aria-label="产品特点">
+              <li class="proof">本地音频</li>
+              <li class="proof">A/B 复读</li>
+              <li class="proof">收藏复习</li>
+              <li class="proof">隐私过滤</li>
+            </ul>
           </div>
-          <div class="phone-stage" aria-label="句练应用截图预览">
-            <div class="phone-shot tertiary">
-              <img src="./assets/screenshot-library.png" width="647" height="1400" alt="句练素材库截图">
-            </div>
-            <div class="phone-shot secondary">
-              <img src="./assets/screenshot-review.png" width="647" height="1400" alt="句练复习页面截图">
-            </div>
-            <div class="phone-shot primary">
-              <img src="./assets/screenshot-ab-loop.png" width="647" height="1400" alt="句练 A/B 复读训练页面截图">
+
+          <div class="hero__visual" data-tilt data-reveal="scale" style="--reveal-delay:200ms" aria-label="句练应用截图预览">
+            <div class="shot-stack">
+              <figure class="shot shot--back">
+                <img src="./assets/screenshot-library.png" width="647" height="1400" alt="句练素材库截图">
+              </figure>
+              <figure class="shot shot--mid">
+                <img src="./assets/screenshot-review.png" width="647" height="1400" alt="句练复习页面截图">
+              </figure>
+              <figure class="shot shot--front">
+                <img src="./assets/screenshot-ab-loop.png" width="647" height="1400" alt="句练 A/B 复读训练页面截图">
+              </figure>
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
-      <section class="band" id="features" aria-labelledby="zh-features-title">
-        <div class="section-inner">
-          <div class="section-heading">
-            <p class="eyebrow">Practice flow</p>
-            <h2 id="zh-features-title">从导入到复习，围绕一句话完成闭环。</h2>
-            <p>句练不把你带进复杂学习系统，只把本地音频训练这件事做清楚：找到一句、重复一句、保存一句、回看一句。</p>
-          </div>
+      <div class="loopdemo" data-reveal="scale" aria-hidden="true">
+        <div class="loopdemo__head">
+          <span class="loopdemo__badge">A / B Loop</span>
+          <span>00:05 — 00:07 · 复读 x6 · 0.75x</span>
+        </div>
+        <div class="wave-track" style="--a:34%; --b:62%">
+          <div class="wave" data-wave data-a="34" data-b="62"></div>
+          <div class="loop-region"></div>
+          <span class="marker marker--a">A</span>
+          <span class="marker marker--b">B</span>
+          <span class="playhead"></span>
+        </div>
+        <div class="loopdemo__foot">
+          <span>00:00</span>
+          <span>标出难句 · 只重复那一小段</span>
+          <span>00:45</span>
+        </div>
+      </div>
+    </section>
 
-          <div class="feature-row">
-            <div class="feature-copy">
-              <span class="feature-kicker">01 Practice</span>
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__row">
+        <div class="marquee__group"><span>逐句练习</span><span>A/B 片段复读</span><span>本地素材库</span><span>收藏复习</span><span>慢速跟读</span><span>隐私优先</span></div>
+        <div class="marquee__group"><span>逐句练习</span><span>A/B 片段复读</span><span>本地素材库</span><span>收藏复习</span><span>慢速跟读</span><span>隐私优先</span></div>
+      </div>
+    </div>
+
+    <section class="band" id="zh-features" aria-labelledby="zh-features-title">
+      <div class="shell">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">Practice flow</p>
+          <h2 id="zh-features-title">从导入到复习，围绕一句话完成闭环。</h2>
+          <p>句练不把你带进复杂学习系统，只把本地音频训练这件事做清楚：找到一句、重复一句、保存一句、回看一句。</p>
+        </div>
+
+        <div class="features">
+          <article class="feature" data-reveal data-spot>
+            <div class="feature__copy">
+              <span class="kicker"><b>01</b>Practice</span>
               <h3>逐句听说训练</h3>
               <p>打开音频后，从当前句子开始练。播放、暂停、回退和继续练习都围绕同一个训练现场，不需要在文件列表和播放器之间来回找。</p>
-              <ul class="feature-list">
-                <li>继续最近练习，减少重新查找时间。</li>
-                <li>适合听写、跟读、影子练习和精听。</li>
+              <ul class="ticks">
+                <li><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>继续最近练习，减少重新查找时间。</span></li>
+                <li><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>适合听写、跟读、影子练习和精听。</span></li>
               </ul>
             </div>
-            <div class="feature-visual">
-              <img src="./assets/screenshot-practice.png" width="647" height="1400" loading="lazy" alt="句练首页逐句练习截图">
+            <div class="feature__visual">
+              <figure class="shot-card"><img src="./assets/screenshot-practice.png" width="647" height="1400" loading="lazy" decoding="async" alt="句练首页逐句练习截图"></figure>
             </div>
-          </div>
+          </article>
 
-          <div class="feature-row reverse">
-            <div class="feature-copy">
-              <span class="feature-kicker">02 Loop</span>
+          <article class="feature feature--flip" data-reveal data-spot>
+            <div class="feature__copy">
+              <span class="kicker"><b>02</b>Loop</span>
               <h3>A/B 片段复读</h3>
               <p>把难句的开始和结束点标出来，只重复那一小段。可以调整速度和复读次数，让耳朵真正跟上细节。</p>
-              <ul class="feature-list">
-                <li>精确复读短句、连读、停顿和语调。</li>
-                <li>保存片段后，下次直接回到重点。</li>
+              <ul class="ticks">
+                <li><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>精确复读短句、连读、停顿和语调。</span></li>
+                <li><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>保存片段后，下次直接回到重点。</span></li>
               </ul>
             </div>
-            <div class="feature-visual">
-              <img src="./assets/screenshot-ab-loop.png" width="647" height="1400" loading="lazy" alt="句练 A/B 片段复读截图">
+            <div class="feature__visual">
+              <figure class="shot-card"><img src="./assets/screenshot-ab-loop.png" width="647" height="1400" loading="lazy" decoding="async" alt="句练 A/B 片段复读截图"></figure>
             </div>
-          </div>
+          </article>
 
-          <div class="feature-row">
-            <div class="feature-copy">
-              <span class="feature-kicker">03 Library</span>
+          <article class="feature" data-reveal data-spot>
+            <div class="feature__copy">
+              <span class="kicker"><b>03</b>Library</span>
               <h3>本地素材库</h3>
               <p>从 Files、AirDrop 或文件共享导入音频，整理成自己的训练材料。素材以本地库为中心，不把应用变成杂乱的文件浏览器。</p>
-              <ul class="feature-list">
-                <li>本地导入，本地管理。</li>
-                <li>保留音频、片段和练习记录之间的连接。</li>
+              <ul class="ticks">
+                <li><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>本地导入，本地管理。</span></li>
+                <li><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>保留音频、片段和练习记录之间的连接。</span></li>
               </ul>
             </div>
-            <div class="feature-visual">
-              <img src="./assets/screenshot-library.png" width="647" height="1400" loading="lazy" alt="句练本地素材库截图">
+            <div class="feature__visual">
+              <figure class="shot-card"><img src="./assets/screenshot-library.png" width="647" height="1400" loading="lazy" decoding="async" alt="句练本地素材库截图"></figure>
             </div>
-          </div>
+          </article>
 
-          <div class="feature-row reverse">
-            <div class="feature-copy">
-              <span class="feature-kicker">04 Review</span>
+          <article class="feature feature--flip" data-reveal data-spot>
+            <div class="feature__copy">
+              <span class="kicker"><b>04</b>Review</span>
               <h3>收藏片段复习</h3>
               <p>把真正值得反复练的片段留下来。复习页帮你回到收藏和保存的句段，而不是重新听完整音频找重点。</p>
-              <ul class="feature-list">
-                <li>收藏片段和保存片段集中复习。</li>
-                <li>让复读训练从一次播放变成持续积累。</li>
+              <ul class="ticks">
+                <li><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>收藏片段和保存片段集中复习。</span></li>
+                <li><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>让复读训练从一次播放变成持续积累。</span></li>
               </ul>
             </div>
-            <div class="feature-visual">
-              <img src="./assets/screenshot-review.png" width="647" height="1400" loading="lazy" alt="句练收藏片段复习截图">
+            <div class="feature__visual">
+              <figure class="shot-card"><img src="./assets/screenshot-review.png" width="647" height="1400" loading="lazy" decoding="async" alt="句练收藏片段复习截图"></figure>
             </div>
-          </div>
+          </article>
 
-          <div class="feature-row">
-            <div class="feature-copy">
-              <span class="feature-kicker">05 Settings</span>
+          <article class="feature" data-reveal data-spot>
+            <div class="feature__copy">
+              <span class="kicker"><b>05</b>Settings</span>
               <h3>复读习惯自己定</h3>
-              <p>默认复读次数、播放速度、导入后是否直接练习、本地记录清理和分析开关，都放在设置里清清楚楚。</p>
-              <ul class="feature-list">
-                <li>控制复读次数、倍速和导入行为。</li>
-                <li>可以清除学习记录，也可以关闭产品分析。</li>
+              <p>默认复读次数、播放速度、导入后是否直接练习、本地记录清理和法律入口，都放在设置里清清楚楚。</p>
+              <ul class="ticks">
+                <li><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>控制复读次数、倍速和导入行为。</span></li>
+                <li><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>可以清除学习记录，并查看隐私政策与服务条款。</span></li>
               </ul>
             </div>
-            <div class="feature-visual">
-              <img src="./assets/screenshot-settings.png" width="647" height="1400" loading="lazy" alt="句练设置页面截图">
+            <div class="feature__visual">
+              <figure class="shot-card"><img src="./assets/screenshot-settings.png" width="647" height="1400" loading="lazy" decoding="async" alt="句练设置页面截图"></figure>
             </div>
-          </div>
+          </article>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="band alt" id="privacy" aria-labelledby="zh-privacy-title">
-        <div class="section-inner">
-          <div class="trust-layout">
+    <section class="band band--tight" id="zh-privacy" aria-labelledby="zh-privacy-title">
+      <div class="shell">
+        <div class="trust" data-reveal data-spot>
+          <div class="trust__grid">
             <div>
               <p class="eyebrow">Local-first privacy</p>
               <h2 id="zh-privacy-title">训练材料主要留在你的设备里。</h2>
               <p>句练的核心数据围绕本地音频、播放进度、A/B 标记、收藏片段和复习记录展开。产品分析只用于理解功能是否顺畅，并过滤音频内容、文件名、完整路径和原始搜索词。</p>
+              <div class="doc-foot__links" style="margin-top:26px">
+                <a class="pill-link" href="./privacy.html?lang=zh">阅读隐私政策
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </a>
+              </div>
             </div>
-            <div class="trust-points">
-              <div class="trust-point">
-                <strong>不上传音频内容</strong>
-                <span>导入的音频用于本地播放、复读和波形训练。</span>
+            <div class="trust__cards">
+              <div class="trust-card">
+                <span class="trust-card__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v6c0 4.4-3 8.2-7 9-4-.8-7-4.6-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span>
+                <div><strong>不上传音频内容</strong><span>导入的音频用于本地播放、复读和波形训练。</span></div>
               </div>
-              <div class="trust-point">
-                <strong>本地学习记录</strong>
-                <span>播放进度、片段和收藏主要保存在设备内。</span>
+              <div class="trust-card">
+                <span class="trust-card__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M10.5 5.5h3"/><path d="M9 18.5h6"/></svg></span>
+                <div><strong>本地学习记录</strong><span>播放进度、片段和收藏主要保存在设备内。</span></div>
               </div>
-              <div class="trust-point">
-                <strong>可关闭分析</strong>
-                <span>设置里可以停止后续产品分析事件发送。</span>
+              <div class="trust-card">
+                <span class="trust-card__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></svg></span>
+                <div><strong>隐私过滤</strong><span>产品分析会过滤音频内容、文件名、路径和原始搜索词。</span></div>
               </div>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="band" id="faq" aria-labelledby="zh-faq-title">
-        <div class="section-inner">
-          <div class="section-heading">
-            <p class="eyebrow">FAQ</p>
-            <h2 id="zh-faq-title">开始前你可能会问。</h2>
-          </div>
-          <div class="faq-grid">
-            <div class="faq-item">
-              <h3>适合哪些材料？</h3>
+    <section class="band" id="zh-faq" aria-labelledby="zh-faq-title">
+      <div class="shell">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">FAQ</p>
+          <h2 id="zh-faq-title">开始前你可能会问。</h2>
+        </div>
+
+        <div class="faq">
+          <details class="faq-item" data-reveal open>
+            <summary>适合哪些材料？<span class="sign" aria-hidden="true"></span></summary>
+            <div class="faq-item__body"><div class="faq-item__inner">
               <p>适合播客、讲座音频、听力材料、口语跟读素材和自己收集的本地音频。</p>
-            </div>
-            <div class="faq-item">
-              <h3>会替我管理学习计划吗？</h3>
+            </div></div>
+          </details>
+          <details class="faq-item" data-reveal style="--reveal-delay:60ms">
+            <summary>会替我管理学习计划吗？<span class="sign" aria-hidden="true"></span></summary>
+            <div class="faq-item__body"><div class="faq-item__inner">
               <p>不会。句练是一个本地听说训练工具，重点是导入音频、复读片段、保存重点和复习。</p>
-            </div>
-            <div class="faq-item">
-              <h3>为什么强调 A/B 复读？</h3>
+            </div></div>
+          </details>
+          <details class="faq-item" data-reveal style="--reveal-delay:120ms">
+            <summary>为什么强调 A/B 复读？<span class="sign" aria-hidden="true"></span></summary>
+            <div class="faq-item__body"><div class="faq-item__inner">
               <p>因为语言训练常常卡在几秒钟的连读、弱读、语调和停顿上。短片段重复比整段重听更有效。</p>
-            </div>
-            <div class="faq-item">
-              <h3>隐私政策在哪里？</h3>
+            </div></div>
+          </details>
+          <details class="faq-item" data-reveal style="--reveal-delay:180ms">
+            <summary>隐私政策在哪里？<span class="sign" aria-hidden="true"></span></summary>
+            <div class="faq-item__body"><div class="faq-item__inner">
               <p>你可以查看 <a href="./privacy.html?lang=zh">隐私政策</a> 和 <a href="./terms.html?lang=zh">服务条款</a>，了解数据处理和使用规则。</p>
-            </div>
-          </div>
+            </div></div>
+          </details>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="band" aria-labelledby="zh-download-title">
-        <div class="section-inner">
-          <div class="download-panel">
-            <div>
-              <p class="eyebrow">Ready to practice</p>
-              <h2 id="zh-download-title">从下一句开始。</h2>
-              <p>下载句练，把你已经拥有的音频变成可以反复打磨的听说训练材料。</p>
-            </div>
+    <section class="band band--tight" aria-labelledby="zh-download-title">
+      <div class="shell">
+        <div class="cta" data-reveal="scale">
+          <div>
+            <p class="eyebrow">Ready to practice</p>
+            <h2 id="zh-download-title">从下一句开始。</h2>
+            <p>下载句练，把你已经拥有的音频变成可以反复打磨的听说训练材料。</p>
+          </div>
+          <div class="cta__actions">
             <a class="store-link" href="https://apps.apple.com/app/id6780488152" aria-label="在 App Store 下载句练">
               <img class="store-badge" src="./assets/app-store-badge-zh.svg" width="109" height="40" loading="lazy" alt="在 App Store 下载">
             </a>
+            <span class="cta__note">iPhone · 本地运行 · 无需登录</span>
           </div>
         </div>
-      </section>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        <span>© 2026 句练 / Vocer</span>
-        <div class="footer-links">
-          <a href="./privacy.html?lang=zh">隐私政策</a>
-          <a href="./terms.html?lang=zh">服务条款</a>
-          <a href="mailto:irepeater@midaigc.com">联系</a>
-        </div>
       </div>
-    </footer>
-  </div>
+    </section>
+  </main>
 
-  <div class="site-shell" data-lang-panel="en" lang="en">
-    <header class="topbar">
-      <div class="topbar-inner">
-        <a class="brand" href="./index.html?lang=en" aria-label="Vocer home">
-          <span class="brand-mark"><img src="./assets/app-icon.png" width="256" height="256" alt="" aria-hidden="true"></span>
-          <span class="brand-text">Vocer</span>
+  <footer class="footer">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <a class="brand" href="./index.html?lang=zh">
+          <span class="brand__mark"><img src="./assets/app-icon.png" width="256" height="256" alt="" aria-hidden="true"></span>
+          <span>句练</span>
         </a>
-          <nav class="nav" aria-label="Primary navigation">
-            <a href="#en-features">Features</a>
-            <a href="#en-faq">FAQ</a>
-            <a href="./privacy.html?lang=en">Privacy Policy</a>
-            <a href="./terms.html?lang=en">Terms</a>
-            <a class="language" href="./index.html?lang=zh">中文</a>
-        </nav>
+        <p>本地音频听说训练工具。逐句练习、A/B 片段复读、素材管理与收藏复习。</p>
       </div>
-    </header>
+      <div class="footer__col">
+        <strong>产品</strong>
+        <div><a href="#zh-features">功能</a></div>
+        <div><a href="#zh-privacy">隐私设计</a></div>
+        <div><a href="#zh-faq">常见问题</a></div>
+        <div><a href="https://apps.apple.com/app/id6780488152">App Store</a></div>
+      </div>
+      <div class="footer__col">
+        <strong>法律与联系</strong>
+        <div><a href="./privacy.html?lang=zh">隐私政策</a></div>
+        <div><a href="./terms.html?lang=zh">服务条款</a></div>
+        <div><a href="mailto:irepeater@midaigc.com">irepeater@midaigc.com</a></div>
+        <div><a href="./index.html?lang=en">English</a></div>
+      </div>
+    </div>
+    <div class="footer__base">
+      <span>© 2026 句练 / Vocer</span>
+      <span>Made for focused listening practice.</span>
+    </div>
+  </footer>
+</div>
 
-    <main>
-      <section class="hero" aria-labelledby="en-hero-title">
-        <div class="hero-grid">
-          <div>
-            <p class="eyebrow">Local audio practice</p>
-            <h1 id="en-hero-title">Vocer</h1>
-            <p class="hero-copy">Practice one sentence at a time. Import local audio, loop the exact phrase, slow it down, save the moments that matter, and return to them when you review.</p>
-            <div class="actions">
+<!-- ==================== English ==================== -->
+<div class="site-shell" data-lang-panel="en" lang="en">
+  <a class="skip-link" href="#en-main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="./index.html?lang=en" aria-label="Vocer home">
+        <span class="brand__mark"><img src="./assets/app-icon.png" width="256" height="256" alt="" aria-hidden="true"></span>
+        <span>Vocer</span>
+      </a>
+
+      <nav class="nav" id="nav-en" aria-label="Primary navigation" data-spy>
+        <a href="#en-features">Features</a>
+        <a href="#en-privacy">Privacy</a>
+        <a href="#en-faq">FAQ</a>
+        <a href="./privacy.html?lang=en">Privacy Policy</a>
+        <a href="./terms.html?lang=en">Terms</a>
+        <a class="nav__lang" href="./index.html?lang=zh">中文</a>
+      </nav>
+
+      <div class="topbar__tools">
+        <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Toggle dark and light theme">
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+        <button class="icon-btn nav-toggle" type="button" data-nav-toggle aria-controls="nav-en" aria-expanded="false" aria-label="Open navigation menu">
+          <span class="bars" aria-hidden="true"><span></span><span></span><span></span></span>
+        </button>
+      </div>
+    </div>
+    <span class="topbar__progress" aria-hidden="true"></span>
+  </header>
+
+  <main id="en-main">
+
+    <section class="hero" aria-labelledby="en-hero-title">
+      <div class="shell">
+        <div class="hero__inner">
+          <div class="hero__copy">
+            <p class="eyebrow" data-reveal>Local audio practice</p>
+            <h1 id="en-hero-title"><span class="word"><span style="--rise-delay:80ms">Vocer</span></span></h1>
+            <p class="hero__sub" data-reveal style="--reveal-delay:220ms">Practice one sentence at a time.</p>
+            <p class="hero__text" data-reveal style="--reveal-delay:300ms">Import local audio, loop the exact phrase, slow it down, save the moments that matter, and return to them when you review.</p>
+
+            <div class="hero__cta" data-reveal style="--reveal-delay:380ms">
               <a class="store-link" href="https://apps.apple.com/app/id6780488152" aria-label="Download Vocer on the App Store">
                 <img class="store-badge" src="./assets/app-store-badge-en.svg" width="120" height="40" alt="Download on the App Store">
               </a>
+              <a class="btn btn--ghost" href="#en-features">
+                See how it works
+                <svg class="btn__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
             </div>
-            <div class="proof-strip" aria-label="Product highlights">
-              <span class="proof">Local audio</span>
-              <span class="proof">A/B repeat</span>
-              <span class="proof">Saved review</span>
-              <span class="proof">Analytics opt-out</span>
-            </div>
+
+            <ul class="proof-strip" data-reveal style="--reveal-delay:460ms" aria-label="Product highlights">
+              <li class="proof">Local audio</li>
+              <li class="proof">A/B repeat</li>
+              <li class="proof">Saved review</li>
+              <li class="proof">Privacy filtering</li>
+            </ul>
           </div>
-          <div class="phone-stage" aria-label="Vocer app screenshot preview">
-            <div class="phone-shot tertiary">
-              <img src="./assets/screenshot-library.png" width="647" height="1400" alt="Vocer library screenshot">
-            </div>
-            <div class="phone-shot secondary">
-              <img src="./assets/screenshot-review.png" width="647" height="1400" alt="Vocer review screenshot">
-            </div>
-            <div class="phone-shot primary">
-              <img src="./assets/screenshot-ab-loop.png" width="647" height="1400" alt="Vocer A/B loop practice screenshot">
+
+          <div class="hero__visual" data-tilt data-reveal="scale" style="--reveal-delay:200ms" aria-label="Vocer app screenshot preview">
+            <div class="shot-stack">
+              <figure class="shot shot--back">
+                <img src="./assets/screenshot-library.png" width="647" height="1400" alt="Vocer library screenshot">
+              </figure>
+              <figure class="shot shot--mid">
+                <img src="./assets/screenshot-review.png" width="647" height="1400" alt="Vocer review screenshot">
+              </figure>
+              <figure class="shot shot--front">
+                <img src="./assets/screenshot-ab-loop.png" width="647" height="1400" alt="Vocer A/B loop practice screenshot">
+              </figure>
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
-      <section class="band" id="en-features" aria-labelledby="en-features-title">
-        <div class="section-inner">
-          <div class="section-heading">
-            <p class="eyebrow">Practice flow</p>
-            <h2 id="en-features-title">From import to review, built around the sentence you are practicing.</h2>
-            <p>Vocer keeps the workflow focused: find a phrase, repeat it, save it, and come back when it is time to review.</p>
-          </div>
+      <div class="loopdemo" data-reveal="scale" aria-hidden="true">
+        <div class="loopdemo__head">
+          <span class="loopdemo__badge">A / B Loop</span>
+          <span>00:05 — 00:07 · repeat x6 · 0.75x</span>
+        </div>
+        <div class="wave-track" style="--a:34%; --b:62%">
+          <div class="wave" data-wave data-a="34" data-b="62"></div>
+          <div class="loop-region"></div>
+          <span class="marker marker--a">A</span>
+          <span class="marker marker--b">B</span>
+          <span class="playhead"></span>
+        </div>
+        <div class="loopdemo__foot">
+          <span>00:00</span>
+          <span>Mark the hard phrase · repeat only that moment</span>
+          <span>00:45</span>
+        </div>
+      </div>
+    </section>
 
-          <div class="feature-row">
-            <div class="feature-copy">
-              <span class="feature-kicker">01 Practice</span>
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__row">
+        <div class="marquee__group"><span>Sentence practice</span><span>A/B repeat</span><span>Local library</span><span>Saved review</span><span>Slow shadowing</span><span>Privacy first</span></div>
+        <div class="marquee__group"><span>Sentence practice</span><span>A/B repeat</span><span>Local library</span><span>Saved review</span><span>Slow shadowing</span><span>Privacy first</span></div>
+      </div>
+    </div>
+
+    <section class="band" id="en-features" aria-labelledby="en-features-title">
+      <div class="shell">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">Practice flow</p>
+          <h2 id="en-features-title">From import to review, built around the sentence you are practicing.</h2>
+          <p>Vocer keeps the workflow focused: find a phrase, repeat it, save it, and come back when it is time to review.</p>
+        </div>
+
+        <div class="features">
+          <article class="feature" data-reveal data-spot>
+            <div class="feature__copy">
+              <span class="kicker"><b>01</b>Practice</span>
               <h3>Practice one sentence at a time</h3>
               <p>Start from the current sentence and stay in the practice context. Playback, pause, rewind, and continue are all close to the material you are training on.</p>
-              <ul class="feature-list">
-                <li>Resume recent practice without hunting through files.</li>
-                <li>Useful for dictation, shadowing, close listening, and speaking practice.</li>
+              <ul class="ticks">
+                <li><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Resume recent practice without hunting through files.</span></li>
+                <li><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Useful for dictation, shadowing, close listening, and speaking practice.</span></li>
               </ul>
             </div>
-            <div class="feature-visual">
-              <img src="./assets/screenshot-practice.png" width="647" height="1400" loading="lazy" alt="Vocer one sentence practice screenshot">
+            <div class="feature__visual">
+              <figure class="shot-card"><img src="./assets/screenshot-practice.png" width="647" height="1400" loading="lazy" decoding="async" alt="Vocer one sentence practice screenshot"></figure>
             </div>
-          </div>
+          </article>
 
-          <div class="feature-row reverse">
-            <div class="feature-copy">
-              <span class="feature-kicker">02 Loop</span>
+          <article class="feature feature--flip" data-reveal data-spot>
+            <div class="feature__copy">
+              <span class="kicker"><b>02</b>Loop</span>
               <h3>Loop the exact phrase</h3>
               <p>Set A and B points around the hard phrase, then repeat just that moment. Adjust speed and repeat count until the details become clear.</p>
-              <ul class="feature-list">
-                <li>Repeat short phrases, connected speech, pauses, and intonation.</li>
-                <li>Save segments so you can return directly to the important part.</li>
+              <ul class="ticks">
+                <li><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Repeat short phrases, connected speech, pauses, and intonation.</span></li>
+                <li><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Save segments so you can return directly to the important part.</span></li>
               </ul>
             </div>
-            <div class="feature-visual">
-              <img src="./assets/screenshot-ab-loop.png" width="647" height="1400" loading="lazy" alt="Vocer A/B loop screenshot">
+            <div class="feature__visual">
+              <figure class="shot-card"><img src="./assets/screenshot-ab-loop.png" width="647" height="1400" loading="lazy" decoding="async" alt="Vocer A/B loop screenshot"></figure>
             </div>
-          </div>
+          </article>
 
-          <div class="feature-row">
-            <div class="feature-copy">
-              <span class="feature-kicker">03 Library</span>
+          <article class="feature" data-reveal data-spot>
+            <div class="feature__copy">
+              <span class="kicker"><b>03</b>Library</span>
               <h3>Import audio your way</h3>
               <p>Bring in audio from Files, AirDrop, or file sharing, then keep it in a clean local materials library. Vocer stays centered on practice instead of becoming a generic file browser.</p>
-              <ul class="feature-list">
-                <li>Local import and local material management.</li>
-                <li>Keep audio, segments, and learning records connected.</li>
+              <ul class="ticks">
+                <li><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Local import and local material management.</span></li>
+                <li><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Keep audio, segments, and learning records connected.</span></li>
               </ul>
             </div>
-            <div class="feature-visual">
-              <img src="./assets/screenshot-library.png" width="647" height="1400" loading="lazy" alt="Vocer local library screenshot">
+            <div class="feature__visual">
+              <figure class="shot-card"><img src="./assets/screenshot-library.png" width="647" height="1400" loading="lazy" decoding="async" alt="Vocer local library screenshot"></figure>
             </div>
-          </div>
+          </article>
 
-          <div class="feature-row reverse">
-            <div class="feature-copy">
-              <span class="feature-kicker">04 Review</span>
+          <article class="feature feature--flip" data-reveal data-spot>
+            <div class="feature__copy">
+              <span class="kicker"><b>04</b>Review</span>
               <h3>Review what matters</h3>
               <p>Save the clips that deserve another pass. The review page brings you back to favorite and saved segments instead of making you scan the full recording again.</p>
-              <ul class="feature-list">
-                <li>Review favorite and saved clips in one place.</li>
-                <li>Turn repetition into a growing practice record.</li>
+              <ul class="ticks">
+                <li><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Review favorite and saved clips in one place.</span></li>
+                <li><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Turn repetition into a growing practice record.</span></li>
               </ul>
             </div>
-            <div class="feature-visual">
-              <img src="./assets/screenshot-review.png" width="647" height="1400" loading="lazy" alt="Vocer saved segment review screenshot">
+            <div class="feature__visual">
+              <figure class="shot-card"><img src="./assets/screenshot-review.png" width="647" height="1400" loading="lazy" decoding="async" alt="Vocer saved segment review screenshot"></figure>
             </div>
-          </div>
+          </article>
 
-          <div class="feature-row">
-            <div class="feature-copy">
-              <span class="feature-kicker">05 Settings</span>
+          <article class="feature" data-reveal data-spot>
+            <div class="feature__copy">
+              <span class="kicker"><b>05</b>Settings</span>
               <h3>Personalize every repeat</h3>
-              <p>Default repeat count, playback speed, import behavior, local data cleanup, and analytics controls are kept clear in Settings.</p>
-              <ul class="feature-list">
-                <li>Control repeat count, speed, and import behavior.</li>
-                <li>Clear learning records or turn off product analytics.</li>
+              <p>Default repeat count, playback speed, import behavior, local data cleanup, and legal links are kept clear in Settings.</p>
+              <ul class="ticks">
+                <li><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Control repeat count, speed, and import behavior.</span></li>
+                <li><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Clear learning records and view the Privacy Policy and Terms of Service.</span></li>
               </ul>
             </div>
-            <div class="feature-visual">
-              <img src="./assets/screenshot-settings.png" width="647" height="1400" loading="lazy" alt="Vocer settings screenshot">
+            <div class="feature__visual">
+              <figure class="shot-card"><img src="./assets/screenshot-settings.png" width="647" height="1400" loading="lazy" decoding="async" alt="Vocer settings screenshot"></figure>
             </div>
-          </div>
+          </article>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="band alt" id="en-privacy" aria-labelledby="en-privacy-title">
-        <div class="section-inner">
-          <div class="trust-layout">
+    <section class="band band--tight" id="en-privacy" aria-labelledby="en-privacy-title">
+      <div class="shell">
+        <div class="trust" data-reveal data-spot>
+          <div class="trust__grid">
             <div>
               <p class="eyebrow">Local-first privacy</p>
               <h2 id="en-privacy-title">Your practice materials mainly stay on your device.</h2>
               <p>Vocer is built around local audio, playback progress, A/B markers, saved clips, and review records. Product analytics are used only to understand whether features work smoothly, and app code filters audio content, file names, full paths, and raw search text.</p>
+              <div class="doc-foot__links" style="margin-top:26px">
+                <a class="pill-link" href="./privacy.html?lang=en">Read the Privacy Policy
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </a>
+              </div>
             </div>
-            <div class="trust-points">
-              <div class="trust-point">
-                <strong>No audio upload</strong>
-                <span>Imported audio is used for local playback, repeating, and waveform practice.</span>
+            <div class="trust__cards">
+              <div class="trust-card">
+                <span class="trust-card__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v6c0 4.4-3 8.2-7 9-4-.8-7-4.6-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span>
+                <div><strong>No audio upload</strong><span>Imported audio is used for local playback, repeating, and waveform practice.</span></div>
               </div>
-              <div class="trust-point">
-                <strong>Local learning records</strong>
-                <span>Playback progress, segments, and favorites mainly stay on device.</span>
+              <div class="trust-card">
+                <span class="trust-card__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M10.5 5.5h3"/><path d="M9 18.5h6"/></svg></span>
+                <div><strong>Local learning records</strong><span>Playback progress, segments, and favorites mainly stay on device.</span></div>
               </div>
-              <div class="trust-point">
-                <strong>Analytics opt-out</strong>
-                <span>You can stop future product analytics events in Settings.</span>
+              <div class="trust-card">
+                <span class="trust-card__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></svg></span>
+                <div><strong>Privacy filtering</strong><span>Product analytics filters audio content, file names, paths, and raw search text.</span></div>
               </div>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="band" id="en-faq" aria-labelledby="en-faq-title">
-        <div class="section-inner">
-          <div class="section-heading">
-            <p class="eyebrow">FAQ</p>
-            <h2 id="en-faq-title">Before you start.</h2>
-          </div>
-          <div class="faq-grid">
-            <div class="faq-item">
-              <h3>What materials work well?</h3>
+    <section class="band" id="en-faq" aria-labelledby="en-faq-title">
+      <div class="shell">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">FAQ</p>
+          <h2 id="en-faq-title">Before you start.</h2>
+        </div>
+
+        <div class="faq">
+          <details class="faq-item" data-reveal open>
+            <summary>What materials work well?<span class="sign" aria-hidden="true"></span></summary>
+            <div class="faq-item__body"><div class="faq-item__inner">
               <p>Podcasts, lecture audio, listening materials, speaking practice files, and local recordings you already have the right to use.</p>
-            </div>
-            <div class="faq-item">
-              <h3>Does Vocer manage study plans?</h3>
+            </div></div>
+          </details>
+          <details class="faq-item" data-reveal style="--reveal-delay:60ms">
+            <summary>Does Vocer manage study plans?<span class="sign" aria-hidden="true"></span></summary>
+            <div class="faq-item__body"><div class="faq-item__inner">
               <p>No. Vocer is a local listening and speaking practice tool focused on import, repeat loops, saved clips, and review.</p>
-            </div>
-            <div class="faq-item">
-              <h3>Why focus on A/B repeat?</h3>
+            </div></div>
+          </details>
+          <details class="faq-item" data-reveal style="--reveal-delay:120ms">
+            <summary>Why focus on A/B repeat?<span class="sign" aria-hidden="true"></span></summary>
+            <div class="faq-item__body"><div class="faq-item__inner">
               <p>Language practice often breaks down in a few seconds of connected speech, weak forms, intonation, or pauses. Short-loop repetition is more focused than replaying an entire file.</p>
-            </div>
-            <div class="faq-item">
-              <h3>Where is the privacy policy?</h3>
+            </div></div>
+          </details>
+          <details class="faq-item" data-reveal style="--reveal-delay:180ms">
+            <summary>Where is the privacy policy?<span class="sign" aria-hidden="true"></span></summary>
+            <div class="faq-item__body"><div class="faq-item__inner">
               <p>You can read the <a href="./privacy.html?lang=en">Privacy Policy</a> and <a href="./terms.html?lang=en">Terms of Service</a> for data handling and use rules.</p>
-            </div>
-          </div>
+            </div></div>
+          </details>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="band" aria-labelledby="en-download-title">
-        <div class="section-inner">
-          <div class="download-panel">
-            <div>
-              <p class="eyebrow">Ready to practice</p>
-              <h2 id="en-download-title">Start with the next sentence.</h2>
-              <p>Download Vocer and turn audio you already have into repeatable listening and speaking practice.</p>
-            </div>
+    <section class="band band--tight" aria-labelledby="en-download-title">
+      <div class="shell">
+        <div class="cta" data-reveal="scale">
+          <div>
+            <p class="eyebrow">Ready to practice</p>
+            <h2 id="en-download-title">Start with the next sentence.</h2>
+            <p>Download Vocer and turn audio you already have into repeatable listening and speaking practice.</p>
+          </div>
+          <div class="cta__actions">
             <a class="store-link" href="https://apps.apple.com/app/id6780488152" aria-label="Download Vocer on the App Store">
               <img class="store-badge" src="./assets/app-store-badge-en.svg" width="120" height="40" loading="lazy" alt="Download on the App Store">
             </a>
+            <span class="cta__note">iPhone · runs locally · no account</span>
           </div>
         </div>
-      </section>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        <span>© 2026 Vocer / 句练</span>
-        <div class="footer-links">
-          <a href="./privacy.html?lang=en">Privacy Policy</a>
-          <a href="./terms.html?lang=en">Terms of Service</a>
-          <a href="mailto:irepeater@midaigc.com">Contact</a>
-        </div>
       </div>
-    </footer>
-  </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <a class="brand" href="./index.html?lang=en">
+          <span class="brand__mark"><img src="./assets/app-icon.png" width="256" height="256" alt="" aria-hidden="true"></span>
+          <span>Vocer</span>
+        </a>
+        <p>A local audio listening and speaking practice tool. Sentence practice, A/B loops, local materials, and saved review.</p>
+      </div>
+      <div class="footer__col">
+        <strong>Product</strong>
+        <div><a href="#en-features">Features</a></div>
+        <div><a href="#en-privacy">Privacy design</a></div>
+        <div><a href="#en-faq">FAQ</a></div>
+        <div><a href="https://apps.apple.com/app/id6780488152">App Store</a></div>
+      </div>
+      <div class="footer__col">
+        <strong>Legal &amp; contact</strong>
+        <div><a href="./privacy.html?lang=en">Privacy Policy</a></div>
+        <div><a href="./terms.html?lang=en">Terms of Service</a></div>
+        <div><a href="mailto:irepeater@midaigc.com">irepeater@midaigc.com</a></div>
+        <div><a href="./index.html?lang=zh">中文</a></div>
+      </div>
+    </div>
+    <div class="footer__base">
+      <span>© 2026 Vocer / 句练</span>
+      <span>Made for focused listening practice.</span>
+    </div>
+  </footer>
+</div>
+
+<button class="to-top" type="button" data-to-top aria-label="Back to top">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+</button>
+
 </body>
 </html>

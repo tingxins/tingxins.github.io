@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-Hans" data-variant="studio">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="Moss Plus、Citizenship 与 Vocer 产品列表页视觉原型。">
+  <title>Products / 产品原型</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script>
+    // PROTOTYPE — Three product-page directions, switchable with ?variant=.
+    (function () {
+      var params = new URLSearchParams(location.search);
+      var variants = ["studio", "editorial", "galaxy"];
+      var variant = params.get("variant");
+      var lang = params.get("lang") === "en" ? "en" : "zh";
+      document.documentElement.dataset.variant = variants.includes(variant) ? variant : "studio";
+      document.documentElement.dataset.lang = lang;
+      document.documentElement.lang = lang === "en" ? "en" : "zh-Hans";
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容 / Skip to content</a>
+  <div class="page-noise" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="wordmark" href="../../" aria-label="返回 Tingxins 首页">
+      <span class="wordmark-dot" aria-hidden="true"></span>
+      <span>TINGXINS / LAB</span>
+    </a>
+    <div class="topbar-meta" aria-hidden="true">
+      <span>INDEPENDENT SOFTWARE</span>
+      <span class="topbar-line"></span>
+      <span>2026</span>
+    </div>
+    <button class="language-toggle" type="button" data-language-toggle aria-label="Switch language">
+      <span data-lang-label>EN</span>
+    </button>
+  </header>
+
+  <main id="main" tabindex="-1"></main>
+
+  <nav class="prototype-switcher" aria-label="Prototype variant switcher">
+    <span class="prototype-flag">PROTOTYPE</span>
+    <button type="button" data-variant-prev aria-label="Previous variant">←</button>
+    <output data-variant-label aria-live="polite">A — Studio</output>
+    <button type="button" data-variant-next aria-label="Next variant">→</button>
+  </nav>
+
+  <script src="./app.js"></script>
+</body>
+</html>
