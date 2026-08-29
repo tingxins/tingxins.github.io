@@ -192,6 +192,12 @@
 
     }
 
+    .cover-navigation--primary .navigation__item {
+      display: block;
+      width: 80%;
+      margin: 0 auto .4em;
+    }
+
     .content-wrapper {
       width: 80%;
       max-width: none;
@@ -230,12 +236,6 @@
 
   .panel-cover--agent:not(.panel-cover--collapsed) .cover-navigation {
     margin-top: 30px;
-  }
-
-  .panel-cover--agent:not(.panel-cover--collapsed) .navigation__item {
-    width: auto;
-    margin-right: 2px;
-    margin-left: 2px;
   }
 
   .panel-cover--agent:not(.panel-cover--collapsed) .navigation__item a {
