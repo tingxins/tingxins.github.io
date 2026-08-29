@@ -26,11 +26,6 @@ nav:
     - {title: 产品, description: 查看我的产品, url: '/products/'}
     - {title: 关于我, description: Github, url: 'https://github.com/tingxins'}
 
-# Pagination
-gems: [jekyll-paginate]
-paginate: 10
-paginate_path: "page/:num/"
-
 # Comment
 comment:
     disqus: tingxins
