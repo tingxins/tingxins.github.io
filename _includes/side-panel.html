@@ -1,4 +1,50 @@
-<header class="panel-cover {% if page.layout == 'post' or page.layout == 'page' %}panel-cover--collapsed{% endif %}" style="background-image: url('/assets/images/ai_agent_background.jpeg');background-position: center;background-repeat: no-repeat;background-size: cover;">
+<header class="panel-cover panel-cover--agent {% if page.layout == 'post' or page.layout == 'page' %}panel-cover--collapsed{% endif %}">
+  <div class="agent-field" aria-hidden="true">
+    <div class="agent-field__grid"></div>
+    <div class="agent-field__glow agent-field__glow--cyan"></div>
+    <div class="agent-field__glow agent-field__glow--lime"></div>
+    <div class="agent-field__scan"></div>
+
+    <svg class="agent-field__network" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="agent-route-gradient" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#55e6ff" stop-opacity="0" />
+          <stop offset="0.45" stop-color="#55e6ff" stop-opacity="0.72" />
+          <stop offset="1" stop-color="#b8ff62" stop-opacity="0" />
+        </linearGradient>
+        <filter id="agent-node-glow" x="-100%" y="-100%" width="300%" height="300%">
+          <feGaussianBlur stdDeviation="5" result="blur" />
+          <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+        </filter>
+      </defs>
+
+      <g class="agent-field__routes">
+        <path d="M-40 225 C150 225 210 340 390 340 S650 170 835 240 S1110 455 1485 365" />
+        <path d="M105 785 C230 640 310 625 470 660 S760 800 930 650 S1200 505 1465 610" />
+        <path d="M150 90 C285 175 330 190 450 175 S690 80 810 135 S990 340 1125 310 S1290 135 1455 190" />
+        <path d="M48 510 C185 475 280 505 350 445 S455 295 590 335 S735 555 870 505 S1015 405 1155 465 S1320 735 1480 720" />
+      </g>
+      <g class="agent-field__route-pulses">
+        <path d="M-40 225 C150 225 210 340 390 340 S650 170 835 240 S1110 455 1485 365" />
+        <path d="M105 785 C230 640 310 625 470 660 S760 800 930 650 S1200 505 1465 610" />
+        <path d="M150 90 C285 175 330 190 450 175 S690 80 810 135 S990 340 1125 310 S1290 135 1455 190" />
+      </g>
+      <g class="agent-field__nodes">
+        <g transform="translate(205 270)"><circle class="node-halo" r="34"/><circle class="node-core" r="5"/></g>
+        <g transform="translate(390 340)"><circle class="node-halo" r="44"/><circle class="node-core" r="6"/></g>
+        <g transform="translate(835 240)"><circle class="node-halo" r="40"/><circle class="node-core" r="6"/></g>
+        <g transform="translate(1125 310)"><circle class="node-halo" r="32"/><circle class="node-core" r="5"/></g>
+        <g transform="translate(350 445)"><circle class="node-halo" r="28"/><circle class="node-core" r="4"/></g>
+        <g transform="translate(930 650)"><circle class="node-halo" r="38"/><circle class="node-core node-core--lime" r="6"/></g>
+        <g transform="translate(1220 535)"><circle class="node-halo" r="30"/><circle class="node-core node-core--lime" r="5"/></g>
+      </g>
+    </svg>
+
+    <div class="agent-signal agent-signal--context"><span></span>CONTEXT</div>
+    <div class="agent-signal agent-signal--reason"><span></span>REASON</div>
+    <div class="agent-signal agent-signal--tools"><span></span>TOOLS</div>
+    <div class="agent-signal agent-signal--action"><span></span>ACTION</div>
+  </div>
   <div class="panel-main">
 
     <div class="panel-main__inner panel-inverted">
