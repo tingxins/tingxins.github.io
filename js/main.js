@@ -1,5 +1,30 @@
 $(document).ready(function() {
 
+  var productTransitionLinks = document.querySelectorAll('a.product-transition-link');
+  var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  Array.prototype.forEach.call(productTransitionLinks, function(productTransitionLink) {
+    productTransitionLink.addEventListener('click', function(event) {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || reducedMotion || document.documentElement.classList.contains('is-transitioning-to-products')) return;
+
+      event.preventDefault();
+
+      try {
+        window.sessionStorage.setItem('tx-products-entry', 'home');
+      } catch (error) {}
+
+      document.documentElement.classList.add('is-transitioning-to-products');
+
+      window.setTimeout(function() {
+        window.location.assign(productTransitionLink.href);
+      }, 480);
+    });
+  });
+
+  window.addEventListener('pageshow', function() {
+    document.documentElement.classList.remove('is-transitioning-to-products');
+  });
+
   $('a.blog-button').click(function() {
     // If already in blog, return early without animate overlay panel again.
     if (location.hash && location.hash == "#blog") return;

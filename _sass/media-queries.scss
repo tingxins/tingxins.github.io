@@ -277,6 +277,12 @@
   .panel-cover--agent:not(.panel-cover--collapsed) .navigation__item a {
     transition: none;
   }
+
+  .panel-cover--agent::after,
+  .agent-field,
+  .panel-cover--agent:not(.panel-cover--collapsed) .panel-main__content {
+    transition: none;
+  }
 }
 
 // ------------------------------

@@ -85,6 +85,34 @@ body {
   transition: background .6s var(--ease), color .3s linear;
 }
 
+html.from-home body::before {
+  content: "";
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 36%, color-mix(in srgb, var(--ac) 18%, transparent), var(--bg) 58%);
+  animation: products-curtain-release .56s var(--ease) both;
+}
+
+html.from-home .site-head,
+html.from-home .hero {
+  animation: products-stage-arrive .58s var(--ease) both;
+}
+
+html.from-home .hero { animation-delay: 60ms; }
+
+@keyframes products-curtain-release {
+  0% { opacity: 1; }
+  100% { opacity: 0; visibility: hidden; }
+}
+
+@keyframes products-stage-arrive {
+  0% { opacity: .45; transform: translateY(10px); }
+  100% { opacity: 1; transform: none; }
+}
+
 img, svg, canvas { display: block; max-width: 100%; }
 img { height: auto; }
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
@@ -621,6 +649,9 @@ li[data-state="off"]    .lad__v { opacity: .75; }
   .reveal, .feats li, .nevers li, .js-io .reveal, .js-io .feats li, .js-io .nevers li { opacity: 1; transform: none; }
   .ladder li { opacity: 1; transform: none; }
   .device, .closer__card { transform: none !important; }
+  html.from-home body::before { display: none; }
+  html.from-home .site-head,
+  html.from-home .hero { animation: none; }
 }
 
 /* ═══════════════════════  RESPONSIVE  ═══════════════════════ */

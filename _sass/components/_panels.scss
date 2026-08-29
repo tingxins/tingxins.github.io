@@ -52,6 +52,19 @@
       linear-gradient(145deg, #07101c 0%, #030712 56%, #07110f 100%);
   }
 
+  .panel-cover--agent::after {
+    content: '';
+    position: absolute;
+    z-index: 1000;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    background:
+      radial-gradient(circle at 50% 42%, rgba(92, 231, 255, .2), rgba(4, 11, 19, .88) 58%, #03070d 100%);
+    transform: scale(1.08);
+    transition: opacity .3s ease .14s, transform .38s cubic-bezier(.22, .68, 0, 1) .08s;
+  }
+
   .agent-field {
     --field-x: 50%;
     --field-y: 44%;
@@ -60,6 +73,7 @@
     inset: 0;
     overflow: hidden;
     pointer-events: none;
+    transition: opacity .36s ease .05s, transform .44s cubic-bezier(.22, .68, 0, 1);
   }
 
   .agent-field__grid {
@@ -222,6 +236,25 @@
       0 0 0 1px rgba(47, 211, 236, .025);
     backdrop-filter: blur(24px) saturate(135%);
     -webkit-backdrop-filter: blur(24px) saturate(135%);
+    transform: translate3d(0, 0, 0) scale(1);
+    transform-origin: center 46%;
+    transition: opacity .34s ease .02s, transform .44s cubic-bezier(.22, .68, 0, 1), filter .36s ease;
+  }
+
+  .is-transitioning-to-products .panel-cover--agent::after {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .is-transitioning-to-products .panel-cover--agent:not(.panel-cover--collapsed) .panel-main__content {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translate3d(0, -18px, 0) scale(.9);
+  }
+
+  .is-transitioning-to-products .agent-field {
+    opacity: .5;
+    transform: scale(1.04);
   }
 
   .panel-cover--agent:not(.panel-cover--collapsed) .panel-main__content::before {

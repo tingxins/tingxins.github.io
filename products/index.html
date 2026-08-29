@@ -7,6 +7,15 @@
 <meta name="theme-color" content="#08090C" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#F7F7F5" media="(prefers-color-scheme: light)">
 
+<script>
+try {
+  if (sessionStorage.getItem('tx-products-entry') === 'home') {
+    document.documentElement.classList.add('from-home');
+    sessionStorage.removeItem('tx-products-entry');
+  }
+} catch (error) {}
+</script>
+
 <title>tingxins — focused iPhone apps</title>
 <meta name="description" content="Focused iPhone apps for real problems: check where a file came from, drill a phrase until it sticks, think something through. Native, quiet, and honest about their limits.">
 
