@@ -6,6 +6,10 @@ description: AI Agent & Harness Engineer，业余开发者。持续探索 Agent�
 
 url: "https://midaigc.com"
 
+exclude:
+    - docs
+    - README.md
+
 permalink: /:year/:month/:title/
 
 # Format
