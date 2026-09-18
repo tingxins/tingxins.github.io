@@ -51,7 +51,7 @@
     <div class="panel-main__content">
 
         <a href="/products/" title="查看我的产品" class="product-transition-link"><img src="/assets/images/avatar.jpg" width="80" alt="{{ site.title }} logo" class="panel-cover__logo logo" /></a>
-        <h1 class="panel-cover__title panel-title"><a href="/" title="返回 {{ site.title }} 首页">{{ site.title }}</a></h1>
+        <h1 class="panel-cover__title panel-title"><a href="/" title="返回 {{ site.title }} 首页"><span class="panel-title__name">{{ site.title }}</span><span class="panel-title__alias" aria-label="Lee">(Lee)</span></a></h1>
         {% if site.subtitle %}
         <span class="panel-cover__subtitle panel-subtitle">{{site.subtitle}}</span>
         {% endif %}
@@ -65,20 +65,9 @@
         {% if site.welcome_message %}
         <p class="panel-cover__description">{{ site.welcome_message }}</p>
         {% endif %}
-        
-        <div class="navigation-wrapper">
-          <div>
-            <nav class="cover-navigation cover-navigation--primary">
-              <ul class="navigation">
-                {% for item in site.nav %}
-                  <!-- <li class="navigation__item"><a href="{{item.url}}" target="_blank" title="{{item.description}}">{{item.title}}</a></li> -->
-                  <li class="navigation__item"><a href="{{item.url}}" target="_self" title="{{item.description}}"{% if item.url == '/products/' %} class="product-transition-link"{% endif %}>{{item.title}}</a></li>
-                {% endfor %}
-              </ul>
-            </nav>
-          </div>
-          
-          <div>{% include social.html %}</div>
+
+        <div class="desktop-navigation-wrapper">
+          {% include navigation-content.html %}
         </div>
       </div>
     </div>

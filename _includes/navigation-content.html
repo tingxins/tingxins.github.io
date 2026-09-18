@@ -1,0 +1,11 @@
+<div>
+  <nav class="cover-navigation cover-navigation--primary">
+    <ul class="navigation">
+      {% for item in site.nav %}
+        <li class="navigation__item"><a href="{{item.url}}" target="_self" title="{{item.description}} / {{item.description_en}}"{% if item.url == '/products/' %} class="product-transition-link"{% endif %}><span lang="zh-Hans">{{item.title}}</span><span lang="en">{{item.title_en}}</span></a></li>
+      {% endfor %}
+    </ul>
+  </nav>
+</div>
+
+<div>{% include social.html %}</div>

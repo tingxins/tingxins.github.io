@@ -35,18 +35,47 @@ $(document).ready(function() {
     $('.panel-cover').addClass('panel-cover--collapsed');
   }
 
-  $('.btn-mobile-menu__icon').click(function() {
-    if ($('.navigation-wrapper').css('display') == "block") {
-      $('.navigation-wrapper').on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
-        $('.navigation-wrapper').toggleClass('visible animated bounceOutUp');
-        $('.navigation-wrapper').off('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend');
-      });
-      $('.navigation-wrapper').toggleClass('animated bounceInDown animated bounceOutUp');
+  var mobileMenuButton = document.querySelector('.btn-mobile-menu');
+  var mobileNavigation = document.querySelector('#mobile-navigation');
 
-    } else {
-      $('.navigation-wrapper').toggleClass('visible animated bounceInDown');
+  if (mobileMenuButton && mobileNavigation) {
+    var mobileMenuIcon = mobileMenuButton.querySelector('.btn-mobile-menu__icon');
+    var mobileCloseIcon = mobileMenuButton.querySelector('.btn-mobile-close__icon');
+    var isEnglish = document.documentElement.lang === 'en';
+    var menuLabels = {
+      open: isEnglish ? 'Open navigation menu' : '打开导航菜单',
+      close: isEnglish ? 'Close navigation menu' : '关闭导航菜单'
+    };
+
+    function setMobileMenuOpen(isOpen) {
+      mobileNavigation.classList.toggle('is-open', isOpen);
+      mobileMenuButton.setAttribute('aria-expanded', String(isOpen));
+      mobileMenuButton.setAttribute('aria-label', isOpen ? menuLabels.close : menuLabels.open);
+      mobileMenuIcon.classList.toggle('hidden', isOpen);
+      mobileCloseIcon.classList.toggle('hidden', !isOpen);
     }
-    $('.btn-mobile-menu__icon').toggleClass('fa fa-list fa fa-angle-up animated fadeIn');
-  });
+
+    mobileMenuButton.addEventListener('click', function() {
+      setMobileMenuOpen(!mobileNavigation.classList.contains('is-open'));
+    });
+
+    mobileNavigation.addEventListener('click', function(event) {
+      if (event.target.closest('a')) setMobileMenuOpen(false);
+    });
+
+    document.addEventListener('click', function(event) {
+      if (mobileNavigation.classList.contains('is-open') && !mobileNavigation.contains(event.target) && !mobileMenuButton.contains(event.target)) {
+        setMobileMenuOpen(false);
+      }
+    });
+
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') setMobileMenuOpen(false);
+    });
+
+    window.addEventListener('resize', function() {
+      if (window.matchMedia && !window.matchMedia('(max-width: 960px)').matches) setMobileMenuOpen(false);
+    });
+  }
 
 });

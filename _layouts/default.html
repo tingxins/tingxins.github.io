@@ -5,12 +5,13 @@
 
   <body>
 
-    <span class="mobile btn-mobile-menu">
-        <i class="fa fa-list btn-mobile-menu__icon"></i>
-        <i class="fa fa-angle-up btn-mobile-close__icon hidden"></i>
-    </span>
+    <button type="button" class="mobile btn-mobile-menu" aria-controls="mobile-navigation" aria-expanded="false" aria-label="打开导航菜单">
+        <i class="fa fa-list btn-mobile-menu__icon" aria-hidden="true"></i>
+        <i class="fa fa-angle-up btn-mobile-close__icon hidden" aria-hidden="true"></i>
+    </button>
     
     {% include side-panel.html %}
+    {% include mobile-navigation.html %}
 
     <div class="content-wrapper">
         <div class="content-wrapper__inner">

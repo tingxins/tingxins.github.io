@@ -27,9 +27,9 @@ cover_color: slate
 
 # Navigation buttons in the front page.
 nav:
-    - {title: 博客, description: 访问我的新博客地址, url: 'http://www.tingxins.cn'}
-    - {title: 产品, description: 查看我的产品, url: '/products/'}
-    - {title: 关于我, description: Github, url: 'https://github.com/tingxins'}
+    - {title: 博客, title_en: Blog, description: 访问我的新博客地址, description_en: Visit my blog, url: 'http://www.tingxins.cn'}
+    - {title: 产品, title_en: Products, description: 查看我的产品, description_en: Explore my products, url: '/products/'}
+    - {title: 关于我, title_en: About Me, description: Github, description_en: GitHub profile, url: 'https://github.com/tingxins'}
 
 # Comment
 comment:
