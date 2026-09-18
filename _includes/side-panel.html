@@ -56,7 +56,10 @@
         <span class="panel-cover__subtitle panel-subtitle">{{site.subtitle}}</span>
         {% endif %}
         <hr class="panel-cover__divider" />
-        <p class="panel-cover__description">{{ site.description }}</p>
+        <p class="panel-cover__description panel-cover__description--localized">
+          <span lang="zh-Hans">{{ site.description }}</span>
+          <span lang="en">{{ site.description_en }}</span>
+        </p>
         <hr class="panel-cover__divider panel-cover__divider--secondary" />
         
         {% if site.welcome_message %}

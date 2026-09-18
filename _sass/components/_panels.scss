@@ -372,6 +372,15 @@
     margin: 0 30px;
   }
 
+  .panel-cover__description--localized [lang] {
+    display: none;
+  }
+
+  html:not(.lang-en) .panel-cover__description--localized [lang="zh-Hans"],
+  html.lang-en .panel-cover__description--localized [lang="en"] {
+    display: inline;
+  }
+
   .panel-cover__divider {
     width: 50%;
     margin: 20px auto;
